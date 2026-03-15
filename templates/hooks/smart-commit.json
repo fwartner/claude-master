@@ -1,0 +1,16 @@
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash -c 'CHANGED=$(git diff --name-only 2>/dev/null | head -5); if [ -n \"$CHANGED\" ]; then COUNT=$(git diff --stat 2>/dev/null | tail -1 | grep -o \"[0-9]* insertion\" | grep -o \"[0-9]*\"); echo \"{\\\"message\\\": \\\"Files changed: $CHANGED. Lines: ${COUNT:-0}. Consider committing with conventional format (feat/fix/docs/refactor).\\\"}\" ; fi'",
+            "async": true
+          }
+        ]
+      }
+    ]
+  }
+}

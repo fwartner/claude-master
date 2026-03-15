@@ -1,0 +1,16 @@
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash -c 'CMD=\"$CLAUDE_TOOL_ARG_command\"; PATTERNS=\"sk-ant-|sk-proj-|sk-[a-zA-Z0-9]{20,}|AKIA[0-9A-Z]{16}|ghp_[a-zA-Z0-9]{36}|gho_[a-zA-Z0-9]{36}|glpat-[a-zA-Z0-9_-]{20,}|xoxb-|xoxp-|hooks\\.slack\\.com|-----BEGIN (RSA |EC |DSA )?PRIVATE KEY-----|AIza[0-9A-Za-z_-]{35}|ya29\\.[0-9A-Za-z_-]+|eyJ[A-Za-z0-9_-]*\\.eyJ\"; if echo \"$CMD\" | grep -qE \"$PATTERNS\"; then echo \"{\\\"message\\\": \\\"WARNING: Possible hardcoded secret detected. Use environment variables instead.\\\", \\\"blocked\\\": true}\"; fi'",
+            "async": false
+          }
+        ]
+      }
+    ]
+  }
+}

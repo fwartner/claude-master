@@ -19,6 +19,8 @@ jobs:
 
       - run: npm ci
 
+      - run: npm run build
+
       - run: npm run lint
 
   dry-run:
@@ -33,5 +35,7 @@ jobs:
 
       - run: npm ci
 
+      - run: npm run build
+
       - name: Verify CLI dry-run
-        run: node bin/cli.js --all --dry-run
+        run: node dist/cli.js --all --dry-run

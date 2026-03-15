@@ -2,11 +2,12 @@ import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import fs from 'fs-extra';
 import path from 'path';
 import os from 'os';
-import { install } from '../src/installer.js';
-import { SKILLS, AGENTS, COMMANDS } from '../src/config.js';
+import { install } from '../src/installer';
+import { SKILLS, AGENTS, COMMANDS } from '../src/config';
+import type { InstallConfig } from '../src/config';
 
 describe('Installer', () => {
-  let tmpDir;
+  let tmpDir: string;
 
   beforeEach(async () => {
     tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), 'toolkit-test-'));
@@ -17,18 +18,21 @@ describe('Installer', () => {
     await fs.remove(tmpDir);
   });
 
-  it('installs all 32 skills in plugin mode', async () => {
-    await install({
-      scope: 'project',
-      format: 'plugin',
-      skills: Object.keys(SKILLS),
-      agents: [],
-      commands: [],
-      hooks: false,
-      memory: false,
-      claudeMd: false,
-      dryRun: false,
-    });
+  const makeConfig = (overrides: Partial<InstallConfig> = {}): InstallConfig => ({
+    scope: 'project',
+    format: 'plugin',
+    skills: [],
+    agents: [],
+    commands: [],
+    hooks: false,
+    memory: false,
+    claudeMd: false,
+    dryRun: false,
+    ...overrides,
+  });
+
+  it('installs all 61 skills in plugin mode', async () => {
+    await install(makeConfig({ skills: Object.keys(SKILLS) }));
 
     for (const skill of Object.keys(SKILLS)) {
       const skillPath = path.join(tmpDir, 'skills', skill, 'SKILL.md');
@@ -39,18 +43,8 @@ describe('Installer', () => {
     expect(await fs.pathExists(pluginPath)).toBe(true);
   });
 
-  it('installs all 32 skills in direct mode', async () => {
-    await install({
-      scope: 'project',
-      format: 'direct',
-      skills: Object.keys(SKILLS),
-      agents: [],
-      commands: [],
-      hooks: false,
-      memory: false,
-      claudeMd: false,
-      dryRun: false,
-    });
+  it('installs all 61 skills in direct mode', async () => {
+    await install(makeConfig({ format: 'direct', skills: Object.keys(SKILLS) }));
 
     for (const skill of Object.keys(SKILLS)) {
       const skillPath = path.join(tmpDir, '.claude', 'skills', skill, 'SKILL.md');
@@ -58,18 +52,8 @@ describe('Installer', () => {
     }
   });
 
-  it('installs all 9 agents', async () => {
-    await install({
-      scope: 'project',
-      format: 'plugin',
-      skills: [],
-      agents: Object.keys(AGENTS),
-      commands: [],
-      hooks: false,
-      memory: false,
-      claudeMd: false,
-      dryRun: false,
-    });
+  it('installs all 18 agents', async () => {
+    await install(makeConfig({ agents: Object.keys(AGENTS) }));
 
     for (const agent of Object.keys(AGENTS)) {
       const agentPath = path.join(tmpDir, 'agents', `${agent}.md`);
@@ -77,18 +61,8 @@ describe('Installer', () => {
     }
   });
 
-  it('installs all 14 commands', async () => {
-    await install({
-      scope: 'project',
-      format: 'plugin',
-      skills: [],
-      agents: [],
-      commands: Object.keys(COMMANDS),
-      hooks: false,
-      memory: false,
-      claudeMd: false,
-      dryRun: false,
-    });
+  it('installs all 29 commands', async () => {
+    await install(makeConfig({ commands: Object.keys(COMMANDS) }));
 
     for (const cmd of Object.keys(COMMANDS)) {
       const cmdPath = path.join(tmpDir, 'commands', `${cmd}.md`);
@@ -97,17 +71,7 @@ describe('Installer', () => {
   });
 
   it('installs hooks in plugin mode with executable permission', async () => {
-    await install({
-      scope: 'project',
-      format: 'plugin',
-      skills: [],
-      agents: [],
-      commands: [],
-      hooks: true,
-      memory: false,
-      claudeMd: false,
-      dryRun: false,
-    });
+    await install(makeConfig({ hooks: true }));
 
     const hookPath = path.join(tmpDir, 'hooks', 'session-start');
     expect(await fs.pathExists(hookPath)).toBe(true);
@@ -115,23 +79,12 @@ describe('Installer', () => {
     const stat = await fs.stat(hookPath);
     expect(stat.mode & 0o111).toBeTruthy();
 
-    // Plugin mode should use CLAUDE_PLUGIN_ROOT
     const hooksJson = await fs.readJson(path.join(tmpDir, 'hooks', 'hooks.json'));
     expect(JSON.stringify(hooksJson)).toContain('CLAUDE_PLUGIN_ROOT');
   });
 
   it('installs hooks in direct mode with correct paths', async () => {
-    await install({
-      scope: 'project',
-      format: 'direct',
-      skills: [],
-      agents: [],
-      commands: [],
-      hooks: true,
-      memory: false,
-      claudeMd: false,
-      dryRun: false,
-    });
+    await install(makeConfig({ format: 'direct', hooks: true }));
 
     const hookPath = path.join(tmpDir, '.claude', 'hooks', 'session-start');
     expect(await fs.pathExists(hookPath)).toBe(true);
@@ -139,29 +92,19 @@ describe('Installer', () => {
     const stat = await fs.stat(hookPath);
     expect(stat.mode & 0o111).toBeTruthy();
 
-    // Direct mode should NOT use CLAUDE_PLUGIN_ROOT
     const hooksJson = await fs.readJson(path.join(tmpDir, '.claude', 'hooks', 'hooks.json'));
     expect(JSON.stringify(hooksJson)).not.toContain('CLAUDE_PLUGIN_ROOT');
   });
 
   it('installs memory templates', async () => {
-    await install({
-      scope: 'project',
-      format: 'plugin',
-      skills: [],
-      agents: [],
-      commands: [],
-      hooks: false,
-      memory: true,
-      claudeMd: false,
-      dryRun: false,
-    });
+    await install(makeConfig({ memory: true }));
 
     const memDir = path.join(tmpDir, 'memory');
     expect(await fs.pathExists(path.join(memDir, 'project-context.md'))).toBe(true);
     expect(await fs.pathExists(path.join(memDir, 'learned-patterns.md'))).toBe(true);
     expect(await fs.pathExists(path.join(memDir, 'user-preferences.md'))).toBe(true);
     expect(await fs.pathExists(path.join(memDir, 'decisions-log.md'))).toBe(true);
+    expect(await fs.pathExists(path.join(memDir, 'improvement-log.md'))).toBe(true);
   });
 
   it('does not overwrite existing memory files', async () => {
@@ -169,26 +112,14 @@ describe('Installer', () => {
     await fs.ensureDir(memDir);
     await fs.writeFile(path.join(memDir, 'project-context.md'), '# Custom content');
 
-    await install({
-      scope: 'project',
-      format: 'plugin',
-      skills: [],
-      agents: [],
-      commands: [],
-      hooks: false,
-      memory: true,
-      claudeMd: false,
-      dryRun: false,
-    });
+    await install(makeConfig({ memory: true }));
 
     const content = await fs.readFile(path.join(memDir, 'project-context.md'), 'utf8');
     expect(content).toBe('# Custom content');
   });
 
   it('dry run creates no files', async () => {
-    await install({
-      scope: 'project',
-      format: 'plugin',
+    await install(makeConfig({
       skills: Object.keys(SKILLS),
       agents: Object.keys(AGENTS),
       commands: Object.keys(COMMANDS),
@@ -196,46 +127,26 @@ describe('Installer', () => {
       memory: true,
       claudeMd: true,
       dryRun: true,
-    });
+    }));
 
     const files = await fs.readdir(tmpDir);
     expect(files).toHaveLength(0);
   });
 
   it('creates CLAUDE.md with toolkit markers', async () => {
-    await install({
-      scope: 'project',
-      format: 'plugin',
-      skills: [],
-      agents: [],
-      commands: [],
-      hooks: false,
-      memory: false,
-      claudeMd: true,
-      dryRun: false,
-    });
+    await install(makeConfig({ claudeMd: true }));
 
     const content = await fs.readFile(path.join(tmpDir, 'CLAUDE.md'), 'utf8');
     expect(content).toContain('<!-- TOOLKIT START -->');
     expect(content).toContain('<!-- TOOLKIT END -->');
     expect(content).toContain('HARD-GATES');
-    expect(content).toContain('32 skills');
+    expect(content).toContain('61 skills');
   });
 
   it('merges CLAUDE.md with existing content', async () => {
     await fs.writeFile(path.join(tmpDir, 'CLAUDE.md'), '# My Project\n\nExisting content.\n');
 
-    await install({
-      scope: 'project',
-      format: 'plugin',
-      skills: [],
-      agents: [],
-      commands: [],
-      hooks: false,
-      memory: false,
-      claudeMd: true,
-      dryRun: false,
-    });
+    await install(makeConfig({ claudeMd: true }));
 
     const content = await fs.readFile(path.join(tmpDir, 'CLAUDE.md'), 'utf8');
     expect(content).toContain('# My Project');
@@ -245,19 +156,10 @@ describe('Installer', () => {
   });
 
   it('installs skills with reference docs', async () => {
-    await install({
-      scope: 'project',
-      format: 'plugin',
+    await install(makeConfig({
       skills: ['test-driven-development', 'systematic-debugging', 'security-review', 'performance-optimization'],
-      agents: [],
-      commands: [],
-      hooks: false,
-      memory: false,
-      claudeMd: false,
-      dryRun: false,
-    });
+    }));
 
-    // Check reference docs are included
     expect(await fs.pathExists(path.join(tmpDir, 'skills', 'test-driven-development', 'testing-anti-patterns.md'))).toBe(true);
     expect(await fs.pathExists(path.join(tmpDir, 'skills', 'systematic-debugging', 'root-cause-tracing.md'))).toBe(true);
     expect(await fs.pathExists(path.join(tmpDir, 'skills', 'systematic-debugging', 'defense-in-depth.md'))).toBe(true);

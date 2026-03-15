@@ -9,10 +9,20 @@ import {
   getClaudeMdPath,
   backupIfExists,
   mergeClaudeMd,
-} from './utils.js';
-import { MEMORY_FILES } from './config.js';
+} from './utils';
+import { MEMORY_FILES } from './config';
+import type { InstallConfig } from './config';
 
-function generateSessionStartScript(rootDir) {
+interface InstallResult {
+  skills: string[];
+  agents: string[];
+  commands: string[];
+  hooks: boolean;
+  memory: boolean;
+  claudeMd: boolean;
+}
+
+function generateSessionStartScript(rootDir: string): string {
   return `#!/usr/bin/env bash
 # SessionStart hook for @fwartner/claude-toolkit (direct mode)
 set -euo pipefail
@@ -66,9 +76,16 @@ exit 0
 `;
 }
 
-export async function install(config) {
+export async function install(config: InstallConfig): Promise<void> {
   const spinner = ora();
-  const installed = { skills: [], agents: [], commands: [], hooks: false, memory: false, claudeMd: false };
+  const installed: InstallResult = {
+    skills: [],
+    agents: [],
+    commands: [],
+    hooks: false,
+    memory: false,
+    claudeMd: false,
+  };
 
   if (config.dryRun) {
     console.log(chalk.yellow('\n  DRY RUN — no files will be written.\n'));
@@ -167,7 +184,7 @@ export async function install(config) {
       } else {
         // Direct mode: generate hooks with correct paths
         const rootDir = config.scope === 'global'
-          ? path.join(process.env.HOME, '.claude')
+          ? path.join(process.env.HOME || '', '.claude')
           : path.join(process.cwd(), '.claude');
 
         const hooksJsonContent = {

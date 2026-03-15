@@ -1,0 +1,16 @@
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash -c 'FILE=\"$CLAUDE_TOOL_ARG_file_path\"; if echo \"$FILE\" | grep -qE \"\\.(tsx|ts|jsx|js)$\"; then ISSUES=\"\"; if grep -q \"use client\" \"$FILE\" 2>/dev/null && grep -qE \"(getServerSideProps|getStaticProps)\" \"$FILE\" 2>/dev/null; then ISSUES=\"$ISSUES Server functions in client component.\"; fi; if grep -qE \"<img \" \"$FILE\" 2>/dev/null; then ISSUES=\"$ISSUES Use next/image instead of <img>.\"; fi; if grep -qE \"<a href=\" \"$FILE\" 2>/dev/null && ! grep -q \"next/link\" \"$FILE\" 2>/dev/null; then ISSUES=\"$ISSUES Use next/link instead of <a>.\"; fi; if [ -n \"$ISSUES\" ]; then echo \"{\\\"message\\\": \\\"Next.js quality:$ISSUES\\\"}\"; fi; fi'",
+            "async": true
+          }
+        ]
+      }
+    ]
+  }
+}

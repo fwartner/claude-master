@@ -1,9 +1,10 @@
 #!/usr/bin/env node
 
 import { Command } from 'commander';
-import { runWizard } from '../src/wizard.js';
-import { install } from '../src/installer.js';
-import { SKILLS, AGENTS, COMMANDS } from '../src/config.js';
+import { runWizard } from './wizard';
+import { install } from './installer';
+import { SKILLS, AGENTS, COMMANDS } from './config';
+import type { InstallConfig } from './config';
 import chalk from 'chalk';
 
 const program = new Command();
@@ -21,13 +22,13 @@ program
   .option('--no-memory', 'Skip memory structure creation')
   .option('--no-claude-md', 'Skip CLAUDE.md generation')
   .option('--dry-run', 'Show what would be installed without making changes')
-  .action(async (options) => {
+  .action(async (options: Record<string, unknown>) => {
     console.log('');
-    console.log(chalk.bold.cyan('  @fwartner/claude-toolkit'));
+    console.log(chalk.bold.cyan('  superkit-agents'));
     console.log(chalk.dim('  Complete AI-optimized development environment'));
     console.log('');
 
-    let config;
+    let config: InstallConfig | null = null;
 
     if (options.all) {
       config = {
@@ -39,10 +40,10 @@ program
         hooks: options.hooks !== false,
         memory: options.memory !== false,
         claudeMd: options.claudeMd !== false,
-        dryRun: options.dryRun || false,
-      };
+        dryRun: (options.dryRun as boolean) || false,
+      } as InstallConfig;
     } else if (options.skills) {
-      const selectedSkills = options.skills.split(',').map(s => s.trim());
+      const selectedSkills = (options.skills as string).split(',').map((s: string) => s.trim());
       config = {
         scope: options.global ? 'global' : 'project',
         format: options.plugin ? 'plugin' : (options.direct ? 'direct' : 'plugin'),
@@ -52,10 +53,10 @@ program
         hooks: options.hooks !== false,
         memory: options.memory !== false,
         claudeMd: options.claudeMd !== false,
-        dryRun: options.dryRun || false,
-      };
+        dryRun: (options.dryRun as boolean) || false,
+      } as InstallConfig;
     } else {
-      config = await runWizard(options);
+      config = await runWizard(options as { global?: boolean; dryRun?: boolean });
     }
 
     if (!config) {

@@ -1,0 +1,16 @@
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash -c 'FILE=\"$CLAUDE_TOOL_ARG_file_path\"; EXT=\"${FILE##*.}\"; case \"$EXT\" in js|ts|jsx|tsx) npx eslint --fix \"$FILE\" 2>/dev/null && echo \"{\\\"message\\\": \\\"Linted: $FILE\\\"}\" || echo \"{\\\"message\\\": \\\"Lint issues in: $FILE\\\"}\" ;; py) python3 -m pylint \"$FILE\" --disable=all --enable=E 2>/dev/null && echo \"{\\\"message\\\": \\\"Linted: $FILE\\\"}\" || true ;; *) echo \"{\\\"message\\\": \\\"No linter for .$EXT\\\"}\" ;; esac'",
+            "async": true
+          }
+        ]
+      }
+    ]
+  }
+}

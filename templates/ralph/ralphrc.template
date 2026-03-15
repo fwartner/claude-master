@@ -1,0 +1,38 @@
+# .ralphrc — Ralph Configuration
+# Copy to your project root and customize
+
+# Project type detection (auto-detected if not set)
+# PROJECT_TYPE=typescript|javascript|python|rust|go
+
+[LOOP_SETTINGS]
+MAX_CALLS_PER_HOUR=100
+CLAUDE_TIMEOUT=900  # 15 minutes in seconds
+OUTPUT_FORMAT=stream-json
+MODEL=opus
+
+[SESSION_MANAGEMENT]
+SESSION_EXPIRY=86400  # 24 hours in seconds
+
+[CIRCUIT_BREAKER]
+# Open after N loops with no progress
+NO_PROGRESS_THRESHOLD=3
+# Open after N loops with identical errors
+IDENTICAL_ERROR_THRESHOLD=5
+# Open after N% output decline
+OUTPUT_DECLINE_THRESHOLD=70
+# Cooldown before retry (seconds)
+COOLDOWN_SECONDS=1800  # 30 minutes
+
+[TOOL_PERMISSIONS]
+ALLOWED_TOOLS=Write,Read,Edit,Bash,Glob,Grep,Agent
+RESTRICTED_COMMANDS=git clean,git rm,rm -rf
+
+[FILE_PROTECTION]
+PROTECTED_PATHS=.ralph/,.ralphrc,IMPLEMENTATION_PLAN.md,AGENTS.md,specs/,.claude/,CLAUDE.md
+
+[TASK_SOURCES]
+# Import tasks from:
+# local — specs/ directory
+# github — GitHub Issues
+# Import command: ralph-import <source>
+DEFAULT_SOURCE=local

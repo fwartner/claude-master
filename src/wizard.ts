@@ -1,8 +1,14 @@
 import inquirer from 'inquirer';
 import chalk from 'chalk';
-import { SKILLS, AGENTS, COMMANDS, SKILL_CATEGORIES } from './config.js';
+import { SKILLS, AGENTS, COMMANDS, SKILL_CATEGORIES } from './config';
+import type { InstallConfig, SkillCategory } from './config';
 
-export async function runWizard(cliOptions) {
+interface CliOptions {
+  global?: boolean;
+  dryRun?: boolean;
+}
+
+export async function runWizard(cliOptions: CliOptions): Promise<InstallConfig | null> {
   const { scope } = await inquirer.prompt([
     {
       type: 'list',
@@ -30,7 +36,7 @@ export async function runWizard(cliOptions) {
   ]);
 
   const skillChoices = Object.entries(SKILLS).map(([key, skill]) => {
-    const category = SKILL_CATEGORIES[skill.category] || skill.category;
+    const category = SKILL_CATEGORIES[skill.category as SkillCategory] || skill.category;
     return {
       name: `${chalk.bold(key)} — ${skill.description} ${chalk.dim(`[${category}]`)}`,
       value: key,
@@ -48,7 +54,7 @@ export async function runWizard(cliOptions) {
     },
   ]);
 
-  if (skills.length === 0) {
+  if ((skills as string[]).length === 0) {
     console.log(chalk.yellow('  No skills selected.'));
     return null;
   }
@@ -68,15 +74,17 @@ export async function runWizard(cliOptions) {
     },
   ]);
 
-  const config = {
-    scope,
-    format,
-    skills,
-    agents: features.includes('agents') ? Object.keys(AGENTS) : [],
-    commands: features.includes('commands') ? Object.keys(COMMANDS) : [],
-    hooks: features.includes('hooks'),
-    memory: features.includes('memory'),
-    claudeMd: features.includes('claudeMd'),
+  const selectedFeatures = features as string[];
+
+  const config: InstallConfig = {
+    scope: scope as 'project' | 'global',
+    format: format as 'plugin' | 'direct',
+    skills: skills as string[],
+    agents: selectedFeatures.includes('agents') ? Object.keys(AGENTS) : [],
+    commands: selectedFeatures.includes('commands') ? Object.keys(COMMANDS) : [],
+    hooks: selectedFeatures.includes('hooks'),
+    memory: selectedFeatures.includes('memory'),
+    claudeMd: selectedFeatures.includes('claudeMd'),
     dryRun: cliOptions.dryRun || false,
   };
 
@@ -84,9 +92,9 @@ export async function runWizard(cliOptions) {
   console.log(chalk.bold('  Installation Summary:'));
   console.log(`  Scope:    ${chalk.cyan(config.scope)}`);
   console.log(`  Format:   ${chalk.cyan(config.format)}`);
-  console.log(`  Skills:   ${chalk.cyan(config.skills.length)} selected`);
-  console.log(`  Agents:   ${chalk.cyan(config.agents.length)} selected`);
-  console.log(`  Commands: ${chalk.cyan(config.commands.length)} selected`);
+  console.log(`  Skills:   ${chalk.cyan(String(config.skills.length))} selected`);
+  console.log(`  Agents:   ${chalk.cyan(String(config.agents.length))} selected`);
+  console.log(`  Commands: ${chalk.cyan(String(config.commands.length))} selected`);
   console.log(`  Hooks:    ${chalk.cyan(config.hooks ? 'yes' : 'no')}`);
   console.log(`  Memory:   ${chalk.cyan(config.memory ? 'yes' : 'no')}`);
   console.log(`  CLAUDE.md: ${chalk.cyan(config.claudeMd ? 'yes' : 'no')}`);

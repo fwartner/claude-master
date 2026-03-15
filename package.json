@@ -1,11 +1,10 @@
 {
-  "name": "superkit-agents",
-  "private": false,
+  "name": "@pixelandprocess/superkit-agents",
   "version": "1.0.0",
   "description": "Complete AI-optimized development environment for Claude Code with skills, hooks, agents, memory, and structured workflows",
   "type": "module",
   "bin": {
-    "claude-toolkit": "./dist/cli.js"
+    "superkit-agents": "./dist/cli.js"
   },
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -41,7 +40,11 @@
     "ui-ux",
     "design-system"
   ],
-  "author": "fwartner",
+  "homepage": "https://pixelandprocess.de",
+  "author": {
+    "name": "Pixel Process UG",
+    "email": "info@pixelandprocess.de"
+  },
   "license": "MIT",
   "publishConfig": {
     "access": "public"
