@@ -118,3 +118,12 @@ Create example test files demonstrating:
 - **Deterministic** — no flaky tests, no time-dependent logic
 - **Readable** — tests are documentation; make them clear
 - **Maintainable** — tests should help refactoring, not block it
+
+## Verification Gate
+
+Before claiming the testing strategy is complete:
+1. VERIFY framework selection matches tech stack
+2. VERIFY coverage thresholds are realistic
+3. VERIFY test configuration files are valid
+4. VERIFY example tests actually run
+5. VERIFY CI integration is configured

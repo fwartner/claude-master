@@ -17,7 +17,7 @@ describe('Installer', () => {
     await fs.remove(tmpDir);
   });
 
-  it('installs all skills in plugin mode', async () => {
+  it('installs all 25 skills in plugin mode', async () => {
     await install({
       scope: 'project',
       format: 'plugin',
@@ -39,7 +39,7 @@ describe('Installer', () => {
     expect(await fs.pathExists(pluginPath)).toBe(true);
   });
 
-  it('installs all skills in direct mode', async () => {
+  it('installs all 25 skills in direct mode', async () => {
     await install({
       scope: 'project',
       format: 'direct',
@@ -58,7 +58,7 @@ describe('Installer', () => {
     }
   });
 
-  it('installs agents', async () => {
+  it('installs all 6 agents', async () => {
     await install({
       scope: 'project',
       format: 'plugin',
@@ -77,7 +77,26 @@ describe('Installer', () => {
     }
   });
 
-  it('installs hooks with executable permission', async () => {
+  it('installs all 11 commands', async () => {
+    await install({
+      scope: 'project',
+      format: 'plugin',
+      skills: [],
+      agents: [],
+      commands: Object.keys(COMMANDS),
+      hooks: false,
+      memory: false,
+      claudeMd: false,
+      dryRun: false,
+    });
+
+    for (const cmd of Object.keys(COMMANDS)) {
+      const cmdPath = path.join(tmpDir, 'commands', `${cmd}.md`);
+      expect(await fs.pathExists(cmdPath)).toBe(true);
+    }
+  });
+
+  it('installs hooks in plugin mode with executable permission', async () => {
     await install({
       scope: 'project',
       format: 'plugin',
@@ -94,7 +113,35 @@ describe('Installer', () => {
     expect(await fs.pathExists(hookPath)).toBe(true);
 
     const stat = await fs.stat(hookPath);
-    expect(stat.mode & 0o111).toBeTruthy(); // executable
+    expect(stat.mode & 0o111).toBeTruthy();
+
+    // Plugin mode should use CLAUDE_PLUGIN_ROOT
+    const hooksJson = await fs.readJson(path.join(tmpDir, 'hooks', 'hooks.json'));
+    expect(JSON.stringify(hooksJson)).toContain('CLAUDE_PLUGIN_ROOT');
+  });
+
+  it('installs hooks in direct mode with correct paths', async () => {
+    await install({
+      scope: 'project',
+      format: 'direct',
+      skills: [],
+      agents: [],
+      commands: [],
+      hooks: true,
+      memory: false,
+      claudeMd: false,
+      dryRun: false,
+    });
+
+    const hookPath = path.join(tmpDir, '.claude', 'hooks', 'session-start');
+    expect(await fs.pathExists(hookPath)).toBe(true);
+
+    const stat = await fs.stat(hookPath);
+    expect(stat.mode & 0o111).toBeTruthy();
+
+    // Direct mode should NOT use CLAUDE_PLUGIN_ROOT
+    const hooksJson = await fs.readJson(path.join(tmpDir, '.claude', 'hooks', 'hooks.json'));
+    expect(JSON.stringify(hooksJson)).not.toContain('CLAUDE_PLUGIN_ROOT');
   });
 
   it('installs memory templates', async () => {
@@ -172,6 +219,7 @@ describe('Installer', () => {
     expect(content).toContain('<!-- TOOLKIT START -->');
     expect(content).toContain('<!-- TOOLKIT END -->');
     expect(content).toContain('Core Principles');
+    expect(content).toContain('25 Skills');
   });
 
   it('merges CLAUDE.md with existing content', async () => {
@@ -194,5 +242,26 @@ describe('Installer', () => {
     expect(content).toContain('Existing content.');
     expect(content).toContain('<!-- TOOLKIT START -->');
     expect(content).toContain('Core Principles');
+  });
+
+  it('installs skills with reference docs', async () => {
+    await install({
+      scope: 'project',
+      format: 'plugin',
+      skills: ['test-driven-development', 'systematic-debugging', 'security-review', 'performance-optimization'],
+      agents: [],
+      commands: [],
+      hooks: false,
+      memory: false,
+      claudeMd: false,
+      dryRun: false,
+    });
+
+    // Check reference docs are included
+    expect(await fs.pathExists(path.join(tmpDir, 'skills', 'test-driven-development', 'testing-anti-patterns.md'))).toBe(true);
+    expect(await fs.pathExists(path.join(tmpDir, 'skills', 'systematic-debugging', 'root-cause-tracing.md'))).toBe(true);
+    expect(await fs.pathExists(path.join(tmpDir, 'skills', 'systematic-debugging', 'defense-in-depth.md'))).toBe(true);
+    expect(await fs.pathExists(path.join(tmpDir, 'skills', 'security-review', 'owasp-checklist.md'))).toBe(true);
+    expect(await fs.pathExists(path.join(tmpDir, 'skills', 'performance-optimization', 'performance-budgets.md'))).toBe(true);
   });
 });

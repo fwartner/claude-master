@@ -97,3 +97,13 @@ I tried 3 different approaches to [goal]:
 - **Root cause analysis** — understand WHY before trying the next approach
 - **Learn from failure** — update memory with what didn't work and why
 - **Transparent** — show the user your reasoning at each step
+
+## Rationalizations — STOP If You Think These
+
+| Excuse | Reality |
+|--------|---------|
+| "This genuinely can't be done" | Have you tried 3 different approaches? Probably not. |
+| "The error is clear, I know what's wrong" | Clear errors can have hidden root causes. Investigate. |
+| "I've already tried everything" | List what you tried. There are always more options. |
+| "The user should fix this themselves" | Provide a manual path, but try 3 approaches first. |
+| "This is a platform limitation" | Limitations often have workarounds. Search for them. |

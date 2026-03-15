@@ -2,8 +2,8 @@ import { describe, it, expect } from 'vitest';
 import { SKILLS, AGENTS, COMMANDS, MEMORY_FILES, SKILL_CATEGORIES } from '../src/config.js';
 
 describe('Config', () => {
-  it('has 12 skills defined', () => {
-    expect(Object.keys(SKILLS)).toHaveLength(12);
+  it('has 25 skills defined', () => {
+    expect(Object.keys(SKILLS)).toHaveLength(25);
   });
 
   it('has all expected skills', () => {
@@ -11,16 +11,32 @@ describe('Config', () => {
       'using-toolkit', 'planning', 'brainstorming', 'task-management',
       'prd-generation', 'self-learning', 'code-review', 'tech-docs-generator',
       'resilient-execution', 'api-design', 'testing-strategy', 'deployment',
+      'test-driven-development', 'systematic-debugging', 'verification-before-completion',
+      'executing-plans', 'subagent-driven-development', 'dispatching-parallel-agents',
+      'using-git-worktrees', 'finishing-a-development-branch', 'writing-skills',
+      'frontend-ui-design', 'database-schema-design', 'security-review',
+      'performance-optimization',
     ];
     expect(Object.keys(SKILLS)).toEqual(expect.arrayContaining(expected));
+    expect(expected).toHaveLength(25);
   });
 
-  it('has 4 agents defined', () => {
-    expect(Object.keys(AGENTS)).toHaveLength(4);
+  it('has 6 agents defined', () => {
+    expect(Object.keys(AGENTS)).toHaveLength(6);
   });
 
-  it('has 5 commands defined', () => {
-    expect(Object.keys(COMMANDS)).toHaveLength(5);
+  it('has all expected agents', () => {
+    const expected = ['planner', 'code-reviewer', 'prd-writer', 'doc-generator', 'spec-reviewer', 'quality-reviewer'];
+    expect(Object.keys(AGENTS)).toEqual(expect.arrayContaining(expected));
+  });
+
+  it('has 11 commands defined', () => {
+    expect(Object.keys(COMMANDS)).toHaveLength(11);
+  });
+
+  it('has all expected commands', () => {
+    const expected = ['plan', 'review', 'prd', 'learn', 'docs', 'tdd', 'debug', 'verify', 'execute', 'worktree', 'brainstorm'];
+    expect(Object.keys(COMMANDS)).toEqual(expect.arrayContaining(expected));
   });
 
   it('has 4 memory files defined', () => {
@@ -39,6 +55,13 @@ describe('Config', () => {
   it('every command references a valid skill', () => {
     for (const cmd of Object.values(COMMANDS)) {
       expect(SKILLS[cmd.skill]).toBeTruthy();
+    }
+  });
+
+  it('every agent has name and description', () => {
+    for (const [key, agent] of Object.entries(AGENTS)) {
+      expect(agent.name).toBe(key);
+      expect(agent.description).toBeTruthy();
     }
   });
 });

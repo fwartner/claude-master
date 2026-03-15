@@ -114,3 +114,17 @@ After review:
 - **Constructive** — lead with what was done well
 - **Actionable** — every issue has a specific fix recommendation
 - **Convention-aware** — use learned patterns as the standard
+
+## Iron Law
+
+**NO MERGE WITHOUT REVIEW.** Every change gets reviewed. No exceptions for "small fixes" or "obvious changes."
+
+## Rationalizations — STOP If You Think These
+
+| Excuse | Reality |
+|--------|---------|
+| "It's just a typo fix" | Typo fixes can break APIs. Review it. |
+| "I'm confident in this code" | Confidence ≠ correctness. Review it. |
+| "The tests pass" | Tests can miss bugs. Review it. |
+| "It's just styling/formatting" | Style changes can introduce bugs. Review it. |
+| "Nobody will notice" | That's exactly when bugs ship. Review it. |

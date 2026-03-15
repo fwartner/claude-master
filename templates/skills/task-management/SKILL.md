@@ -94,3 +94,16 @@ Next batch: Tasks 7-9 (API endpoint implementation)
 - **Checkpoint regularly** — Every 3 tasks, pause and assess
 - **Track everything** — No task without a status
 - **Small commits** — Commit after each logical batch
+
+## Iron Law
+
+**NO TASK MARKED COMPLETE WITHOUT VERIFICATION.** Run the verification command. Read the output. Confirm it matches expectations. Only then mark complete.
+
+## Verification Gate
+
+Before marking any task complete, follow verification-before-completion:
+1. IDENTIFY the verification command for this task
+2. RUN it fresh
+3. READ the full output
+4. VERIFY it matches success criteria
+5. MARK complete only after verification passes

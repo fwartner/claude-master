@@ -101,3 +101,13 @@ digraph brainstorming {
 - **Explore alternatives** — Always propose 2-3 approaches
 - **Incremental validation** — Present and approve in sections
 - **Build on context** — Use self-learning memory to avoid re-asking known things
+
+## Rationalizations — STOP If You Think These
+
+| Excuse | Reality |
+|--------|---------|
+| "This is too simple to brainstorm" | Every project needs a design, even simple ones. |
+| "The user already knows what they want" | Users know WHAT, not HOW. Explore the HOW. |
+| "I can just start coding" | Code without design is technical debt from line 1. |
+| "We don't have time to brainstorm" | We don't have time to rebuild from poor assumptions. |
+| "The requirements are clear" | Requirements ≠ design. You still need to explore approaches. |

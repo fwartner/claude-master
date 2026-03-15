@@ -106,3 +106,12 @@ Present documentation section by section:
 - **Keep current** — documentation should match the current code state
 - **DRY** — reference existing docs, don't duplicate
 - **Audience-aware** — adjust detail level based on who will read it
+
+## Verification Gate
+
+Before claiming documentation is complete:
+1. VERIFY all public APIs are documented
+2. VERIFY code examples actually work (not invented)
+3. VERIFY cross-references link to existing content
+4. VERIFY documentation matches current code state
+5. RUN any documented commands to confirm they work

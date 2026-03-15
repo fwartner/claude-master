@@ -12,6 +12,60 @@ import {
 } from './utils.js';
 import { MEMORY_FILES } from './config.js';
 
+function generateSessionStartScript(rootDir) {
+  return `#!/usr/bin/env bash
+# SessionStart hook for @fwartner/claude-toolkit (direct mode)
+set -euo pipefail
+
+TOOLKIT_ROOT="${rootDir}"
+
+# Read using-toolkit skill content
+using_toolkit_content=$(cat "\${TOOLKIT_ROOT}/skills/using-toolkit/SKILL.md" 2>&1 || echo "Error reading using-toolkit skill")
+
+# Read memory files if they exist
+memory_context=""
+MEMORY_DIR="\${TOOLKIT_ROOT}/memory"
+if [ -d "$MEMORY_DIR" ]; then
+    for memfile in project-context.md learned-patterns.md user-preferences.md; do
+        filepath="\${MEMORY_DIR}/\${memfile}"
+        if [ -f "$filepath" ] && [ -s "$filepath" ]; then
+            content=$(cat "$filepath" 2>/dev/null || true)
+            if [ -n "$content" ]; then
+                memory_context="\${memory_context}\\\\n\\\\n--- \${memfile} ---\\\\n\${content}"
+            fi
+        fi
+    done
+fi
+
+escape_for_json() {
+    local s="$1"
+    s="\${s//\\\\/\\\\\\\\}"
+    s="\${s//\\"/\\\\\\"}"
+    s="\${s//$'\\n'/\\\\n}"
+    s="\${s//$'\\r'/\\\\r}"
+    s="\${s//$'\\t'/\\\\t}"
+    printf '%s' "$s"
+}
+
+using_toolkit_escaped=$(escape_for_json "$using_toolkit_content")
+memory_escaped=$(escape_for_json "$memory_context")
+
+session_context="<EXTREMELY_IMPORTANT>\\nYou have the Claude Toolkit installed.\\n\\n**Below is the full content of your 'toolkit:using-toolkit' skill. For all other skills, use the 'Skill' tool:**\\n\\n\${using_toolkit_escaped}\\n\\n**Project Memory:**\\n\${memory_escaped}\\n</EXTREMELY_IMPORTANT>"
+
+cat <<EOF
+{
+  "additional_context": "\${session_context}",
+  "hookSpecificOutput": {
+    "hookEventName": "SessionStart",
+    "additionalContext": "\${session_context}"
+  }
+}
+EOF
+
+exit 0
+`;
+}
+
 export async function install(config) {
   const spinner = ora();
   const installed = { skills: [], agents: [], commands: [], hooks: false, memory: false, claudeMd: false };
@@ -99,14 +153,43 @@ export async function install(config) {
     spinner.start('Installing hooks...');
     if (!config.dryRun) {
       await fs.ensureDir(hooksDir);
-      await fs.copy(
-        path.join(TEMPLATES_DIR, 'hooks', 'hooks.json'),
-        path.join(hooksDir, 'hooks.json')
-      );
-      const sessionStartSrc = path.join(TEMPLATES_DIR, 'hooks', 'session-start');
-      const sessionStartDest = path.join(hooksDir, 'session-start');
-      await fs.copy(sessionStartSrc, sessionStartDest);
-      await fs.chmod(sessionStartDest, 0o755);
+
+      if (config.format === 'plugin') {
+        // Plugin mode: use ${CLAUDE_PLUGIN_ROOT} variable
+        await fs.copy(
+          path.join(TEMPLATES_DIR, 'hooks', 'hooks.json'),
+          path.join(hooksDir, 'hooks.json')
+        );
+        await fs.copy(
+          path.join(TEMPLATES_DIR, 'hooks', 'session-start'),
+          path.join(hooksDir, 'session-start')
+        );
+      } else {
+        // Direct mode: generate hooks with correct paths
+        const rootDir = config.scope === 'global'
+          ? path.join(process.env.HOME, '.claude')
+          : path.join(process.cwd(), '.claude');
+
+        const hooksJsonContent = {
+          hooks: {
+            SessionStart: [{
+              matcher: 'startup|resume|clear|compact',
+              hooks: [{
+                type: 'command',
+                command: `'${path.join(rootDir, 'hooks', 'session-start')}'`,
+                async: false,
+              }],
+            }],
+          },
+        };
+        await fs.writeJson(path.join(hooksDir, 'hooks.json'), hooksJsonContent, { spaces: 2 });
+
+        // Generate session-start script with correct paths for direct mode
+        const sessionStartContent = generateSessionStartScript(rootDir);
+        await fs.writeFile(path.join(hooksDir, 'session-start'), sessionStartContent, 'utf8');
+      }
+
+      await fs.chmod(path.join(hooksDir, 'session-start'), 0o755);
     }
     installed.hooks = true;
     spinner.succeed('Hooks installed');

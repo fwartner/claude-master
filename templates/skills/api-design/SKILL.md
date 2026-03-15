@@ -132,3 +132,12 @@ components:
 - **Consistent** — same patterns across all endpoints
 - **Documented** — every endpoint, parameter, and error documented
 - **Versioned** — plan for API evolution from the start
+
+## Verification Gate
+
+Before claiming the API design is complete:
+1. VERIFY all endpoints have request/response schemas
+2. VERIFY all error responses are documented
+3. VERIFY authentication is specified for each endpoint
+4. VERIFY the OpenAPI spec is valid YAML
+5. VERIFY user has approved each endpoint

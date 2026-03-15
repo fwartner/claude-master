@@ -154,3 +154,12 @@ jobs:
 - **Rollback-ready** — every deploy has a rollback plan
 - **Observable** — monitoring before, during, and after deploy
 - **Secure** — no secrets in code, use secrets management
+
+## Verification Gate
+
+Before claiming the deployment config is complete:
+1. VERIFY CI/CD config file syntax is valid
+2. VERIFY all environment variables are documented
+3. VERIFY rollback plan exists
+4. VERIFY pre/post-deploy checklists are complete
+5. VERIFY the pipeline can be tested locally (act, etc.)

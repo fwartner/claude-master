@@ -101,3 +101,26 @@ Invoke the `task-management` skill to break the plan into tracked, executable st
 - **TDD** — Write tests first when applicable
 - **Frequent commits** — Small, atomic commits after each task
 - **Exact paths** — Always specify exact file paths in the plan
+
+## Iron Law
+
+**NO CODE WITHOUT AN APPROVED PLAN.** No exceptions. No "just this small thing." No "it's obvious."
+
+## Verification Gate
+
+Before claiming the plan is complete, invoke the `verification-before-completion` skill:
+1. IDENTIFY: Plan document exists at `docs/plans/`
+2. RUN: Review plan for completeness
+3. READ: Verify all sections filled
+4. VERIFY: User has explicitly approved
+5. CLAIM: Only then transition to implementation
+
+## Rationalizations — STOP If You Think These
+
+| Excuse | Reality |
+|--------|---------|
+| "This is too simple to plan" | Simple tasks have unexamined assumptions. Plan anyway. |
+| "I already know the approach" | Your approach may conflict with project patterns. Plan anyway. |
+| "The user wants it fast" | Bad code is slower than planned code. Plan anyway. |
+| "It's just a bug fix" | Bug fixes need root cause analysis. Plan anyway. |
+| "I'll plan as I go" | That's not planning, that's improvising. Plan first. |

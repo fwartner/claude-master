@@ -122,3 +122,12 @@ Present the PRD section by section:
 - **Explicit non-goals** — prevent scope creep by defining what's out of scope
 - **User-centric** — frame everything from the user's perspective
 - **Living document** — PRDs should be updated as understanding evolves
+
+## Verification Gate
+
+Before claiming the PRD is complete:
+1. VERIFY all 11 sections are filled (not placeholder text)
+2. VERIFY every goal has a measurable metric
+3. VERIFY non-goals are explicit
+4. VERIFY user stories have acceptance criteria
+5. VERIFY user has approved each section

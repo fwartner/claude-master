@@ -59,6 +59,71 @@ export const SKILLS = {
     description: 'CI/CD pipeline generation and deploy checklists',
     category: 'operations',
   },
+  'test-driven-development': {
+    name: 'test-driven-development',
+    description: 'TDD workflow with RED-GREEN-REFACTOR cycle',
+    category: 'quality',
+  },
+  'systematic-debugging': {
+    name: 'systematic-debugging',
+    description: '4-phase debugging methodology with root cause analysis',
+    category: 'quality',
+  },
+  'verification-before-completion': {
+    name: 'verification-before-completion',
+    description: '5-step verification gate before any completion claim',
+    category: 'core',
+  },
+  'executing-plans': {
+    name: 'executing-plans',
+    description: 'Step-by-step execution of approved plan documents',
+    category: 'process',
+  },
+  'subagent-driven-development': {
+    name: 'subagent-driven-development',
+    description: 'Same-session execution with two-stage review gates',
+    category: 'process',
+  },
+  'dispatching-parallel-agents': {
+    name: 'dispatching-parallel-agents',
+    description: 'Coordinate multiple independent agents in parallel',
+    category: 'process',
+  },
+  'using-git-worktrees': {
+    name: 'using-git-worktrees',
+    description: 'Isolated development environments with git worktrees',
+    category: 'operations',
+  },
+  'finishing-a-development-branch': {
+    name: 'finishing-a-development-branch',
+    description: 'Structured branch completion with merge options',
+    category: 'operations',
+  },
+  'writing-skills': {
+    name: 'writing-skills',
+    description: 'Create new skills with TDD and best practices',
+    category: 'documentation',
+  },
+  'frontend-ui-design': {
+    name: 'frontend-ui-design',
+    description: 'Component architecture, responsive design, accessibility',
+    category: 'design',
+  },
+  'database-schema-design': {
+    name: 'database-schema-design',
+    description: 'Data modeling, migrations, indexing, query optimization',
+    category: 'design',
+  },
+  'security-review': {
+    name: 'security-review',
+    description: 'OWASP Top 10, auth patterns, input validation, secrets',
+    category: 'quality',
+  },
+  'performance-optimization': {
+    name: 'performance-optimization',
+    description: 'Profiling, caching, bundle optimization, Web Vitals',
+    category: 'quality',
+  },
 };
 
 export const AGENTS = {
@@ -78,6 +143,14 @@ export const AGENTS = {
     name: 'doc-generator',
     description: 'Generates technical documentation from code',
   },
+  'spec-reviewer': {
+    name: 'spec-reviewer',
+    description: 'Reviews implementation against spec compliance',
+  },
+  'quality-reviewer': {
+    name: 'quality-reviewer',
+    description: 'Reviews code quality, patterns, performance, security',
+  },
 };
 
 export const COMMANDS = {
@@ -86,6 +159,12 @@ export const COMMANDS = {
   'prd': { name: 'prd', skill: 'prd-generation', description: 'Generate a PRD' },
   'learn': { name: 'learn', skill: 'self-learning', description: 'Scan and learn project context' },
   'docs': { name: 'docs', skill: 'tech-docs-generator', description: 'Generate technical docs' },
+  'tdd': { name: 'tdd', skill: 'test-driven-development', description: 'Start TDD workflow' },
+  'debug': { name: 'debug', skill: 'systematic-debugging', description: 'Start debugging methodology' },
+  'verify': { name: 'verify', skill: 'verification-before-completion', description: 'Verify completion claim' },
+  'execute': { name: 'execute', skill: 'executing-plans', description: 'Execute an approved plan' },
+  'worktree': { name: 'worktree', skill: 'using-git-worktrees', description: 'Set up git worktree' },
+  'brainstorm': { name: 'brainstorm', skill: 'brainstorming', description: 'Start brainstorming session' },
 };
 
 export const MEMORY_FILES = [
