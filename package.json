@@ -1,0 +1,48 @@
+{
+  "name": "@fwartner/claude-toolkit",
+  "version": "1.0.0",
+  "description": "Complete AI-optimized development environment for Claude Code with skills, hooks, agents, memory, and structured workflows",
+  "type": "module",
+  "bin": {
+    "claude-toolkit": "./bin/cli.js"
+  },
+  "main": "src/index.js",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "files": [
+    "bin/",
+    "src/",
+    "templates/",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "keywords": [
+    "claude",
+    "claude-code",
+    "ai",
+    "developer-tools",
+    "skills",
+    "agents",
+    "hooks",
+    "planning",
+    "code-review",
+    "prd"
+  ],
+  "author": "fwartner",
+  "license": "MIT",
+  "dependencies": {
+    "chalk": "^5.4.0",
+    "commander": "^13.0.0",
+    "fs-extra": "^11.2.0",
+    "inquirer": "^12.0.0",
+    "ora": "^8.1.0"
+  },
+  "devDependencies": {
+    "vitest": "^3.0.0"
+  }
+}
