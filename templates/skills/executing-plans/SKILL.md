@@ -292,6 +292,18 @@ If you catch yourself thinking:
 
 ---
 
+## Subagent Dispatch Opportunities
+
+| Task Pattern | Dispatch To | When |
+|---|---|---|
+| Independent plan steps with no shared state | Parallel subagents via `Agent` tool | When dependency analysis shows no blockers between steps |
+| Code review of completed step | `code-reviewer` agent | After each major plan step completion |
+| Test execution for completed features | Background `Bash` task | When tests can run independently of ongoing work |
+
+Follow the `dispatching-parallel-agents` skill protocol when dispatching.
+
+---
+
 ## Integration Points
 
 | Skill | Relationship | When |

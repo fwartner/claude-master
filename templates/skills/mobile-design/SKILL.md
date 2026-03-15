@@ -256,6 +256,20 @@ class ResponsiveLayout extends StatelessWidget {
 | Pixel values instead of dp/pt | Different sizes on different screens | Use density-independent units |
 | Skipping haptic feedback | App feels cheap and unresponsive | Add haptics for key interactions |
 
+## Documentation Lookup (Context7)
+
+When you need up-to-date documentation for frameworks/libraries used in this skill:
+
+1. **Resolve:** `mcp__context7__resolve-library-id` with the library name
+2. **Query:** `mcp__context7__query-docs` with the resolved ID and your question
+3. **Apply:** Use returned docs as authoritative, overriding memorized knowledge
+
+### Libraries for this skill
+- `react-native` — for component API, navigation, or platform-specific modules
+- `flutter` — for widget catalog, state management, or platform channels
+
+---
+
 ## Integration Points
 
 | Skill | Integration |

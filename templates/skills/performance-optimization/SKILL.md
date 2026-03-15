@@ -257,6 +257,18 @@ ORDER BY seq_scan DESC;
 
 ---
 
+## Subagent Dispatch Opportunities
+
+| Task Pattern | Dispatch To | When |
+|---|---|---|
+| Profiling different system layers concurrently | Parallel `Explore` subagents | When analyzing frontend, backend, and database independently |
+| Bundle analysis and tree-shaking review | Dedicated subagent | When frontend bundle size is a concern |
+| Database query optimization analysis | `database-architect` agent | When slow queries are identified across multiple tables |
+
+Follow the `dispatching-parallel-agents` skill protocol when dispatching.
+
+---
+
 ## Integration Points
 
 | Skill | Relationship |

@@ -181,6 +181,18 @@ For Critical and Important issues:
 
 ---
 
+## Subagent Dispatch Opportunities
+
+| Task Pattern | Dispatch To | When |
+|---|---|---|
+| Reviewing multiple independent files/modules | Parallel `Explore` subagents | When review scope spans multiple unrelated modules |
+| Security-focused review pass | `security-review` skill | When changes touch auth, input handling, or external APIs |
+| Performance impact assessment | `performance-optimization` skill | When changes affect hot paths or data-heavy operations |
+
+Follow the `dispatching-parallel-agents` skill protocol when dispatching.
+
+---
+
 ## Integration Points
 
 | Skill | Relationship |

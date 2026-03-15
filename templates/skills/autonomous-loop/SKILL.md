@@ -277,6 +277,18 @@ If you catch yourself thinking:
 
 ---
 
+## Subagent Dispatch Opportunities
+
+| Task Pattern | Dispatch To | When |
+|---|---|---|
+| Independent file reads across codebase | Parallel `Explore` subagents | When loop iteration needs context from multiple areas |
+| Test execution during build phase | Background `Bash` task | When tests can validate work without blocking progress |
+| Code review between iterations | `code-reviewer` agent | After completing a build iteration, before next planning |
+
+Follow the `dispatching-parallel-agents` skill protocol when dispatching.
+
+---
+
 ## Integration Points
 
 | Skill | Relationship | When |

@@ -343,6 +343,18 @@ If you catch yourself thinking:
 
 ---
 
+## Subagent Dispatch Opportunities
+
+| Task Pattern | Dispatch To | When |
+|---|---|---|
+| Parallelizable leaf tasks identified during decomposition | Parallel subagents via `Agent` tool | When tasks have no shared dependencies |
+| Architecture analysis of task boundaries | `planner` agent | When decomposition reveals cross-cutting concerns |
+| Validation of decomposition completeness | `spec-reviewer` agent | When task tree is complete but unverified |
+
+Mark each decomposed task with a `parallelizable: yes/no` flag in the output table. Follow the `dispatching-parallel-agents` skill protocol when dispatching.
+
+---
+
 ## Integration Points
 
 | Skill | Relationship | When |

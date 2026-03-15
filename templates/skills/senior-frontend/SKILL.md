@@ -269,6 +269,23 @@ function useUpdateUser() {
 
 ---
 
+## Documentation Lookup (Context7)
+
+When you need up-to-date documentation for frameworks/libraries used in this skill:
+
+1. **Resolve:** `mcp__context7__resolve-library-id` with the library name
+2. **Query:** `mcp__context7__query-docs` with the resolved ID and your question
+3. **Apply:** Use returned docs as authoritative, overriding memorized knowledge
+
+### Libraries for this skill
+- `react` — when uncertain about hooks API, component lifecycle, or React 19+ features
+- `next.js` — for App Router, Server Components, or Next.js-specific APIs
+- `typescript` — for advanced type patterns or compiler options
+- `tailwindcss` — for utility classes, configuration, or plugin API
+- `vitest` — for test runner API, matchers, or mock utilities
+
+---
+
 ## Integration Points
 
 | Skill | Relationship |

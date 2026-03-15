@@ -1,12 +1,16 @@
 # superkit-agents
 
-**Complete AI-optimized development environment for Claude Code**
+**Install AI-powered skills, agents, and slash commands into Claude Code in 30 seconds.**
 
 [![npm version](https://img.shields.io/npm/v/@pixelandprocess/superkit-agents)](https://www.npmjs.com/package/@pixelandprocess/superkit-agents)
 [![license](https://img.shields.io/npm/l/@pixelandprocess/superkit-agents)](LICENSE)
 [![node](https://img.shields.io/node/v/@pixelandprocess/superkit-agents)](package.json)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.7-blue)](tsconfig.json)
 [![CI](https://github.com/fwartner/claude-master/actions/workflows/ci.yml/badge.svg)](https://github.com/fwartner/claude-master/actions/workflows/ci.yml)
 [![Test](https://github.com/fwartner/claude-master/actions/workflows/test.yml/badge.svg)](https://github.com/fwartner/claude-master/actions/workflows/test.yml)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
+
+---
 
 ## Quick Start
 
@@ -14,27 +18,76 @@
 npx @pixelandprocess/superkit-agents
 ```
 
-The interactive wizard guides you through selecting skills, agents, commands, hooks, and memory — then installs everything into your project or global `.claude/` directory.
-
-For a full non-interactive install:
+That's it. The interactive wizard walks you through everything. For a full non-interactive install:
 
 ```bash
 npx @pixelandprocess/superkit-agents --all
 ```
 
-## What's Included
+## What You Get
 
 | 64 Skills | 20 Agents | 31 Commands | Hooks | Memory System |
 |:---------:|:--------:|:-----------:|:-----:|:-------------:|
 | Structured workflows for every phase of development | Specialized sub-agents for parallel work | Slash commands that trigger skills | Session-start context injection | Persistent project knowledge |
 
-Now with **Ralph integration** — autonomous iterative development loops with circuit breakers, structured status reporting, JTBD specifications, and acceptance-driven backpressure.
+## How It Works
+
+1. **Run the CLI** — `npx @pixelandprocess/superkit-agents`
+2. **Pick your skills** — choose from 64 skills across 12 categories, or install all
+3. **Files are installed** — skills, agents, commands, hooks, and memory files go into `.claude/` or `.claude-plugin/`
+4. **Start Claude Code** — the SessionStart hook loads your toolkit automatically
+
+## Prerequisites
+
+- **Node.js >= 18** (required)
+- **Git** (required)
+- **Claude Code CLI** (recommended) — `npm install -g @anthropic-ai/claude-code`
+
+The installer checks these automatically and shows OS-specific install commands if anything is missing.
 
 ---
 
-## Skills
+## Installation Options
 
-### Core (6)
+```bash
+# Interactive wizard (recommended)
+npx @pixelandprocess/superkit-agents
+
+# Full install, no prompts
+npx @pixelandprocess/superkit-agents --all
+
+# Global install (available in all projects)
+npx @pixelandprocess/superkit-agents --all --global
+
+# Direct mode (no plugin wrapper)
+npx @pixelandprocess/superkit-agents --all --direct
+
+# Selective skills only
+npx @pixelandprocess/superkit-agents --skills planning,tdd,code-review,autonomous-loop
+
+# Install a third-party plugin
+superkit-agents plugin add some-plugin
+
+# Install a local plugin (for development)
+superkit-agents plugin add ./my-plugin --local
+```
+
+| Mode | Directory | Use Case |
+|------|-----------|----------|
+| **Plugin** (default) | `.claude-plugin/` | Isolated, portable, easy to update |
+| **Direct** | `.claude/` | Merged into existing Claude Code config |
+
+| Scope | Path | Use Case |
+|-------|------|----------|
+| **Project** (default) | `./.claude/` or `./.claude-plugin/` | Per-project setup |
+| **Global** | `~/.claude/` or `~/.claude-plugin/` | Available everywhere |
+
+---
+
+## Skills Overview
+
+<details>
+<summary><strong>Core (6)</strong> — Foundation skills always recommended</summary>
 
 | Skill | Description |
 |-------|-------------|
@@ -45,7 +98,10 @@ Now with **Ralph integration** — autonomous iterative development loops with c
 | `auto-improvement` | Self-improving system, tracks effectiveness, learns from errors |
 | `verification-before-completion` | 5-step verification gate before any completion claim |
 
-### Process & Workflow (9)
+</details>
+
+<details>
+<summary><strong>Process & Workflow (9)</strong> — Planning, execution, and autonomous loops</summary>
 
 | Skill | Description |
 |-------|-------------|
@@ -59,7 +115,10 @@ Now with **Ralph integration** — autonomous iterative development loops with c
 | `ralph-status` | Structured status reporting with exit signal protocol |
 | `task-decomposition` | Hierarchical breakdown, dependency mapping, parallelization |
 
-### Quality Assurance (17)
+</details>
+
+<details>
+<summary><strong>Quality Assurance (17)</strong> — Testing, review, debugging, and specialist roles</summary>
 
 | Skill | Description |
 |-------|-------------|
@@ -81,7 +140,10 @@ Now with **Ralph integration** — autonomous iterative development loops with c
 | `senior-prompt-engineer` | Prompt design, optimization, chain-of-thought |
 | `senior-data-scientist` | ML pipelines, statistical analysis, experiment design |
 
-### Design (3)
+</details>
+
+<details>
+<summary><strong>Design (3)</strong> — API, UI, and database design</summary>
 
 | Skill | Description |
 |-------|-------------|
@@ -89,7 +151,10 @@ Now with **Ralph integration** — autonomous iterative development loops with c
 | `frontend-ui-design` | Component architecture, responsive design, accessibility |
 | `database-schema-design` | Data modeling, migrations, indexing, query optimization |
 
-### Documentation (5)
+</details>
+
+<details>
+<summary><strong>Documentation (5)</strong> — PRDs, specs, and technical docs</summary>
 
 | Skill | Description |
 |-------|-------------|
@@ -99,7 +164,10 @@ Now with **Ralph integration** — autonomous iterative development loops with c
 | `spec-writing` | JTBD-based specification writing with acceptance criteria |
 | `reverse-engineering-specs` | Generate implementation-free specs from existing codebases |
 
-### Operations (7)
+</details>
+
+<details>
+<summary><strong>Operations (7)</strong> — Git, CI/CD, DevOps, and MCP</summary>
 
 | Skill | Description |
 |-------|-------------|
@@ -111,7 +179,10 @@ Now with **Ralph integration** — autonomous iterative development loops with c
 | `mcp-builder` | MCP server development, tools, resources, transport layers |
 | `agent-development` | Building AI agents, tool use, memory, planning |
 
-### Creative (6)
+</details>
+
+<details>
+<summary><strong>Creative (6)</strong> — UI/UX, design systems, mobile, and canvas</summary>
 
 | Skill | Description |
 |-------|-------------|
@@ -122,7 +193,10 @@ Now with **Ralph integration** — autonomous iterative development loops with c
 | `ux-researcher-designer` | User research, personas, journey maps, usability testing |
 | `artifacts-builder` | Generate standalone artifacts, interactive demos, prototypes |
 
-### Business (3)
+</details>
+
+<details>
+<summary><strong>Business (3)</strong> — SEO, content, and marketing</summary>
 
 | Skill | Description |
 |-------|-------------|
@@ -130,7 +204,10 @@ Now with **Ralph integration** — autonomous iterative development loops with c
 | `content-research-writer` | Research methodology, long-form content, citations |
 | `content-creator` | Marketing copy, social media, brand voice |
 
-### Document Processing (3)
+</details>
+
+<details>
+<summary><strong>Document Processing (3)</strong> — Word, PDF, and Excel</summary>
 
 | Skill | Description |
 |-------|-------------|
@@ -138,19 +215,20 @@ Now with **Ralph integration** — autonomous iterative development loops with c
 | `pdf-processing` | PDF generation, form filling, OCR, merge/split |
 | `xlsx-processing` | Excel manipulation, formulas, charts |
 
-### Productivity (1)
+</details>
+
+<details>
+<summary><strong>Productivity & Communication (2)</strong></summary>
 
 | Skill | Description |
 |-------|-------------|
 | `file-organizer` | Project structure, file naming, directory architecture |
-
-### Communication (1)
-
-| Skill | Description |
-|-------|-------------|
 | `email-composer` | Professional email drafting, tone adjustment |
 
-### Frameworks & Languages (3)
+</details>
+
+<details>
+<summary><strong>Frameworks & Languages (3)</strong> — Laravel and PHP</summary>
 
 | Skill | Description |
 |-------|-------------|
@@ -158,11 +236,42 @@ Now with **Ralph integration** — autonomous iterative development loops with c
 | `php-specialist` | Modern PHP 8.x — enums, fibers, readonly, PSR standards, static analysis |
 | `laravel-boost` | Laravel Boost performance optimization — caching, database, Octane |
 
+</details>
+
 ---
 
-## Commands
+## Agents & Commands
 
-Slash commands trigger skills directly in Claude Code:
+<details>
+<summary><strong>20 Agents</strong> — Specialized sub-agents for parallel work</summary>
+
+| Agent | Description |
+|-------|-------------|
+| `planner` | Senior architect creating implementation plans |
+| `code-reviewer` | Reviews code against plan and standards |
+| `prd-writer` | Generates PRD from collected requirements |
+| `doc-generator` | Generates technical documentation from code |
+| `spec-reviewer` | Reviews implementation against spec compliance |
+| `quality-reviewer` | Reviews code quality, patterns, performance, security |
+| `loop-orchestrator` | Manages autonomous development loop iterations |
+| `spec-writer` | Generates JTBD specifications with acceptance criteria |
+| `acceptance-judge` | Evaluates subjective quality via LLM-as-judge pattern |
+| `frontend-developer` | Three-phase frontend dev with context discovery, development, handoff |
+| `ui-ux-designer` | Design system generation, component specs, style guides |
+| `backend-architect` | Service boundaries, contract-first API, scaling |
+| `context-manager` | Project context tracking, dependency mapping |
+| `database-architect` | Multi-DB strategy, domain-driven design, event sourcing |
+| `architect-reviewer` | Architecture review, scalability assessment, tech debt |
+| `typescript-pro` | Advanced type patterns, conditional types, branded types |
+| `task-decomposer` | Hierarchical task breakdown, parallelization strategy |
+| `mobile-developer` | Cross-platform mobile, platform-specific patterns |
+| `laravel-developer` | Laravel specialist with Eloquent, Blade, Livewire, and Pest expertise |
+| `php-developer` | Modern PHP 8.x development with PSR compliance and static analysis |
+
+</details>
+
+<details>
+<summary><strong>31 Slash Commands</strong> — Trigger skills directly in Claude Code</summary>
 
 | Command | Description |
 |---------|-------------|
@@ -198,38 +307,65 @@ Slash commands trigger skills directly in Claude Code:
 | `/laravel` | Laravel development |
 | `/php` | Modern PHP development |
 
----
-
-## Agents
-
-Specialized sub-agents dispatched for parallel or focused work:
-
-| Agent | Description |
-|-------|-------------|
-| `planner` | Senior architect creating implementation plans |
-| `code-reviewer` | Reviews code against plan and standards |
-| `prd-writer` | Generates PRD from collected requirements |
-| `doc-generator` | Generates technical documentation from code |
-| `spec-reviewer` | Reviews implementation against spec compliance |
-| `quality-reviewer` | Reviews code quality, patterns, performance, security |
-| `loop-orchestrator` | Manages autonomous development loop iterations |
-| `spec-writer` | Generates JTBD specifications with acceptance criteria |
-| `acceptance-judge` | Evaluates subjective quality via LLM-as-judge pattern |
-| `frontend-developer` | Three-phase frontend dev with context discovery, development, handoff |
-| `ui-ux-designer` | Design system generation, component specs, style guides |
-| `backend-architect` | Service boundaries, contract-first API, scaling |
-| `context-manager` | Project context tracking, dependency mapping |
-| `database-architect` | Multi-DB strategy, domain-driven design, event sourcing |
-| `architect-reviewer` | Architecture review, scalability assessment, tech debt |
-| `typescript-pro` | Advanced type patterns, conditional types, branded types |
-| `task-decomposer` | Hierarchical task breakdown, parallelization strategy |
-| `mobile-developer` | Cross-platform mobile, platform-specific patterns |
-| `laravel-developer` | Laravel specialist with Eloquent, Blade, Livewire, and Pest expertise |
-| `php-developer` | Modern PHP 8.x development with PSR compliance and static analysis |
+</details>
 
 ---
 
-## Ralph Integration
+## Plugin System
+
+Extend superkit-agents with third-party or custom plugins.
+
+### Installing Plugins
+
+```bash
+# From npm
+superkit-agents plugin add my-awesome-plugin
+
+# From a local directory (symlinks for live dev)
+superkit-agents plugin add ./my-plugin --local
+
+# List installed plugins
+superkit-agents plugin list
+
+# Remove a plugin
+superkit-agents plugin remove my-plugin
+
+# Search npm for plugins
+superkit-agents plugin search [query]
+```
+
+### Creating Plugins
+
+A plugin is a directory with a `superkit-plugin.json` manifest:
+
+```json
+{
+  "name": "my-plugin",
+  "version": "1.0.0",
+  "description": "Custom skills for my framework",
+  "skills": {
+    "my-skill": {
+      "name": "my-skill",
+      "description": "Does something useful",
+      "category": "framework",
+      "path": "skills/my-skill"
+    }
+  },
+  "agents": {
+    "my-agent": { "name": "my-agent", "description": "...", "path": "agents/my-agent.md" }
+  },
+  "commands": {
+    "my-cmd": { "name": "my-cmd", "skill": "my-skill", "description": "...", "path": "commands/my-cmd.md" }
+  }
+}
+```
+
+See [Plugin Development Guide](docs/plugin-development.md) for the full walkthrough.
+
+---
+
+<details>
+<summary><strong>Ralph Integration</strong> — Autonomous iterative development loops</summary>
 
 The toolkit integrates key concepts from [Ralph](https://github.com/frankbria/ralph-claude-code) and the [Ralph Playbook](https://github.com/ClaytonFarr/ralph-playbook) — an autonomous AI development methodology by Geoffrey Huntley.
 
@@ -265,68 +401,13 @@ Jobs to Be Done methodology for writing implementation-free specs:
 - **Acceptance testing** — backpressure chain: specs → tests → code (fix code, not specs)
 - **LLM-as-judge** — structured rubric evaluation for subjective criteria (tone, UX, readability)
 
----
-
-## Installation
-
-### Modes
-
-| Mode | Directory | Use Case |
-|------|-----------|----------|
-| **Plugin** (default) | `.claude-plugin/` | Isolated, portable, easy to update |
-| **Direct** | `.claude/` | Merged into existing Claude Code config |
-
-### Scope
-
-| Scope | Path | Use Case |
-|-------|------|----------|
-| **Project** (default) | `./.claude/` or `./.claude-plugin/` | Per-project setup |
-| **Global** | `~/.claude/` or `~/.claude-plugin/` | Available everywhere |
-
-### Interactive vs CLI
-
-```bash
-# Interactive wizard (recommended)
-npx @pixelandprocess/superkit-agents
-
-# Full install, no prompts
-npx @pixelandprocess/superkit-agents --all
-
-# Global plugin install
-npx @pixelandprocess/superkit-agents --all --global
-
-# Direct install (no plugin wrapper)
-npx @pixelandprocess/superkit-agents --all --direct
-
-# Selective skills
-npx @pixelandprocess/superkit-agents --skills planning,tdd,code-review,autonomous-loop
-```
+</details>
 
 ---
 
-## Update
+## Configuration
 
-Check for updates and get the latest version:
-
-```bash
-superkit-agents update
-```
-
-This checks the npm registry for newer versions and provides upgrade instructions. Your installation preferences are automatically saved and reused on update.
-
----
-
-## Laravel Detection
-
-When running in a Laravel project directory (detected via `composer.json`), superkit-agents automatically:
-
-1. Detects the Laravel framework dependency
-2. Prompts to install **Laravel Boost** (`composer require laravel/boost`) for performance optimization
-3. Auto-selects `laravel-specialist`, `php-specialist`, and `laravel-boost` skills
-
----
-
-## CLI Flags
+### CLI Flags
 
 | Flag | Description |
 |------|-------------|
@@ -339,276 +420,81 @@ When running in a Laravel project directory (detected via `composer.json`), supe
 | `--no-memory` | Skip memory structure creation |
 | `--no-claude-md` | Skip CLAUDE.md generation |
 | `--dry-run` | Show what would be installed without making changes |
+| `--skip-checks` | Skip system requirements check |
 
----
-
-## Hooks & Session Start
-
-The toolkit installs a `hooks.json` that triggers on Claude Code session events:
-
-```json
-{
-  "hooks": {
-    "SessionStart": [{
-      "matcher": "startup|resume|clear|compact",
-      "hooks": [{
-        "type": "command",
-        "command": "'${CLAUDE_PLUGIN_ROOT}/hooks/session-start'"
-      }]
-    }]
-  }
-}
-```
-
-On every session start, resume, clear, or compact:
-1. The `using-toolkit` skill is loaded into context
-2. Memory files (`project-context.md`, `learned-patterns.md`, `user-preferences.md`) are injected
-3. Claude Code receives the toolkit's full skill catalog and workflow guidance
-
----
-
-## Memory System
-
-Four persistent memory files store project knowledge across sessions:
-
-| File | Purpose |
-|------|---------|
-| `project-context.md` | Tech stack, architecture, dependencies |
-| `learned-patterns.md` | Coding conventions and patterns |
-| `user-preferences.md` | Communication and workflow preferences |
-| `decisions-log.md` | Architectural decisions with rationale |
-| `improvement-log.md` | Self-improvement tracking and effectiveness metrics |
-
-- Auto-loaded on session start via the session-start hook
-- Updated by the `self-learning` skill (`/learn`)
-- Persists across conversations for continuity
-
----
-
-## CLAUDE.md Merge Behavior
-
-When installing, the toolkit handles existing `CLAUDE.md` files safely:
-
-- Wraps toolkit content in `<!-- TOOLKIT START -->` / `<!-- TOOLKIT END -->` markers
-- Backs up existing `CLAUDE.md` before modifying
-- Preserves all user content outside the markers
-- Re-running the installer updates only the toolkit section
-
----
-
-## Workflow Examples
-
-### New Feature
-
-```
-/brainstorm     → explore the idea, create design doc
-/specs          → write specifications with JTBD methodology
-/plan           → create implementation plan with tasks
-/execute        → execute plan with TDD and progress tracking
-/review         → verify against plan and standards
-/verify         → confirm everything works with fresh evidence
-```
-
-### Bug Fix
-
-```
-/debug          → systematic 4-phase debugging methodology
-/tdd            → write test that reproduces bug, then fix
-/review         → verify the fix
-/verify         → confirm fix with fresh evidence
-```
-
-### Ralph Autonomous Session
-
-```
-/specs          → write or audit specifications
-/ralph          → start autonomous loop
-                  → PLANNING: analyze specs, generate implementation plan
-                  → BUILDING: select task, implement, test, commit
-                  → STATUS: produce RALPH_STATUS, evaluate exit gate
-                  → repeat until dual-condition exit gate passes
-/review         → final code review
-/verify         → verify all acceptance tests pass
-```
-
-### Legacy Codebase Onboarding
-
-```
-/learn                      → scan and discover project context
-reverse-engineering-specs   → generate specs from existing code
-/specs                      → audit and refine generated specs
-/plan                       → plan improvements
-```
-
-### Documentation
-
-```
-/docs           → generate technical documentation from code
-/prd            → create Product Requirements Documents
-```
-
----
-
-## Architecture
-
-```
-templates/
-├── skills/                    # 64 skill directories
-│   ├── using-toolkit/SKILL.md
-│   ├── planning/SKILL.md
-│   ├── brainstorming/SKILL.md
-│   ├── task-management/SKILL.md
-│   ├── executing-plans/SKILL.md
-│   ├── subagent-driven-development/
-│   ├── dispatching-parallel-agents/SKILL.md
-│   ├── code-review/SKILL.md
-│   ├── test-driven-development/
-│   ├── testing-strategy/SKILL.md
-│   ├── systematic-debugging/
-│   ├── security-review/
-│   ├── performance-optimization/
-│   ├── api-design/SKILL.md
-│   ├── frontend-ui-design/SKILL.md
-│   ├── database-schema-design/SKILL.md
-│   ├── prd-generation/SKILL.md
-│   ├── tech-docs-generator/SKILL.md
-│   ├── writing-skills/
-│   ├── deployment/SKILL.md
-│   ├── using-git-worktrees/SKILL.md
-│   ├── finishing-a-development-branch/SKILL.md
-│   ├── self-learning/SKILL.md
-│   ├── resilient-execution/SKILL.md
-│   ├── verification-before-completion/SKILL.md
-│   ├── autonomous-loop/SKILL.md        # NEW: Ralph loop
-│   ├── circuit-breaker/SKILL.md        # NEW: Stagnation detection
-│   ├── ralph-status/SKILL.md           # NEW: Status reporting
-│   ├── spec-writing/SKILL.md           # NEW: JTBD specs
-│   ├── reverse-engineering-specs/SKILL.md  # NEW: Legacy specs
-│   ├── acceptance-testing/SKILL.md     # NEW: Backpressure
-│   ├── llm-as-judge/SKILL.md          # NEW: Subjective quality
-│   ├── laravel-specialist/SKILL.md    # NEW: Laravel development
-│   ├── php-specialist/SKILL.md        # NEW: Modern PHP 8.x
-│   └── laravel-boost/SKILL.md         # NEW: Laravel Boost optimization
-├── agents/                    # 20 agent definitions
-│   ├── planner.md
-│   ├── code-reviewer.md
-│   ├── prd-writer.md
-│   ├── doc-generator.md
-│   ├── spec-reviewer.md
-│   ├── quality-reviewer.md
-│   ├── loop-orchestrator.md            # NEW
-│   ├── spec-writer.md                  # NEW
-│   ├── acceptance-judge.md             # NEW
-│   ├── laravel-developer.md           # NEW: Laravel specialist
-│   └── php-developer.md               # NEW: PHP specialist
-├── commands/                  # 31 slash commands
-│   ├── plan.md
-│   ├── brainstorm.md
-│   ├── execute.md
-│   ├── tdd.md
-│   ├── debug.md
-│   ├── review.md
-│   ├── verify.md
-│   ├── prd.md
-│   ├── learn.md
-│   ├── docs.md
-│   ├── worktree.md
-│   ├── ralph.md                        # NEW
-│   ├── specs.md                        # NEW
-│   ├── loop.md                         # NEW
-│   ├── laravel.md                      # NEW: Laravel development
-│   └── php.md                          # NEW: PHP development
-├── hooks/
-│   ├── hooks.json
-│   └── session-start
-├── memory/
-│   ├── project-context.md
-│   ├── learned-patterns.md
-│   ├── user-preferences.md
-│   └── decisions-log.md
-├── claude-plugin/
-│   └── plugin.json
-└── CLAUDE.md
-```
-
----
-
-## CI/CD
-
-The toolkit includes GitHub Actions workflows:
-
-| Workflow | Trigger | Purpose |
-|----------|---------|---------|
-| **test.yml** | Push to main/develop, PRs | Run tests on Node 18/20/22 matrix with coverage |
-| **ci.yml** | Push to main, PRs | Lint + dry-run CLI validation |
-| **release.yml** | Tag push (`v*`) | Publish to npm with provenance, create GitHub Release |
-| **claude.yml** | `@claude` in issues/PRs | Claude Code action for automated assistance |
-
-### Required Secrets
-
-| Secret | Purpose |
-|--------|---------|
-| `NPM_TOKEN` | npm publish authentication |
-| `ANTHROPIC_API_KEY` | Claude Code action (optional) |
-
----
-
-## Configuration & Customization
-
-### Selective Skill Installation
-
-Install only the skills you need:
+### Update
 
 ```bash
-npx @pixelandprocess/superkit-agents --skills planning,tdd,code-review,autonomous-loop
+superkit-agents update
 ```
 
-Or use the interactive wizard to pick categories and individual skills.
-
-### Custom Skills
-
-Add your own skills alongside toolkit ones. Each skill is a directory containing a `SKILL.md` file:
-
-```
-.claude/skills/my-custom-skill/SKILL.md
-```
-
-### Find More Skills
-
-When the toolkit's 64 skills don't cover your needs:
-
-```bash
-npx skills find [query]                    # Search the ecosystem
-npx skills add <owner/repo@skill> -g -y    # Install
-npx skills check                           # Check for updates
-```
+Checks npm for newer versions and provides upgrade instructions. Your preferences are saved automatically.
 
 ---
 
-## Skill Format Reference
+## FAQ
 
-Skills use markdown with YAML frontmatter:
+<details>
+<summary><strong>Do I need to install all 64 skills?</strong></summary>
 
-```markdown
+No. The interactive wizard lets you pick exactly the skills you want. You can also use `--skills` to install a specific set. Only `self-learning` and `auto-improvement` are mandatory.
+
+</details>
+
+<details>
+<summary><strong>What's the difference between plugin and direct mode?</strong></summary>
+
+**Plugin mode** (default) installs into `.claude-plugin/`, keeping your toolkit isolated and portable. **Direct mode** installs into `.claude/`, merging with any existing Claude Code config. Plugin mode is recommended for most users.
+
+</details>
+
+<details>
+<summary><strong>Can I use this alongside other Claude Code plugins?</strong></summary>
+
+Yes. Plugin mode is designed to coexist with other plugins. Each plugin has its own namespace.
+
+</details>
+
+<details>
+<summary><strong>How do I create my own skills?</strong></summary>
+
+See the [Skill Authoring Guide](docs/skill-authoring.md). Each skill is a directory with a `SKILL.md` file containing YAML frontmatter and structured instructions.
+
+</details>
+
+<details>
+<summary><strong>How do I update to the latest version?</strong></summary>
+
+Run `superkit-agents update` or re-run `npx @pixelandprocess/superkit-agents --all`. Your preferences are saved and reused.
+
+</details>
+
+<details>
+<summary><strong>Does it work with Laravel?</strong></summary>
+
+Yes. When running in a Laravel project, it auto-detects the framework, offers to install Laravel Boost, and auto-selects `laravel-specialist`, `php-specialist`, and `laravel-boost` skills.
+
+</details>
+
+<details>
+<summary><strong>What happens to my existing CLAUDE.md?</strong></summary>
+
+Your content is preserved. The toolkit wraps its own content in `<!-- TOOLKIT START -->` / `<!-- TOOLKIT END -->` markers and backs up the original file before modifying.
+
+</details>
+
+<details>
+<summary><strong>Can I extend superkit-agents with plugins?</strong></summary>
+
+Yes. Use `superkit-agents plugin add <name>` to install plugins from npm or local directories. See [Plugin Development](docs/plugin-development.md) for creating your own.
+
+</details>
+
 ---
-name: my-skill
-description: What this skill does (one line)
-triggers:
-  - keyword or phrase that activates this skill
-  - another trigger phrase
----
 
-## Purpose
-What this skill accomplishes.
+## Contributing
 
-## Process
-Step-by-step instructions Claude follows when this skill is invoked.
-
-## Output
-What the skill produces.
-```
-
-The `name` and `description` fields are required. `triggers` help Claude identify when to use the skill automatically.
+See [CONTRIBUTING.md](CONTRIBUTING.md) for how to fork, develop, test, and submit pull requests.
 
 ---
 

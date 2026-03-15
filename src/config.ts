@@ -42,6 +42,12 @@ export interface InstallConfig {
   laravelBoost: boolean;
 }
 
+export interface PluginConfig {
+  name: string;
+  source: 'npm' | 'local';
+  path: string;
+}
+
 export const SKILLS: Record<string, Skill> = {
   // === Core ===
   'using-toolkit': {

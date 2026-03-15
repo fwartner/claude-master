@@ -241,6 +241,21 @@ After explicit approval:
 - **Do NOT** skip the discovery phase — understand query patterns and data volume
 - **Do NOT** drop columns or tables without expand-contract pattern in production
 
+## Documentation Lookup (Context7)
+
+When you need up-to-date documentation for frameworks/libraries used in this skill:
+
+1. **Resolve:** `mcp__context7__resolve-library-id` with the library name
+2. **Query:** `mcp__context7__query-docs` with the resolved ID and your question
+3. **Apply:** Use returned docs as authoritative, overriding memorized knowledge
+
+### Libraries for this skill
+- `prisma` — for schema syntax, relations, or migration API
+- `typeorm` — for entity decorators, repository patterns, or query builder
+- `knex` — for query builder syntax, migrations, or seed files
+
+---
+
 ## Integration Points
 
 | Skill | Relationship |

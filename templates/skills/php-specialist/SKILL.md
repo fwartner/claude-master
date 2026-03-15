@@ -555,6 +555,20 @@ final class TypedCollection implements \IteratorAggregate, \Countable
 - Do NOT use the service locator pattern (`app()`) in business logic, even in Laravel.
 - Do NOT skip interfaces for key boundaries because "there's only one implementation" -- there will be two.
 
+## Documentation Lookup (Context7)
+
+When you need up-to-date documentation for frameworks/libraries used in this skill:
+
+1. **Resolve:** `mcp__context7__resolve-library-id` with the library name
+2. **Query:** `mcp__context7__query-docs` with the resolved ID and your question
+3. **Apply:** Use returned docs as authoritative, overriding memorized knowledge
+
+### Libraries for this skill
+- `php` — for language features, built-in functions, or PHP 8.x syntax
+- `composer` — for package management, autoloading, or scripts configuration
+
+---
+
 ## Integration Points
 
 | Skill | How It Connects |

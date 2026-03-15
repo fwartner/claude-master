@@ -380,6 +380,19 @@ describe('MCP Server', () => {
 | Blocking event loop with sync ops | Server becomes unresponsive | Use async/await for all I/O |
 | No tests | Regressions go undetected | Test with InMemoryTransport |
 
+## Documentation Lookup (Context7)
+
+When you need up-to-date documentation for frameworks/libraries used in this skill:
+
+1. **Resolve:** `mcp__context7__resolve-library-id` with the library name
+2. **Query:** `mcp__context7__query-docs` with the resolved ID and your question
+3. **Apply:** Use returned docs as authoritative, overriding memorized knowledge
+
+### Libraries for this skill
+- `@anthropic-ai/sdk` — for Claude API client, tool definitions, or streaming
+
+---
+
 ## Integration Points
 
 | Skill | Integration |

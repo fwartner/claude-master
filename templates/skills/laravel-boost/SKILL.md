@@ -291,6 +291,20 @@ The custom agent class must extend `Laravel\Boost\Install\Agents\Agent` and impl
 - Do NOT install Boost in production -- it is a `--dev` dependency exclusively.
 - Do NOT forget to run `boost:update` after dependency changes -- stale guidelines degrade AI output.
 
+## Documentation Lookup (Context7)
+
+When you need up-to-date documentation for frameworks/libraries used in this skill:
+
+1. **Resolve:** `mcp__context7__resolve-library-id` with the library name
+2. **Query:** `mcp__context7__query-docs` with the resolved ID and your question
+3. **Apply:** Use returned docs as authoritative, overriding memorized knowledge
+
+### Libraries for this skill
+- `laravel/framework` — for core Laravel APIs, configuration, or Artisan commands
+- `livewire` — for component lifecycle, wire directives, or Alpine.js integration
+
+---
+
 ## Integration Points
 
 | Skill | How It Connects |

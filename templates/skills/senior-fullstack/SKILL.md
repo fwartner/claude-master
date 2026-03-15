@@ -289,6 +289,22 @@ tests/
 
 ---
 
+## Documentation Lookup (Context7)
+
+When you need up-to-date documentation for frameworks/libraries used in this skill:
+
+1. **Resolve:** `mcp__context7__resolve-library-id` with the library name
+2. **Query:** `mcp__context7__query-docs` with the resolved ID and your question
+3. **Apply:** Use returned docs as authoritative, overriding memorized knowledge
+
+### Libraries for this skill
+- `react` — for component patterns, hooks, or React 19+ features
+- `next.js` — for App Router, API routes, or server components
+- `prisma` — for schema design, client queries, or migrations
+- `tailwindcss` — for utility-first CSS patterns or configuration
+
+---
+
 ## Integration Points
 
 | Skill | Relationship |
