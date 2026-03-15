@@ -1,5 +1,5 @@
 {
-  "name": "@fwartner/claude-toolkit",
+  "name": "superkit-agents",
   "private": false,
   "version": "1.0.0",
   "description": "Complete AI-optimized development environment for Claude Code with skills, hooks, agents, memory, and structured workflows",
