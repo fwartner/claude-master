@@ -76,6 +76,11 @@ Before writing any code, scan the project to understand the existing landscape:
 - `php-specialist` — Modern PHP development patterns, PSR standards, and static analysis
 
 ## Agent Integration
-- **backend-architect** — Consult for service design, API contracts, and architectural patterns
-- **database-architect** — Consult for data modeling and repository pattern implementation
-- **code-reviewer** — Request review for PHP-specific quality, type safety, and PSR compliance
+
+When this agent needs input from other specialists, use the `Agent` tool:
+
+| Need | Dispatch To | How |
+|---|---|---|
+| Service design | `backend-architect` agent | `Agent(description="Review service design", prompt="Review the service design, API contracts, and architectural patterns for...")` |
+| Data modeling | `database-architect` agent | `Agent(description="Review data model", prompt="Review the data modeling and repository pattern implementation for...")` |
+| Code review | `code-reviewer` agent | `Agent(description="Code review", prompt="Review the PHP implementation for type safety and PSR compliance in...")` |

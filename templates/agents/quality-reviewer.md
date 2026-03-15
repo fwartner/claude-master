@@ -51,6 +51,14 @@ When reviewing:
    - **Important** (should fix): Quality issues, missing tests, convention violations
    - **Suggestions** (nice to have): Style, naming, minor improvements
 
+## Agent Coordination
+
+When this agent identifies spec compliance concerns, use the `Agent` tool:
+
+| Need | Dispatch To | How |
+|---|---|---|
+| Spec compliance check | `spec-reviewer` agent | `Agent(description="Check spec compliance", prompt="Verify the implementation matches the spec for...")` |
+
 8. **Output Format:**
    ```
    ## Quality Review

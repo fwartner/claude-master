@@ -53,9 +53,9 @@ Planning mode produces NO implementation code. It is analysis and planning ONLY.
 
 ### Steps
 
-1. **Knowledge Gathering** — Deploy up to 250 parallel Sonnet subagents to study specs, existing implementation plans, and utility libraries
-2. **Code Analysis** — Deploy up to 500 parallel subagents to study `src/*` against `specs/*`, identifying gaps between specification and implementation
-3. **Synthesis** — Deploy Opus subagent to synthesize findings and prioritize incomplete work
+1. **Knowledge Gathering** — Deploy up to 250 parallel subagents via the `Agent` tool (with `subagent_type="Explore"` and `model="sonnet"`) to study specs, existing implementation plans, and utility libraries
+2. **Code Analysis** — Deploy up to 500 parallel subagents via the `Agent` tool (with `subagent_type="Explore"`) to study `src/*` against `specs/*`, identifying gaps between specification and implementation
+3. **Synthesis** — Deploy a synthesis subagent via the `Agent` tool (with `model="opus"`) to synthesize findings and prioritize incomplete work
 4. **Plan Refresh** — Update `IMPLEMENTATION_PLAN.md` as organized, prioritized bullet list
 
 ### Planning Mode Constraints
@@ -281,9 +281,9 @@ If you catch yourself thinking:
 
 | Task Pattern | Dispatch To | When |
 |---|---|---|
-| Independent file reads across codebase | Parallel `Explore` subagents | When loop iteration needs context from multiple areas |
-| Test execution during build phase | Background `Bash` task | When tests can validate work without blocking progress |
-| Code review between iterations | `code-reviewer` agent | After completing a build iteration, before next planning |
+| Independent file reads across codebase | `Agent` tool with `subagent_type="Explore"` | When loop iteration needs context from multiple areas |
+| Test execution during build phase | `Bash` tool with `run_in_background=true` | When tests can validate work without blocking progress |
+| Code review between iterations | `Agent` tool dispatching `code-reviewer` agent | After completing a build iteration, before next planning |
 
 Follow the `dispatching-parallel-agents` skill protocol when dispatching.
 

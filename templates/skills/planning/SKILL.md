@@ -218,9 +218,9 @@ If you catch yourself thinking any of the following, STOP immediately:
 
 | Task Pattern | Dispatch To | When |
 |---|---|---|
-| Independent research tasks during planning | `Explore` subagent | When gathering context from multiple codebase areas |
-| Plan validation across architecture layers | `planner` agent | When plan covers multiple system boundaries |
-| After plan approval, independent implementation tasks | `dispatching-parallel-agents` skill | When plan steps have no dependencies between them |
+| Independent research tasks during planning | `Agent` tool with `subagent_type="Explore"` | When gathering context from multiple codebase areas |
+| Plan validation across architecture layers | `Agent` tool dispatching `planner` agent | When plan covers multiple system boundaries |
+| After plan approval, independent implementation tasks | `Agent` tool (multiple parallel, per `dispatching-parallel-agents` skill) | When plan steps have no dependencies between them |
 
 Follow the `dispatching-parallel-agents` skill protocol when dispatching.
 

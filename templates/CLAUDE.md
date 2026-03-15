@@ -4,7 +4,7 @@
 
 ## §1 IDENTITY & PURPOSE
 
-You are an AI development agent enhanced with the **@pixelandprocess/superkit-agents** (v1.0.0). This toolkit provides structured workflows, quality gates, and autonomous development capabilities through a comprehensive skill system.
+You are an AI development agent enhanced with the **@pixelandprocess/superkit-agents** (v1.2.0). This toolkit provides structured workflows, quality gates, and autonomous development capabilities through a comprehensive skill system.
 
 **Capabilities:** 64 skills | 20 agents | 31 commands | hooks | memory system
 
@@ -341,8 +341,8 @@ Each iteration selects and completes exactly ONE task from `IMPLEMENTATION_PLAN.
 | Resource            | Budget             | Strategy                                  |
 | ------------------- | ------------------ | ----------------------------------------- |
 | Main context window | 40-60% utilization | The "smart zone" — enough room to think   |
-| Read subagents      | Up to 500 parallel | Searching, file reading, pattern matching |
-| Build subagents     | 1 at a time        | Implementation, test execution            |
+| Read subagents      | Up to 500 parallel | Via `Agent` tool with `subagent_type="Explore"` |
+| Build subagents     | 1 at a time        | Via `Agent` tool with `subagent_type="general-purpose"` |
 | Token format        | Prefer Markdown    | ~30% more efficient than JSON             |
 
 
@@ -593,17 +593,31 @@ Before any destructive operation (`rm`, `git clean`, `git checkout .`):
 
 ## §12 SUBAGENT DISPATCH RULES
 
+### How to Dispatch Subagents
+
+All subagent dispatch uses the **`Agent` tool**. To run multiple agents in parallel, invoke multiple `Agent` tool calls in a **single message**.
+
+**Key parameters:**
+
+| Parameter | Description |
+|---|---|
+| `prompt` | Detailed task description with all necessary context |
+| `description` | Short label (3-5 words) |
+| `subagent_type` | `"Explore"` (fast codebase search), `"Plan"` (architecture), `"general-purpose"` (default) |
+| `run_in_background` | `true` for async — you'll be notified on completion |
+| `model` | Optional override: `"sonnet"`, `"opus"`, `"haiku"` |
+
 ### When to Dispatch vs Do Inline
 
 
 | Scenario                                  | Action                          |
 | ----------------------------------------- | ------------------------------- |
-| 2+ independent tasks with no shared state | Dispatch parallel subagents     |
+| 2+ independent tasks with no shared state | `Agent` tool — multiple parallel calls in one message |
 | Single focused task                       | Do inline                       |
-| Heavy reading/searching across codebase   | Dispatch read subagents         |
-| Build or test execution                   | 1 subagent only                 |
-| Code review                               | Dispatch code-reviewer agent    |
-| Quality evaluation                        | Dispatch acceptance-judge agent |
+| Heavy reading/searching across codebase   | `Agent` tool with `subagent_type="Explore"` |
+| Build or test execution                   | `Agent` tool — 1 at a time only |
+| Code review                               | `Agent` tool dispatching `code-reviewer` agent |
+| Quality evaluation                        | `Agent` tool dispatching `acceptance-judge` agent |
 
 
 ### Parallelism Limits
@@ -626,7 +640,7 @@ Both gates must pass before task is marked complete.
 
 ### Result Aggregation
 
-When parallel subagents return:
+When parallel `Agent` tool calls return:
 
 1. Collect all results
 2. Check for conflicts or contradictions

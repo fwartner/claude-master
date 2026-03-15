@@ -238,7 +238,8 @@ If you catch yourself thinking:
 | `verification-before-completion` | Per-task — verification gate | Before marking any task complete |
 | `resilient-execution` | On failure — retry with alternatives | When task verification fails |
 | `code-review` | At checkpoints — batch quality review | Every 3 tasks or batch boundary |
-| `subagent-driven-development` | Alternative — parallel execution path | For independent task batches |
+| `subagent-driven-development` | Alternative — parallel execution path (via `Agent` tool) | For independent task batches |
+| `Agent` tool | Dispatch mechanism for all subagent work | When parallelizing independent tasks |
 | `circuit-breaker` | Safety net — detects stagnation | When tasks repeatedly fail |
 
 ---

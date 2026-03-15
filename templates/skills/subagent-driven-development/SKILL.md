@@ -74,6 +74,8 @@ Every task dispatched to a subagent MUST include ALL of these:
 4. Dispatch the implementer subagent
 5. Collect the implementation output
 
+> **Dispatch mechanism:** Use the `Agent` tool with `subagent_type="general-purpose"` and include the implementer prompt (from `implementer-prompt.md`) in the `prompt` parameter. Set `description` to a short task label.
+
 ### Implementer Expectations
 
 The implementer subagent MUST:
@@ -109,6 +111,8 @@ The implementer subagent MUST:
 3. Dispatch the spec-reviewer subagent
 4. Collect the review result
 
+> **Dispatch mechanism:** Use the `Agent` tool with the spec-reviewer prompt (from `spec-reviewer-prompt.md`) in the `prompt` parameter.
+
 ### Spec Review Criteria
 
 | Criterion | Assessment | What to Check |
@@ -139,6 +143,8 @@ The implementer subagent MUST:
 2. Provide the implementation code, test code, and project quality standards
 3. Dispatch the quality-reviewer subagent
 4. Collect the review result
+
+> **Dispatch mechanism:** Use the `Agent` tool with the quality-reviewer prompt (from `code-quality-reviewer-prompt.md`) in the `prompt` parameter.
 
 ### Quality Review Areas
 
@@ -289,6 +295,7 @@ If you catch yourself thinking:
 | `dispatching-parallel-agents` | Complementary — parallelization strategy | When dispatching independent tasks |
 | `resilient-execution` | On failure — retry strategies | When fix cycles exhaust |
 | `task-management` | Tracking — task status management | Progress tracking |
+| `Agent` tool | Dispatch mechanism for all subagent phases |
 
 ---
 

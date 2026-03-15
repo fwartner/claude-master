@@ -13,7 +13,7 @@ Generate comprehensive technical documentation by analyzing the actual codebase.
 
 ## Phase 1: Codebase Analysis
 
-Scan the codebase to identify what needs documenting. Deploy parallel subagents (up to 500) to analyze:
+Scan the codebase to identify what needs documenting. Deploy parallel subagents via the `Agent` tool (up to 500, with `subagent_type="Explore"`) to analyze:
 
 | Analysis Target | What to Capture |
 |----------------|-----------------|
@@ -40,7 +40,7 @@ STOP after analysis — present a summary of what was found and ask which docume
 | **Configuration Guide** | Documenting config options | `docs/configuration.md` | 50-200 lines |
 | **Migration Guide** | Documenting version upgrades | `docs/migration/v[X]-to-v[Y].md` | 50-150 lines |
 
-Ask the user which type(s) they need if not specified. If multiple types are requested, dispatch parallel subagents — one per doc type.
+Ask the user which type(s) they need if not specified. If multiple types are requested, dispatch parallel subagents via the `Agent` tool — one per doc type.
 
 ## Phase 3: Generate Documentation
 

@@ -239,9 +239,9 @@ For each identified threat:
 
 | Task Pattern | Dispatch To | When |
 |---|---|---|
-| Scanning different OWASP categories in parallel | Parallel `Explore` subagents | When reviewing a large codebase across multiple vulnerability types |
-| Authentication flow analysis | Dedicated subagent | When auth implementation spans multiple files/services |
-| Dependency vulnerability scanning | Background `Bash` task | When running `npm audit` or similar tools concurrently |
+| Scanning different OWASP categories in parallel | `Agent` tool with `subagent_type="Explore"` (one per category) | When reviewing a large codebase across multiple vulnerability types |
+| Authentication flow analysis | `Agent` tool with `subagent_type="general-purpose"` | When auth implementation spans multiple files/services |
+| Dependency vulnerability scanning | `Bash` tool with `run_in_background=true` | When running `npm audit` or similar tools concurrently |
 
 Follow the `dispatching-parallel-agents` skill protocol when dispatching.
 

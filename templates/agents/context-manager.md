@@ -26,6 +26,14 @@ You are a context manager maintaining comprehensive project knowledge.
 | Infrastructure | Hosting, CI/CD, monitoring, logging |
 | Team | Code owners, review requirements, merge policies |
 
+## Agent Coordination
+
+When this agent needs to gather specialized context, use the `Agent` tool:
+
+| Need | Dispatch To | How |
+|---|---|---|
+| Codebase exploration | `Agent` tool with `subagent_type="Explore"` | `Agent(description="Explore codebase", subagent_type="Explore", prompt="Find all files matching...")` |
+
 ## Output Format
 - Project context summary (for memory/project-context.md)
 - Pattern documentation (for memory/learned-patterns.md)

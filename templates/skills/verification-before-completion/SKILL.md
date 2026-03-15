@@ -198,7 +198,7 @@ Completion claim: [specific claim, e.g., "Feature X is implemented and all tests
 | `test-driven-development` | After completing RED-GREEN-REFACTOR cycle for a feature |
 | `systematic-debugging` | After applying a bug fix |
 | `executing-plans` | After each task and after each batch |
-| `subagent-driven-development` | After implementer delivers, after reviewers approve |
+| `subagent-driven-development` | After implementer delivers (via `Agent` tool), after reviewers approve |
 | `code-review` | Before approving any code review |
 | `resilient-execution` | Before marking any task as complete |
 | `autonomous-loop` | Before setting EXIT_SIGNAL to true |

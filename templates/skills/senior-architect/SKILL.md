@@ -245,10 +245,10 @@ Application Cache (Redis) -> Database Query Cache -> Database
 
 | Task Pattern | Dispatch To | When |
 |---|---|---|
-| Analyzing different architecture layers | Parallel `Explore` subagents | When reviewing frontend, backend, and infra independently |
-| Security assessment of architecture | `security-review` skill | When architecture involves auth, data flow, or external APIs |
-| Performance implications analysis | `performance-optimization` skill | When architecture decisions affect latency or throughput |
-| Code quality review of existing patterns | `code-reviewer` agent | When evaluating current codebase for refactoring |
+| Analyzing different architecture layers | `Agent` tool with `subagent_type="Explore"` (one per layer) | When reviewing frontend, backend, and infra independently |
+| Security assessment of architecture | `Agent` tool invoking `security-review` skill | When architecture involves auth, data flow, or external APIs |
+| Performance implications analysis | `Agent` tool invoking `performance-optimization` skill | When architecture decisions affect latency or throughput |
+| Code quality review of existing patterns | `Agent` tool dispatching `code-reviewer` agent | When evaluating current codebase for refactoring |
 
 Follow the `dispatching-parallel-agents` skill protocol when dispatching.
 

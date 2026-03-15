@@ -47,6 +47,15 @@ When creating an implementation plan, you will:
    - Exact paths — no ambiguity about which files to touch
    - Complete code — show actual code, not "add validation logic"
 
+## Agent Coordination
+
+When this agent needs input from other specialists, use the `Agent` tool:
+
+| Need | Dispatch To | How |
+|---|---|---|
+| Task breakdown | `task-decomposer` agent | `Agent(description="Decompose tasks", prompt="Break down the following plan into parallelizable tasks...")` |
+| Architecture validation | `architect-reviewer` agent | `Agent(description="Validate architecture", prompt="Review the architectural decisions in this plan...")` |
+
 5. **Output Format**:
    ```markdown
    # [Feature Name] Implementation Plan

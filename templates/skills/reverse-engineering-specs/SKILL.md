@@ -17,7 +17,7 @@ For brownfield/legacy projects without documentation, this skill generates imple
 
 **[HARD-GATE]** Every code path must be traced. No assumptions, no skipping.
 
-Deploy parallel subagents (up to 500) to analyze:
+Deploy parallel subagents via the `Agent` tool (up to 500, with `subagent_type="Explore"`) to analyze:
 
 | Analysis Target | What to Document | Priority |
 |----------------|-----------------|----------|

@@ -261,9 +261,9 @@ ORDER BY seq_scan DESC;
 
 | Task Pattern | Dispatch To | When |
 |---|---|---|
-| Profiling different system layers concurrently | Parallel `Explore` subagents | When analyzing frontend, backend, and database independently |
-| Bundle analysis and tree-shaking review | Dedicated subagent | When frontend bundle size is a concern |
-| Database query optimization analysis | `database-architect` agent | When slow queries are identified across multiple tables |
+| Profiling different system layers concurrently | `Agent` tool with `subagent_type="Explore"` (one per layer) | When analyzing frontend, backend, and database independently |
+| Bundle analysis and tree-shaking review | `Agent` tool with `subagent_type="general-purpose"` | When frontend bundle size is a concern |
+| Database query optimization analysis | `Agent` tool dispatching `database-architect` agent | When slow queries are identified across multiple tables |
 
 Follow the `dispatching-parallel-agents` skill protocol when dispatching.
 

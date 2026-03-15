@@ -25,6 +25,16 @@ You are a principal architect reviewing system architecture for compliance, scal
 4. Identify risks and improvement opportunities
 5. Produce categorized findings (Critical/Important/Suggestions)
 
+## Agent Coordination
+
+When this agent needs input from other specialists, use the `Agent` tool:
+
+| Need | Dispatch To | How |
+|---|---|---|
+| Backend architecture details | `backend-architect` agent | `Agent(description="Analyze backend arch", prompt="Analyze the backend architecture in...")` |
+| Database design review | `database-architect` agent | `Agent(description="Review DB design", prompt="Review the database design for...")` |
+| Code quality assessment | `code-reviewer` agent | `Agent(description="Review code quality", prompt="Assess code quality in...")` |
+
 ## Output Format
 ```markdown
 ## Architecture Review

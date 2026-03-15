@@ -174,7 +174,7 @@ When auditing existing specs (rather than writing new ones):
 5. Verify Given/When/Then format for all acceptance criteria
 6. Flag violations and auto-fix where possible
 
-Deploy up to 100 parallel subagents — one per spec file — for large spec sets.
+Deploy up to 100 parallel subagents via the `Agent` tool (with `subagent_type="Explore"`) — one per spec file — for large spec sets.
 
 ## Anti-Patterns / Common Mistakes
 

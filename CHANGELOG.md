@@ -1,5 +1,19 @@
 # Changelog
 
+## [1.2.0] - 2026-03-15
+
+### Added
+- **Concrete `Agent` tool references** across all subagent dispatch instructions — every "dispatch", "deploy", or "invoke" now explicitly names the `Agent` tool with parameters (`prompt`, `description`, `subagent_type`, `run_in_background`, `model`)
+- **Agent Tool Invocation Reference** section in `dispatching-parallel-agents` skill with parameter table, parallel dispatch examples, background dispatch, and named agent dispatch
+- **Agent Coordination sections** in 10 agent templates (`backend-architect`, `database-architect`, `architect-reviewer`, `planner`, `mobile-developer`, `frontend-developer`, `context-manager`, `spec-reviewer`, `quality-reviewer`, `loop-orchestrator`) with concrete `Agent(description=..., prompt=...)` invocation examples
+- **Dispatch mechanism notes** in `subagent-driven-development` skill linking each phase to the `Agent` tool and the corresponding prompt template file
+- **How to Dispatch Subagents** reference in CLAUDE.md template (§12) with parameter table and concrete tool references
+
+### Changed
+- **15 skill templates** updated: all subagent dispatch tables now use `Agent` tool with `subagent_type` instead of vague "Explore subagents" or "Dedicated subagent" language
+- **laravel-developer** and **php-developer** agents: "Consult" language replaced with concrete `Agent(...)` invocations
+- **CLAUDE.md template** version bumped to 1.2.0, §12 dispatch rules now reference `Agent` tool throughout
+
 ## [1.1.0] - 2026-03-15
 
 ### Added

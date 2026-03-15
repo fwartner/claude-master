@@ -74,6 +74,11 @@ Before writing any code, scan the project to understand the existing landscape:
 - `laravel-boost` — Performance optimization, caching, and scaling strategies
 
 ## Agent Integration
-- **backend-architect** — Consult for service boundary design and API contract decisions
-- **database-architect** — Consult for schema design, indexing strategy, and migration planning
-- **code-reviewer** — Request review after implementation for Laravel-specific quality checks
+
+When this agent needs input from other specialists, use the `Agent` tool:
+
+| Need | Dispatch To | How |
+|---|---|---|
+| Service design | `backend-architect` agent | `Agent(description="Review service design", prompt="Review the service boundary design and API contract decisions for...")` |
+| Data modeling | `database-architect` agent | `Agent(description="Review data model", prompt="Review the schema design, indexing strategy, and migration planning for...")` |
+| Code review | `code-reviewer` agent | `Agent(description="Code review", prompt="Review the Laravel implementation for quality checks in...")` |

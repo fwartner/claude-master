@@ -11,6 +11,48 @@ This skill coordinates multiple agents working concurrently on independent subta
 
 **Announce at start:** "I'm using the dispatching-parallel-agents skill to run [N] independent tasks concurrently."
 
+## Agent Tool Invocation Reference
+
+All subagent dispatch in Claude Code uses the `Agent` tool. Every "dispatch" instruction in this skill means: invoke the `Agent` tool.
+
+### Parameters
+
+| Parameter | Required | Description |
+|---|---|---|
+| `prompt` | Yes | Detailed task description with all necessary context |
+| `description` | Yes | Short label (3-5 words) for the task |
+| `subagent_type` | No | Specialized agent type: `Explore` (fast codebase search), `Plan` (architecture), `general-purpose` (default) |
+| `run_in_background` | No | Set `true` to run async — you'll be notified on completion |
+| `model` | No | Model override: `sonnet`, `opus`, `haiku` |
+
+### Dispatching Multiple Agents in Parallel
+
+To run agents concurrently, invoke multiple `Agent` tool calls in a **single message**:
+
+```
+Agent(description="Analyze auth module", subagent_type="Explore", prompt="Search the auth/ directory for...")
+Agent(description="Analyze API routes", subagent_type="Explore", prompt="Search the routes/ directory for...")
+Agent(description="Review DB schema", subagent_type="Explore", prompt="Examine all migration files for...")
+```
+
+All three run concurrently. Results return as each completes.
+
+### Background Dispatch
+
+For non-blocking work:
+```
+Agent(description="Run full test suite", prompt="Execute npm test and report failures", run_in_background=true)
+```
+
+You'll be notified when complete — continue with other work.
+
+### Dispatching Named Agents
+
+To invoke a specific agent template (from the 20 installed agents):
+```
+Agent(description="Code review changes", subagent_type="superpowers:code-reviewer", prompt="Review the changes in src/auth/ against the plan in PLAN.md")
+```
+
 ## Trigger Conditions
 
 - A task decomposes into 2+ subtasks with no data dependencies between them
@@ -55,7 +97,7 @@ Every subtask must satisfy ALL four independence criteria:
 - A single agent can complete the work in under 30 seconds
 - The task requires iterative refinement where each step informs the next
 
-**STOP — Do NOT dispatch agents until:**
+**STOP — Do NOT dispatch agents (via the `Agent` tool) until:**
 - [ ] All four independence criteria verified for every subtask pair
 - [ ] No two agents write to the same file
 - [ ] Each agent's context is self-contained
@@ -146,7 +188,7 @@ You are a focused agent with a single task.
 | Output is defined | Will the agent return what you need to integrate? |
 | Constraints are explicit | Are file boundaries and "do NOT" items clear? |
 
-**STOP — Do NOT dispatch until:**
+**STOP — Do NOT dispatch (via the `Agent` tool) until:**
 - [ ] Every prompt has all 4 sections
 - [ ] No prompt requires the agent to explore beyond provided context
 - [ ] File boundaries are explicit in every constraint section
@@ -155,9 +197,9 @@ You are a focused agent with a single task.
 
 ## Phase 3: Dispatch and Monitor
 
-**Goal:** Launch all agents concurrently and track completion.
+**Goal:** Launch all agents (via the `Agent` tool) concurrently and track completion.
 
-1. Launch all agents concurrently
+1. Launch all agents concurrently by invoking multiple `Agent` tool calls in a single message
 2. Each agent works in isolation on its designated files
 3. Monitor for completion — wait for ALL agents to finish
 4. Collect outputs from every agent
@@ -176,10 +218,10 @@ You are a focused agent with a single task.
 
 | Scenario | Action |
 |----------|--------|
-| One agent fails, others succeed | Retry failed agent independently |
-| Multiple agents fail independently | Retry each independently |
+| One agent fails, others succeed | Retry failed agent independently (via the `Agent` tool) |
+| Multiple agents fail independently | Retry each independently (via the `Agent` tool) |
 | Agent reports out-of-scope issue | Note for post-integration review |
-| Agent exceeds scope (modifies wrong files) | Reject output, re-dispatch with stricter constraints |
+| Agent exceeds scope (modifies wrong files) | Reject output, re-dispatch (via the `Agent` tool) with stricter constraints |
 
 ---
 
@@ -208,8 +250,8 @@ You are a focused agent with a single task.
 
 | Failure Type | Diagnosis | Action |
 |-------------|-----------|--------|
-| Test failure in Agent 1's files | Agent 1's changes have a bug | Re-dispatch Agent 1 with test failure context |
-| Test failure in unrelated files | Cross-cutting regression | Identify root cause, fix manually or re-dispatch |
+| Test failure in Agent 1's files | Agent 1's changes have a bug | Re-dispatch Agent 1 (via the `Agent` tool) with test failure context |
+| Test failure in unrelated files | Cross-cutting regression | Identify root cause, fix manually or re-dispatch (via the `Agent` tool) |
 | Build failure | Import/type issue | Check which agent's changes caused it, fix |
 | Merge conflict | Agents touched same file (should not happen) | Rollback, serialize those tasks |
 
@@ -227,7 +269,7 @@ You are a focused agent with a single task.
 
 | Pattern | When to Use | Example |
 |---------|-----------|---------|
-| By Module | Independent modules or packages | Agent per microservice |
+| By Module | Independent modules or packages | One `Agent` call per microservice |
 | By Layer | Layers touch different files | API agent, service agent, data agent |
 | By Feature Area | Independent vertical slices | Auth agent, profile agent, billing agent |
 | By Task Type | Code, tests, docs touch different files | Code agent, test agent, docs agent |
@@ -262,14 +304,14 @@ AGENT 3 - OpenAPI Spec:
 
 | Anti-Pattern | Why It Fails | Correct Approach |
 |-------------|-------------|-----------------|
-| Two agents modifying the same file | Merge conflicts, data loss | One file owner per dispatch |
+| Two agents modifying the same file | Merge conflicts, data loss | One file owner per `Agent` dispatch |
 | Shared mutable state between agents | Race conditions, inconsistency | Eliminate shared state |
 | Incomplete context in prompts | Agents explore and step on each other | Provide ALL needed context |
 | Vague file boundaries | Agents guess scope, modify wrong files | Explicit file lists in constraints |
 | No integration check after completion | Cross-cutting bugs go undetected | Full test suite after integration |
 | Parallelizing sequential tasks | Agent B needs Agent A's output | Verify independence first |
 | Not tracking which agent touched which file | Cannot diagnose integration failures | Maintain dispatch tracking table |
-| Dispatching too many agents (10+) | Coordination overhead exceeds savings | 2-5 agents per dispatch round |
+| Dispatching too many agents (10+) | Coordination overhead exceeds savings | 2-5 `Agent` calls per dispatch round |
 | Skipping rollback preparation | Cannot recover from integration failure | Keep pre-dispatch state recoverable |
 
 ---
@@ -277,7 +319,7 @@ AGENT 3 - OpenAPI Spec:
 ## Anti-Rationalization Guards
 
 <HARD-GATE>
-Do NOT dispatch agents that modify the same file. Do NOT parallelize tasks with data dependencies. Do NOT skip integration verification. If independence criteria are not met, serialize the tasks.
+Do NOT dispatch agents (via the `Agent` tool) that modify the same file. Do NOT parallelize tasks with data dependencies. Do NOT skip integration verification. If independence criteria are not met, serialize the tasks.
 </HARD-GATE>
 
 If you catch yourself thinking:
