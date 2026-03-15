@@ -1,6 +1,11 @@
 ---
 name: email-composer
-description: When the user needs professional email drafting, tone adjustment, template creation, or communication strategy for business correspondence.
+description: >
+  Use when the user needs professional email drafting, tone adjustment, template creation,
+  or communication strategy for business correspondence.
+  Trigger conditions: draft professional email, adjust email tone, create email template,
+  write cold outreach, compose follow-up, draft escalation email, write apology email,
+  craft meeting request, compose status update, plan email communication strategy.
 ---
 
 # Email Composer
@@ -9,35 +14,62 @@ description: When the user needs professional email drafting, tone adjustment, t
 
 Draft clear, effective professional emails with appropriate tone, structure, and purpose. This skill covers business correspondence, cold outreach, follow-ups, escalations, apologies, negotiations, internal communications, and stakeholder updates. Includes tone calibration, cultural sensitivity, and templates for common business scenarios.
 
-## Process
+Apply this skill whenever professional email communication needs to be drafted, refined, or strategized.
+
+## Multi-Phase Process
 
 ### Phase 1: Context Assessment
+
 1. Identify the recipient(s) and their relationship to the sender
 2. Determine the email's primary purpose (inform, request, persuade, respond)
-3. Assess the appropriate formality level
+3. Assess the appropriate formality level (see tone matrix)
 4. Consider cultural and organizational norms
 5. Identify any sensitive topics requiring careful framing
 
+> **STOP — Do NOT begin drafting without knowing the recipient, purpose, and tone level.**
+
 ### Phase 2: Structure Planning
+
 1. Craft a clear, specific subject line
 2. Plan the opening (context-setting or relationship acknowledgment)
 3. Organize the body (one idea per paragraph, most important first)
 4. Define the call to action or next steps
 5. Choose an appropriate sign-off
 
+> **STOP — Do NOT draft the full email without a subject line and clear CTA defined.**
+
 ### Phase 3: Drafting
+
 1. Write using the selected tone and formality level
 2. Keep paragraphs short (2-4 sentences maximum)
 3. Use bullet points for multiple items or action items
 4. Bold or highlight key dates, deadlines, or decisions
 5. Include all necessary context without over-explaining
 
+> **STOP — Do NOT send without completing the review phase.**
+
 ### Phase 4: Review
+
 1. Read aloud for natural flow and tone
 2. Check that the subject line matches the content
 3. Verify all names, dates, and attachments are correct
 4. Ensure the CTA is clear and actionable
 5. Consider how the email reads if forwarded out of context
+
+## Email Type Decision Table
+
+| Situation | Structure | Tone | Key Element |
+|---|---|---|---|
+| Status update to stakeholders | Inverted Pyramid | Professional | Bold status indicator, bullet points |
+| Request for approval/decision | BLUF | Professional | Recommendation first, supporting data |
+| Delivering bad news | Sandwich | Formal | Empathy, explanation, constructive close |
+| Meeting request | Direct | Professional-Friendly | Agenda items, time options |
+| Cold outreach | Personalized Hook | Professional | Specific observation about recipient |
+| Follow-up (no response) | Gentle Reminder | Professional | Easy options, graceful out |
+| Escalation | Structured Report | Formal | Impact, attempts made, specific ask |
+| Apology | Acknowledgment + Action | Formal | Honest explanation, preventive measures |
+| Internal team update | Quick Update | Friendly Professional | Brevity, action items highlighted |
+| Negotiation | Collaborative | Professional | Shared interests, multiple options |
 
 ## Tone Calibration Matrix
 
@@ -49,6 +81,7 @@ Draft clear, effective professional emails with appropriate tone, structure, and
 | **Casual** | Close teammates, informal updates | Conversational, emoji acceptable | "Just a heads up — the deploy is going out at 3pm" |
 
 ### Tone Adjustment Signals
+
 | Signal | Shift Toward |
 |---|---|
 | Bad news, rejection, complaint | More formal, more empathetic |
@@ -75,9 +108,9 @@ from Q3 to Q4.
 
 [DETAILS]
 Key changes from the original proposal:
-• Marketing: $80K → $60K (Q3), $20K moved to Q4
-• Engineering: unchanged at $120K
-• Operations: $40K (new line item for tooling)
+- Marketing: $80K → $60K (Q3), $20K moved to Q4
+- Engineering: unchanged at $120K
+- Operations: $40K (new line item for tooling)
 
 [ACTION]
 Could you review the attached spreadsheet and reply with
@@ -133,8 +166,8 @@ Hi [Name],
 I'd like to schedule [duration] to discuss [topic].
 
 Specifically, I'd like to cover:
-• [Agenda item 1]
-• [Agenda item 2]
+- [Agenda item 1]
+- [Agenda item 2]
 
 Would [date/time option 1] or [date/time option 2] work
 for you? Happy to adjust to your availability.
@@ -149,22 +182,22 @@ Subject: [Project Name] Status Update — Week of [Date]
 
 Hi [stakeholders],
 
-**Status: 🟢 On Track** (or 🟡 At Risk / 🔴 Blocked)
+**Status: On Track** (or At Risk / Blocked)
 
 **Completed this week:**
-• [Accomplishment 1]
-• [Accomplishment 2]
+- [Accomplishment 1]
+- [Accomplishment 2]
 
 **In progress:**
-• [Task 1] — expected completion [date]
-• [Task 2] — expected completion [date]
+- [Task 1] — expected completion [date]
+- [Task 2] — expected completion [date]
 
 **Blockers/Risks:**
-• [Blocker] — [mitigation plan or help needed]
+- [Blocker] — [mitigation plan or help needed]
 
 **Next week's priorities:**
-• [Priority 1]
-• [Priority 2]
+- [Priority 1]
+- [Priority 2]
 
 Let me know if you have questions or want to discuss any
 of these items.
@@ -185,12 +218,12 @@ blocked dependencies, unresolved after N attempts].
 [2-3 sentences of context]
 
 **Impact if unresolved:**
-• [Consequence 1 with timeline]
-• [Consequence 2]
+- [Consequence 1 with timeline]
+- [Consequence 2]
 
 **What I've tried:**
-• [Attempt 1 — outcome]
-• [Attempt 2 — outcome]
+- [Attempt 1 — outcome]
+- [Attempt 2 — outcome]
 
 **What I need:**
 [Specific ask — decision, resource, intervention]
@@ -216,8 +249,8 @@ of the standard you should expect from us.
 [Brief, honest explanation — no excuses]
 
 **What we're doing about it:**
-• [Immediate fix]
-• [Preventive measure for the future]
+- [Immediate fix]
+- [Preventive measure for the future]
 
 **What this means for you:**
 [Any impact, compensation, or timeline adjustment]
@@ -259,9 +292,9 @@ Hi [Name],
 I wanted to follow up on my email from [date] about [topic].
 
 I understand you're busy — would it help if I:
-• [Simplified option A]
-• [Alternative option B]
-• [Easy opt-out: "Let me know if this isn't a priority
+- [Simplified option A]
+- [Alternative option B]
+- [Easy opt-out: "Let me know if this isn't a priority
    right now and I'll circle back later"]
 
 [Name]
@@ -282,6 +315,7 @@ Examples:
 ```
 
 ### Subject Line Rules
+
 | Rule | Good | Bad |
 |---|---|---|
 | Be specific | "Q3 Marketing Budget: $80K Reallocation" | "Budget Update" |
@@ -301,18 +335,39 @@ Examples:
 | Cross-timezone | State timezone explicitly, suggest multiple options |
 | Non-native English speakers | Simpler vocabulary, shorter sentences, avoid idioms |
 
-## Anti-Patterns
+## Anti-Patterns / Common Mistakes
 
-- Burying the ask at the bottom of a long email
-- Replying-all unnecessarily
-- Using passive-aggressive tone ("As per my last email...")
-- Writing emails that require scrolling on mobile
-- Vague subject lines ("Quick question", "Following up", "Hi")
-- Including too many action items for too many people in one email
-- Not specifying deadlines ("when you get a chance" = never)
-- CC-ing someone's manager without telling them (perceived as hostile)
-- Using humor or sarcasm that doesn't translate well in text
-- Sending emotional emails without a cooling-off period
+| Anti-Pattern | Why It Fails | What To Do Instead |
+|---|---|---|
+| Burying the ask at the bottom | Reader may never reach it | Lead with the request (BLUF) |
+| Reply-all unnecessarily | Clutters inboxes, annoys recipients | Reply only to those who need to act |
+| Passive-aggressive tone | Damages relationships and trust | Be direct and professional |
+| Long emails requiring mobile scrolling | Recipients skip or defer | Keep to 5-8 sentences for mobile |
+| Vague subject lines ("Quick question") | Gets deprioritized or lost | Include topic and action needed |
+| Too many asks for too many people | Diffusion of responsibility | One primary ask per email |
+| No deadline ("when you get a chance") | Means never | Specify date and time |
+| CC-ing manager without telling recipient | Perceived as hostile escalation | Mention it in the email or tell them first |
+| Humor or sarcasm in text | Misinterpreted without vocal tone | Save humor for in-person |
+| Sending emotional emails immediately | Regret and reputation damage | Wait 30 minutes before sending |
+
+## Anti-Rationalization Guards
+
+- Do NOT skip the context assessment because "it's just a quick email" -- every email represents you.
+- Do NOT draft without a defined CTA -- even "FYI" emails should state what you expect.
+- Do NOT send without the read-aloud review, especially for sensitive emails.
+- Do NOT use a casual tone with someone you haven't corresponded with before.
+- Do NOT send an escalation email without documenting what you have already tried.
+
+## Integration Points
+
+| Skill | How It Connects |
+|---|---|
+| `content-creator` | Brand voice and copywriting frameworks apply to marketing emails |
+| `content-research-writer` | Research summaries inform executive briefing emails |
+| `docx-processing` | Generated documents attach to emails |
+| `pdf-processing` | Generated PDF reports attach to emails |
+| `xlsx-processing` | Spreadsheet attachments accompany data-driven emails |
+| `llm-as-judge` | Evaluate email tone and clarity against rubric |
 
 ## Skill Type
 

@@ -1,6 +1,10 @@
 ---
 name: ui-ux-pro-max
-description: When the user needs full UI/UX design intelligence — styles, palettes, fonts, UX guidelines, chart selection, and accessible, performant implementation across any supported stack.
+description: >
+  Use when the user needs full UI/UX design intelligence — styles, palettes, fonts, UX guidelines,
+  chart selection, and accessible, performant implementation across any supported stack. Triggers:
+  user says "design", "UI", "UX", "color palette", "typography", "accessibility", "responsive design",
+  "chart type", "style guide", building any user-facing interface.
 ---
 
 # UI/UX Pro Max
@@ -9,7 +13,19 @@ description: When the user needs full UI/UX design intelligence — styles, pale
 
 A comprehensive UI/UX design intelligence system that combines visual design expertise with engineering rigor. This skill provides opinionated, production-ready guidance covering style selection, color palettes, typography, UX heuristics, data visualization, and multi-stack implementation. Every recommendation is filtered through a strict priority hierarchy that ensures accessibility and performance are never sacrificed for aesthetics.
 
-## Priority Hierarchy (Non-Negotiable Order)
+## Phase 1: Requirements Gathering
+
+1. Identify the product type and target audience
+2. Determine platform(s) (web, mobile, desktop)
+3. Assess existing brand guidelines or design system
+4. Define accessibility requirements
+5. Set performance budgets
+
+**STOP — Confirm requirements with user before making design recommendations.**
+
+### Priority Hierarchy (Non-Negotiable Order)
+
+Do NOT skip or reorder these priorities. Accessibility always comes first.
 
 1. **Accessibility** — WCAG 2.1 AA minimum, AAA preferred
    - Contrast ratio: 4.5:1 for normal text, 3:1 for large text
@@ -28,83 +44,105 @@ A comprehensive UI/UX design intelligence system that combines visual design exp
 4. **Style** — Applied only after 1-3 are satisfied
 5. **Layout** — Composition and spacing applied last
 
-## Style Reference (67 Styles — Key Categories)
+## Phase 2: Style Selection
 
-### Glass & Transparency
+**STOP — Present style recommendation with rationale before proceeding to implementation.**
+
+### Style Selection Decision Table
+
+| Context | Recommended Styles | Why |
+|---|---|---|
+| SaaS Dashboard | Minimalism, Swiss, Material 3 | Clean, data-focused, professional |
+| Portfolio | Brutalism, Maximalism, Glassmorphism | Expressive, memorable |
+| E-commerce | Clean, Material 3, Swiss | Trust, clarity, conversion |
+| Mobile App | Material 3, Neumorphism, Minimalism | Native feel, thumb-friendly |
+| Landing Page | Glassmorphism, Neo-Brutalism, Japandi | Visual impact, hero focus |
+| Enterprise/B2B | Swiss Design, Minimalism | Authority, information density |
+| Creative Agency | Maximalism, Brutalism, Cyberpunk | Uniqueness, portfolio showcase |
+| Health/Wellness | Japandi, Minimalism | Calming, trustworthy |
+| Finance | Swiss, Material 3 | Conservative, professional |
+| Kids/Family | Claymorphism, Maximalism | Playful, engaging |
+
+### Style Reference (Key Categories)
+
+**Glass and Transparency:**
 - Glassmorphism: `backdrop-filter: blur(10px)`, semi-transparent backgrounds, subtle border
 - Frosted Glass: heavier blur (20px+), lower opacity, works on busy backgrounds
 - Acrylic (Fluent Design): noise texture overlay + blur
 
-### Minimal & Clean
+**Minimal and Clean:**
 - Minimalism: maximum whitespace, single accent color, limited element count
 - Swiss Design: grid-based, Helvetica/Grotesk, asymmetric balance
 - Japandi: warm neutrals, organic shapes, hidden complexity
 
-### Bold & Expressive
+**Bold and Expressive:**
 - Brutalism: raw, exposed structure, system fonts, harsh borders, no border-radius
 - Neo-Brutalism: brutalism + bright accent colors + drop shadows
 - Maximalism: layered textures, mixed fonts, dense information
 
-### Depth & Dimension
+**Depth and Dimension:**
 - Neumorphism: soft inner/outer shadows on same-color backgrounds
 - Material Design 3: elevation tokens, tonal surfaces, dynamic color
 - Claymorphism: inflated 3D look, pastel colors, inner shadows
 
-### Dark & Moody
+**Dark and Moody:**
 - Dark Mode: OLED-safe (#000 backgrounds), muted primaries, reduced brightness
 - Cyberpunk: neon on dark, glitch effects, monospace accents
 - Noir: high contrast, grayscale with single accent
 
-### When to Use What
-| Context | Recommended Styles |
-|---|---|
-| SaaS Dashboard | Minimalism, Swiss, Material 3 |
-| Portfolio | Brutalism, Maximalism, Glassmorphism |
-| E-commerce | Clean, Material 3, Swiss |
-| Mobile App | Material 3, Neumorphism, Minimalism |
-| Landing Page | Glassmorphism, Neo-Brutalism, Japandi |
+## Phase 3: Color and Typography
 
-## Color Palettes (161 Palettes — Organized by Product Type)
+**STOP — Present palette and font pairing for approval before building components.**
 
-### Selection Rules
+### Color Palette Selection Rules
+
+| Palette Category | Product Types | Characteristics |
+|---|---|---|
+| SaaS/B2B (24 palettes) | Dashboards, admin tools | Professional blues, teals, slates |
+| E-commerce (20 palettes) | Shops, marketplaces | Warm, trust-building ambers, greens |
+| Health/Wellness (18 palettes) | Health apps, meditation | Calming greens, soft blues, lavender |
+| Finance (15 palettes) | Banking, trading | Deep blues, golds, conservative neutrals |
+| Creative (22 palettes) | Portfolios, agencies | Bold, saturated, unexpected combos |
+| Social (16 palettes) | Communities, social apps | Vibrant, energetic, gradient-friendly |
+| Education (14 palettes) | Learning, courses | Friendly, approachable, moderate saturation |
+| Enterprise (12 palettes) | Corporate tools | Muted, authoritative, high-contrast |
+| Kids/Family (10 palettes) | Children's apps | Bright primaries, rounded, playful |
+| Luxury (10 palettes) | Premium brands | Black, gold, minimal, high whitespace |
+
+### Color Token Rules
+
 - Primary: brand identity color, used for CTAs and key actions
 - Secondary: complementary, used for secondary actions and accents
 - Neutral: gray scale for text, borders, backgrounds (minimum 9 shades)
 - Semantic: success (#22C55E), warning (#F59E0B), error (#EF4444), info (#3B82F6)
 - Always define as semantic tokens: `--color-action-primary`, not `--color-blue-500`
 
-### Palette Categories
-- **SaaS/B2B**: Professional blues, teals, slates (24 palettes)
-- **E-commerce**: Warm, trust-building — ambers, greens, navy (20 palettes)
-- **Health/Wellness**: Calming greens, soft blues, lavender (18 palettes)
-- **Finance**: Deep blues, golds, conservative neutrals (15 palettes)
-- **Creative/Portfolio**: Bold, saturated, unexpected combinations (22 palettes)
-- **Social/Community**: Vibrant, energetic, gradient-friendly (16 palettes)
-- **Education**: Friendly, approachable, moderate saturation (14 palettes)
-- **Enterprise**: Muted, authoritative, high-contrast (12 palettes)
-- **Kids/Family**: Bright primaries, rounded, playful (10 palettes)
-- **Luxury**: Black, gold, minimal palette, high whitespace (10 palettes)
-
 ### Dark Mode Palette Rules
-- Do NOT invert colors; remap to dark-appropriate equivalents
-- Reduce saturation by 10-20% for dark backgrounds
-- Elevation = lighter surface, not shadow
-- Text: #E2E8F0 (primary), #94A3B8 (secondary), #64748B (tertiary)
 
-## Font Pairings (57 Pairings — Top 10)
+| Rule | Implementation |
+|---|---|
+| Do NOT invert colors | Remap to dark-appropriate equivalents |
+| Reduce saturation 10-20% | Prevent eye strain on dark backgrounds |
+| Elevation = lighter surface | Not shadow-based like light mode |
+| Text hierarchy | #E2E8F0 (primary), #94A3B8 (secondary), #64748B (tertiary) |
 
-1. **Inter + Source Serif 4** — SaaS, dashboards
-2. **Geist + Geist Mono** — Developer tools, technical
-3. **DM Sans + DM Serif Display** — Marketing, editorial
-4. **Plus Jakarta Sans + Lora** — Modern professional
-5. **Outfit + Newsreader** — Creative agencies
-6. **Manrope + Bitter** — Enterprise applications
-7. **Space Grotesk + Space Mono** — Tech startups
-8. **Satoshi + Erode** — Premium/luxury
-9. **General Sans + Gambetta** — Editorial/publishing
-10. **Cabinet Grotesk + Zodiak** — Bold branding
+### Font Pairings (Top 10)
+
+| Pairing | Best For |
+|---|---|
+| Inter + Source Serif 4 | SaaS, dashboards |
+| Geist + Geist Mono | Developer tools, technical |
+| DM Sans + DM Serif Display | Marketing, editorial |
+| Plus Jakarta Sans + Lora | Modern professional |
+| Outfit + Newsreader | Creative agencies |
+| Manrope + Bitter | Enterprise applications |
+| Space Grotesk + Space Mono | Tech startups |
+| Satoshi + Erode | Premium/luxury |
+| General Sans + Gambetta | Editorial/publishing |
+| Cabinet Grotesk + Zodiak | Bold branding |
 
 ### Typography Scale (Default)
+
 ```
 --text-xs: 0.75rem / 1rem
 --text-sm: 0.875rem / 1.25rem
@@ -116,15 +154,17 @@ A comprehensive UI/UX design intelligence system that combines visual design exp
 --text-4xl: 2.25rem / 2.5rem
 ```
 
-## UX Guidelines (99 Rules — Critical Subset)
+## Phase 4: UX Guidelines Application
 
-### Navigation
+### Navigation Rules
+
 1. Primary navigation: maximum 7 items (Miller's Law)
 2. Current location always indicated (breadcrumb or active state)
 3. Back button must always work as expected
 4. Search available on every page for content-heavy apps
 
-### Forms
+### Form Rules
+
 5. Labels above inputs, never placeholder-only
 6. Inline validation on blur, not on keystroke
 7. Error messages: specific, actionable, adjacent to field
@@ -132,25 +172,30 @@ A comprehensive UI/UX design intelligence system that combines visual design exp
 9. Submit button disabled until form valid (with explanation)
 10. Progress indicator for multi-step forms
 
-### Feedback
+### Feedback Rules
+
 11. Loading states for any action > 300ms
 12. Skeleton screens over spinners for content loading
 13. Toast notifications: auto-dismiss success (3s), persist errors
 14. Tap feedback: 80-150ms response time
 15. Optimistic UI for low-risk actions
 
-### Content
+### Content Layout Rules
+
 16. F-pattern for text-heavy pages
 17. Z-pattern for landing pages
 18. Above-the-fold: value proposition + primary CTA
 19. One primary CTA per viewport
 
-### Mobile
+### Mobile Rules
+
 20. Bottom navigation for primary actions (thumb zone)
 21. Pull-to-refresh for feed content
 22. Swipe gestures with visual affordance
 
-## Chart Type Selection (25 Types)
+## Phase 5: Implementation
+
+### Chart Type Selection Decision Table
 
 | Data Relationship | Chart Types |
 |---|---|
@@ -163,20 +208,7 @@ A comprehensive UI/UX design intelligence system that combines visual design exp
 | Geographic | Choropleth, Dot Map, Cartogram |
 | Hierarchical | Sunburst, Icicle |
 
-## Quick Wins Checklist
-
-- [ ] No emoji as icons — use Lucide React or Heroicons
-- [ ] Tap feedback delay: 80-150ms
-- [ ] Semantic color tokens (not raw hex values)
-- [ ] 8dp spacing rhythm (4, 8, 12, 16, 24, 32, 48, 64)
-- [ ] `prefers-color-scheme` media query for dark mode
-- [ ] `prefers-reduced-motion` for animations
-- [ ] `:focus-visible` instead of `:focus` for keyboard-only focus
-- [ ] Image aspect ratios set to prevent CLS
-- [ ] Font preloading for above-the-fold text
-- [ ] `loading="lazy"` on below-fold images
-
-## Supported Stacks (10)
+### Supported Stacks
 
 | Stack | Key Patterns |
 |---|---|
@@ -191,16 +223,15 @@ A comprehensive UI/UX design intelligence system that combines visual design exp
 | shadcn/ui | Radix primitives, Tailwind variants, cn() utility |
 | HTML/CSS | Semantic HTML5, CSS Grid/Flexbox, custom properties |
 
-## Master + Overrides Persistence Pattern
+### Design Token Architecture
 
 ```
-Design System Token Architecture:
-master.tokens.json    → Primitive values (colors, spacing, fonts)
-semantic.tokens.json  → Mapped meanings (action-primary, surface-elevated)
-component.tokens.json → Component-specific (button-padding, card-radius)
+master.tokens.json    -> Primitive values (colors, spacing, fonts)
+semantic.tokens.json  -> Mapped meanings (action-primary, surface-elevated)
+component.tokens.json -> Component-specific (button-padding, card-radius)
 overrides/
-  brand-a.tokens.json → Brand-specific overrides
-  dark.tokens.json    → Dark mode overrides
+  brand-a.tokens.json -> Brand-specific overrides
+  dark.tokens.json    -> Dark mode overrides
 ```
 
 - Master tokens are read-only defaults
@@ -208,17 +239,46 @@ overrides/
 - Component tokens reference semantic tokens only
 - Never reference primitive tokens in components
 
-## Anti-Patterns
+## Quick Wins Checklist
 
-- Using `opacity` for disabled states on text (kills readability)
-- Fixed pixel breakpoints without container queries
-- Hamburger menus on desktop
-- Carousel for critical content
-- Infinite scroll without "back to top" and URL persistence
-- Modal on modal
-- Auto-playing media
-- Color as the only differentiator (red/green for status)
+- [ ] No emoji as icons — use Lucide React or Heroicons
+- [ ] Tap feedback delay: 80-150ms
+- [ ] Semantic color tokens (not raw hex values)
+- [ ] 8dp spacing rhythm (4, 8, 12, 16, 24, 32, 48, 64)
+- [ ] `prefers-color-scheme` media query for dark mode
+- [ ] `prefers-reduced-motion` for animations
+- [ ] `:focus-visible` instead of `:focus` for keyboard-only focus
+- [ ] Image aspect ratios set to prevent CLS
+- [ ] Font preloading for above-the-fold text
+- [ ] `loading="lazy"` on below-fold images
+
+## Anti-Patterns / Common Mistakes
+
+| Anti-Pattern | Why It Is Wrong | What to Do Instead |
+|---|---|---|
+| `opacity` for disabled text | Kills readability | Use distinct disabled color token |
+| Fixed pixel breakpoints only | Ignores component context | Use container queries for components |
+| Hamburger menus on desktop | Hides primary navigation | Visible nav bar on desktop |
+| Carousel for critical content | Most users see only first slide | Use static layout or accordion |
+| Infinite scroll without URL persistence | Cannot share or return to position | Persist scroll position in URL |
+| Modal on modal | Confusing, accessibility nightmare | Redesign to avoid nested modals |
+| Auto-playing media | Annoying, accessibility violation | Require user interaction to play |
+| Color as only differentiator | Color-blind users excluded | Add shape/pattern/text labels |
+| Placeholder-only labels | Disappear on input, accessibility issue | Use visible labels above inputs |
+| Raw hex values in components | Impossible to theme | Use semantic design tokens |
+
+## Integration Points
+
+| Skill | Integration |
+|---|---|
+| `ui-design-system` | Token architecture and component library |
+| `canvas-design` | Data visualization and charts |
+| `mobile-design` | Mobile-specific design patterns |
+| `ux-researcher-designer` | User research informs design decisions |
+| `artifacts-builder` | Standalone prototypes and demos |
+| `senior-frontend` | Implementation of UI components |
+| `accessibility` | WCAG compliance validation |
 
 ## Skill Type
 
-**RIGID** — Follow the priority hierarchy exactly. Accessibility and performance rules are non-negotiable. Style recommendations may be adapted to context but never at the expense of higher-priority concerns.
+**FLEXIBLE** — Follow the priority hierarchy (accessibility > touch > performance > style > layout). Style recommendations adapt to context. Accessibility and performance rules are strongly recommended and should not be deprioritized.

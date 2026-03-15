@@ -1,6 +1,10 @@
 ---
 name: ui-design-system
-description: When the user needs to build or maintain design tokens, component libraries, theme systems, or Tailwind CSS v4 configurations with responsive patterns.
+description: >
+  Use when the user needs to build or maintain design tokens, component libraries, theme systems,
+  or Tailwind CSS v4 configurations with responsive patterns. Triggers: user says "design system",
+  "design tokens", "component library", "theme", "Tailwind config", "dark mode tokens",
+  "color system", building reusable UI components.
 ---
 
 # UI Design System
@@ -9,30 +13,38 @@ description: When the user needs to build or maintain design tokens, component l
 
 Build and maintain scalable design systems with a token-first architecture. This skill covers the full pipeline from primitive design tokens through semantic mapping to themed component libraries, with deep expertise in Tailwind CSS v4, CSS custom properties, and responsive design patterns.
 
-## Process
+## Phase 1: Token Foundation
 
-### Phase 1: Token Foundation
 1. Audit existing design assets (colors, fonts, spacing, shadows)
 2. Define primitive tokens (raw values with no semantic meaning)
 3. Create semantic token layer (map primitives to intentions)
 4. Build component token layer (map semantics to component parts)
 
-### Phase 2: Component Architecture
-1. Identify atomic components (Button, Input, Badge, Avatar)
-2. Define molecule components (FormField, SearchBar, Card)
-3. Build organism components (Header, Sidebar, DataTable)
-4. Establish composition patterns (layouts, page templates)
+**STOP — Present the token hierarchy to user for review before building components.**
 
-### Phase 3: Theming and Responsiveness
-1. Implement light/dark themes via token swapping
-2. Define breakpoint system with container queries
-3. Build responsive component variants
-4. Test across viewports and color schemes
+### Token Layer Decision Table
 
-## Token Hierarchy
+| Layer | Purpose | Naming Convention | Example |
+|---|---|---|---|
+| Primitive | Raw values, single source of truth | `--color-blue-500`, `--space-4` | `oklch(0.55 0.18 250)` |
+| Semantic | Map to purpose/intention | `--action-primary`, `--text-secondary` | `var(--color-blue-600)` |
+| Component | Scoped to specific components | `--button-height-md`, `--card-radius` | `var(--space-4)` |
+
+### When to Create Each Layer
+
+| Situation | Layers Needed |
+|---|---|
+| Brand new project | All three (primitive + semantic + component) |
+| Adding dark mode to existing | Semantic + component (remap primitives) |
+| Updating brand colors | Primitive only (semantic/component auto-update) |
+| Adding new component | Component only (reference existing semantic) |
+| Tailwind project with `@theme` | Primitive via @theme, semantic via CSS vars |
+
+## Phase 2: Token Implementation
 
 ### Level 1: Primitive Tokens
-Raw values with systematic naming. These are the single source of truth for all values.
+
+Raw values with systematic naming. Single source of truth for all values.
 
 ```css
 /* Colors — using OKLCH for perceptual uniformity */
@@ -83,6 +95,7 @@ Raw values with systematic naming. These are the single source of truth for all 
 ```
 
 ### Level 2: Semantic Tokens
+
 Map primitives to purpose. These are what components reference.
 
 ```css
@@ -118,6 +131,7 @@ Map primitives to purpose. These are what components reference.
 ```
 
 ### Level 3: Component Tokens
+
 Scoped to specific components.
 
 ```css
@@ -143,7 +157,65 @@ Scoped to specific components.
 --card-border: var(--border-default);
 ```
 
-## Tailwind CSS v4 Configuration
+## Phase 3: Component Architecture
+
+1. Identify atomic components (Button, Input, Badge, Avatar)
+2. Define molecule components (FormField, SearchBar, Card)
+3. Build organism components (Header, Sidebar, DataTable)
+4. Establish composition patterns (layouts, page templates)
+
+**STOP — Present component inventory for review before building variants.**
+
+### Component Complexity Decision Table
+
+| Level | Components | Composition |
+|---|---|---|
+| Atom | Button, Input, Badge, Avatar, Icon | Single element, no children |
+| Molecule | FormField, SearchBar, Card, Tooltip | 2-3 atoms combined |
+| Organism | Header, Sidebar, DataTable, Modal | Multiple molecules |
+| Template | DashboardLayout, AuthLayout | Page-level composition |
+
+### Variant Pattern (using CVA or Tailwind Variants)
+
+```typescript
+const buttonVariants = cva("inline-flex items-center justify-center rounded-md font-medium", {
+  variants: {
+    variant: {
+      primary: "bg-action-primary text-white hover:bg-action-primary-hover",
+      secondary: "bg-action-secondary text-text-primary hover:bg-gray-200",
+      ghost: "hover:bg-action-secondary",
+      danger: "bg-action-danger text-white hover:bg-red-700",
+    },
+    size: {
+      sm: "h-8 px-3 text-sm",
+      md: "h-10 px-4 text-sm",
+      lg: "h-12 px-6 text-base",
+    },
+  },
+  defaultVariants: {
+    variant: "primary",
+    size: "md",
+  },
+});
+```
+
+### Composition Patterns
+
+- Compound components for complex UI (Tabs, Accordion, Combobox)
+- Slot-based composition for flexible layouts
+- Render props for maximum customization
+- Forward refs for DOM access
+
+## Phase 4: Theming and Responsiveness
+
+1. Implement light/dark themes via token swapping
+2. Define breakpoint system with container queries
+3. Build responsive component variants
+4. Test across viewports and color schemes
+
+**STOP — Verify theme switching works correctly before declaring complete.**
+
+### Tailwind CSS v4 Configuration
 
 ```css
 /* app.css — Tailwind v4 uses CSS-based config */
@@ -165,41 +237,7 @@ Scoped to specific components.
 }
 ```
 
-## Responsive Design Patterns
-
-### Breakpoint System
-```
-Mobile-first approach:
-Default    → 0px+     (mobile)
-sm         → 640px+   (large phone / small tablet)
-md         → 768px+   (tablet)
-lg         → 1024px+  (laptop)
-xl         → 1280px+  (desktop)
-2xl        → 1536px+  (large desktop)
-```
-
-### Container Queries (Preferred for Components)
-```css
-.card-container {
-  container-type: inline-size;
-  container-name: card;
-}
-
-@container card (min-width: 400px) {
-  .card-content {
-    flex-direction: row;
-  }
-}
-```
-
-### Responsive Patterns
-- **Stack to Row**: vertical on mobile, horizontal on desktop
-- **Sidebar Collapse**: persistent sidebar becomes drawer on mobile
-- **Table to Cards**: data table becomes card list on mobile
-- **Hide/Show**: secondary content hidden on mobile
-- **Reorder**: CSS `order` to prioritize critical content
-
-## Dark / Light Theming
+### Dark / Light Theming
 
 ```css
 :root {
@@ -223,38 +261,46 @@ xl         → 1280px+  (desktop)
 }
 ```
 
-## Component Architecture Patterns
+### Responsive Design Patterns
 
-### Variant Pattern (using CVA or Tailwind Variants)
-```typescript
-const buttonVariants = cva("inline-flex items-center justify-center rounded-md font-medium", {
-  variants: {
-    variant: {
-      primary: "bg-action-primary text-white hover:bg-action-primary-hover",
-      secondary: "bg-action-secondary text-text-primary hover:bg-gray-200",
-      ghost: "hover:bg-action-secondary",
-      danger: "bg-action-danger text-white hover:bg-red-700",
-    },
-    size: {
-      sm: "h-8 px-3 text-sm",
-      md: "h-10 px-4 text-sm",
-      lg: "h-12 px-6 text-base",
-    },
-  },
-  defaultVariants: {
-    variant: "primary",
-    size: "md",
-  },
-});
+#### Breakpoint System
+
+```
+Mobile-first approach:
+Default    -> 0px+     (mobile)
+sm         -> 640px+   (large phone / small tablet)
+md         -> 768px+   (tablet)
+lg         -> 1024px+  (laptop)
+xl         -> 1280px+  (desktop)
+2xl        -> 1536px+  (large desktop)
 ```
 
-### Composition Pattern
-- Compound components for complex UI (Tabs, Accordion, Combobox)
-- Slot-based composition for flexible layouts
-- Render props for maximum customization
-- Forward refs for DOM access
+#### Container Queries (Preferred for Components)
 
-## Checklist
+```css
+.card-container {
+  container-type: inline-size;
+  container-name: card;
+}
+
+@container card (min-width: 400px) {
+  .card-content {
+    flex-direction: row;
+  }
+}
+```
+
+#### Responsive Patterns Decision Table
+
+| Pattern | Mobile Behavior | Desktop Behavior |
+|---|---|---|
+| Stack to Row | Vertical column | Horizontal row |
+| Sidebar Collapse | Drawer overlay | Persistent sidebar |
+| Table to Cards | Card list | Full data table |
+| Hide/Show | Secondary content hidden | All content visible |
+| Reorder | Priority content first | Standard order |
+
+## Verification Checklist
 
 - [ ] Primitive tokens defined for all raw values
 - [ ] Semantic tokens map primitives to intentions
@@ -267,15 +313,30 @@ const buttonVariants = cva("inline-flex items-center justify-center rounded-md f
 - [ ] Focus states visible and accessible
 - [ ] Color contrast ratios meet WCAG AA (4.5:1)
 
-## Anti-Patterns
+## Anti-Patterns / Common Mistakes
 
-- Hard-coding hex values in components instead of using tokens
-- Creating dark mode by inverting colors
-- Using `!important` to override design system styles
-- Mixing spacing units (px, rem, em) inconsistently
-- Building one-off components instead of extending the system
-- Skipping the semantic layer (primitive tokens directly in components)
+| Anti-Pattern | Why It Is Wrong | What to Do Instead |
+|---|---|---|
+| Hard-coding hex values in components | Cannot theme, cannot dark-mode | Use semantic tokens |
+| Creating dark mode by inverting colors | Looks terrible, wrong contrast | Remap tokens to dark-appropriate values |
+| Using `!important` to override system | Specificity wars, unmaintainable | Fix the cascade or use data attributes |
+| Mixing spacing units (px, rem, em) | Inconsistent layout, scaling issues | Use rem everywhere, reference tokens |
+| One-off components instead of extending | Design system fragmentation | Extend existing components with variants |
+| Skipping the semantic layer | Tight coupling to primitives | Always map primitives -> semantics -> components |
+| Primitive tokens directly in components | Cannot retheme without rewriting | Components reference semantic tokens only |
+| No container queries for components | Components break in different contexts | Use container queries for adaptive components |
+
+## Integration Points
+
+| Skill | Integration |
+|---|---|
+| `ui-ux-pro-max` | Provides style, palette, and UX guidelines |
+| `senior-frontend` | Implements design system in React/Next.js |
+| `canvas-design` | Data visualization tokens and chart theming |
+| `mobile-design` | Mobile-specific token adaptations |
+| `artifacts-builder` | Design system preview artifacts |
+| `planning` | Design system is planned like any feature |
 
 ## Skill Type
 
-**FLEXIBLE** — Adapt token naming, component structure, and theming approach to the project's existing conventions and tooling. The three-layer token hierarchy is strongly recommended but not mandatory.
+**FLEXIBLE** — Adapt token naming, component structure, and theming approach to the project's existing conventions and tooling. The three-layer token hierarchy (primitive -> semantic -> component) is strongly recommended but can be simplified for small projects.

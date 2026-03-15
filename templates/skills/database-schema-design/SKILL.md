@@ -5,151 +5,158 @@ description: "Use when designing database schemas, creating migrations, modeling
 
 # Database Schema Design
 
-## Purpose
+## Overview
 
-Guide the design, implementation, and optimization of database schemas with sound data modeling, safe migrations, effective indexing, and appropriate query patterns.
+Guide the design, implementation, and optimization of database schemas with sound data modeling, safe migrations, effective indexing, and appropriate query patterns. This skill covers the full lifecycle from conceptual modeling through physical optimization, ensuring schemas that are normalized, performant, and safely evolvable.
 
-## When to Use
+**Announce at start:** "I'm using the database-schema-design skill to design the database schema."
 
-- Designing a new database schema or data model
-- Creating or modifying database migrations
-- Adding or optimizing indexes
-- Modeling complex entity relationships
-- Optimizing slow database queries
-- Choosing between storage solutions
+## Phase 1: Discovery and Conceptual Model
 
-## Data Modeling Methodology
+Ask these questions to understand the data requirements:
 
-### Conceptual Model
+| # | Question | What It Determines |
+|---|----------|-------------------|
+| 1 | What entities does the system manage? | Table names |
+| 2 | What are the relationships between entities? | Foreign keys, join tables |
+| 3 | What are the key attributes of each entity? | Column definitions |
+| 4 | What are the primary query patterns? | Index strategy |
+| 5 | What is the expected data volume? (rows, growth rate) | Partitioning, scaling |
+| 6 | What is the read/write ratio? | Normalization vs denormalization |
+| 7 | SQL or NoSQL? (or both?) | Storage engine selection |
 
-Define entities and their relationships in plain language before touching SQL.
+### Storage Engine Decision Table
 
-1. Identify entities (nouns: User, Order, Product)
-2. Identify relationships (verbs: User places Order, Order contains Product)
-3. Identify attributes (properties: User has email, name, created_at)
-4. Identify cardinality (one-to-many, many-to-many)
+| Factor | Choose SQL (PostgreSQL, MySQL) | Choose Document (MongoDB) | Choose Key-Value (Redis) |
+|--------|-------------------------------|--------------------------|-------------------------|
+| Data shape | Structured, relational | Semi-structured, nested | Simple lookups, caching |
+| Query complexity | Complex joins, aggregations | Document-level queries | Key-based access only |
+| Consistency needs | ACID required | Eventual consistency OK | Ephemeral or cached data |
+| Schema evolution | Migrations manageable | Schema-free flexibility | No schema |
+| Scale pattern | Vertical first, then read replicas | Horizontal sharding | In-memory, limited size |
 
-### Logical Model
+STOP after discovery — present the conceptual model (entities, relationships, cardinality) for confirmation.
+
+## Phase 2: Logical Model Design
 
 Translate the conceptual model into tables, columns, types, and constraints.
 
+### Column Design Rules
+
 | Decision | Guidance |
 |----------|----------|
-| Primary keys | Use UUIDs for distributed systems, auto-increment for single-node |
-| Column types | Use the most specific type (e.g., `timestamptz` not `varchar` for dates) |
+| Primary keys | UUIDs for distributed systems, auto-increment for single-node |
+| Column types | Use the most specific type (`timestamptz` not `varchar` for dates) |
 | Nullability | Default NOT NULL; allow NULL only when absence is meaningful |
-| Defaults | Set sensible defaults (e.g., `created_at DEFAULT now()`) |
+| Defaults | Set sensible defaults (`created_at DEFAULT now()`) |
 | Constraints | Add CHECK, UNIQUE, and FK constraints at the schema level |
+| Naming | `snake_case`, singular table names or plural — be consistent |
 
-### Physical Model
+### Normalization Guide
 
-Optimize for actual query patterns and data volumes.
+| Normal Form | Rule | Violation Example | Fix |
+|-------------|------|-------------------|-----|
+| **1NF** | Atomic values, no repeating groups | `tags VARCHAR "urgent,priority,vip"` | Separate `order_tags` table |
+| **2NF** | All non-key columns depend on entire PK | `product_name` in `order_items` (composite PK) | Move to `products` table |
+| **3NF** | No transitive dependencies | `city` depends on `zip_code`, not `user_id` | Separate `zip_codes` table |
 
-- Add indexes based on measured query patterns (not speculation)
-- Partition large tables by time or tenant
-- Choose storage engine settings appropriate to workload
-- Plan for data growth over 1-3 years
+**Rule:** Always start normalized. Denormalize only with measured evidence.
 
-## Normalization Guide
+### Denormalization Decision Table
 
-### First Normal Form (1NF)
+| Scenario | Pattern | When to Apply |
+|----------|---------|--------------|
+| Read-heavy dashboards | Materialized views or summary tables | Measured slow query |
+| Frequently joined data | Embed as JSONB column | Join is >80% of query time |
+| Reporting / analytics | Separate denormalized reporting tables | OLAP workload |
+| Caching layer | Computed columns refreshed on write | High-frequency reads |
 
-Every column contains atomic values. No repeating groups.
+### Relationship Patterns
+
+| Relationship | Implementation | Index Needed |
+|-------------|---------------|-------------|
+| One-to-One | FK with UNIQUE constraint on child | On FK column |
+| One-to-Many | FK on the "many" side | On FK column |
+| Many-to-Many | Junction/join table with composite PK | On both FK columns |
+| Polymorphic | Separate FK columns with CHECK constraint (preferred) or type+id pattern | On type+id or each FK |
+| Self-referential (trees) | `parent_id` FK to same table; or `ltree`/materialized path | On parent_id or path |
+
+STOP after logical model — present the table definitions for review.
+
+## Phase 3: Physical Model and Indexing
+
+### Index Type Decision Table
+
+| Index Type | Best For | Example |
+|-----------|---------|---------|
+| **B-tree** (default) | Equality and range queries | `CREATE INDEX idx_users_email ON users(email)` |
+| **GIN** | Full-text search, JSONB, arrays | `CREATE INDEX idx_posts_search ON posts USING GIN(to_tsvector('english', body))` |
+| **Partial** | Subset of rows matching condition | `CREATE INDEX idx_active_users ON users(email) WHERE active = true` |
+| **Covering (INCLUDE)** | Index-only scans avoiding table lookup | `CREATE INDEX idx_users_email ON users(email) INCLUDE (name)` |
+| **Composite** | Multi-column queries | `CREATE INDEX idx_orders ON orders(tenant_id, status)` |
+
+### Composite Index Column Order
+
+| Position | Column Type | Reason |
+|----------|------------|--------|
+| First | High-cardinality equality columns | Most selective filter first |
+| Middle | Additional equality columns | Further narrows results |
+| Last | Range columns (dates, numbers) | Range scan on remaining rows |
+
+**Rule:** A composite index on `(A, B, C)` supports queries on `A`, `A+B`, `A+B+C` — but NOT `B` alone or `C` alone.
+
+### Query Optimization Checklist
+
+| Signal in EXPLAIN ANALYZE | Problem | Fix |
+|--------------------------|---------|-----|
+| Seq Scan on large table | Missing index | Add appropriate index |
+| Nested Loop with large outer table | Inefficient join | Add index or restructure query |
+| High actual vs estimated rows | Stale statistics | Run `ANALYZE` on table |
+| Hash Join high memory | `work_mem` too low | Tune `work_mem` or restructure |
+
+### N+1 Detection and Prevention
 
 ```sql
--- Bad: repeating groups
-CREATE TABLE orders (
-  id INT, tags VARCHAR(255)  -- "urgent,priority,vip"
-);
+-- N+1 problem (bad):
+SELECT * FROM users;
+-- Then for EACH user: SELECT * FROM orders WHERE user_id = ?;
 
--- Good: atomic values
-CREATE TABLE order_tags (
-  order_id INT REFERENCES orders(id),
-  tag VARCHAR(50),
-  PRIMARY KEY (order_id, tag)
-);
+-- Fixed with join:
+SELECT u.*, o.* FROM users u LEFT JOIN orders o ON o.user_id = u.id;
+
+-- Fixed with batch load:
+SELECT * FROM orders WHERE user_id = ANY($1);
 ```
 
-### Second Normal Form (2NF)
+STOP after physical model — present indexes and optimization strategy for review.
 
-All non-key columns depend on the entire primary key (relevant for composite keys).
+## Phase 4: Migration Strategy
 
-```sql
--- Bad: partial dependency (product_name depends only on product_id)
-CREATE TABLE order_items (
-  order_id INT, product_id INT, product_name VARCHAR(255), quantity INT,
-  PRIMARY KEY (order_id, product_id)
-);
-
--- Good: product_name lives in products table
-CREATE TABLE order_items (
-  order_id INT, product_id INT REFERENCES products(id), quantity INT,
-  PRIMARY KEY (order_id, product_id)
-);
-```
-
-### Third Normal Form (3NF)
-
-No non-key column depends on another non-key column (no transitive dependencies).
-
-```sql
--- Bad: city depends on zip_code, not on user_id
-CREATE TABLE users (
-  id INT PRIMARY KEY, zip_code VARCHAR(10), city VARCHAR(100)
-);
-
--- Good: city derived from zip_code table
-CREATE TABLE users (id INT PRIMARY KEY, zip_code VARCHAR(10) REFERENCES zip_codes(code));
-CREATE TABLE zip_codes (code VARCHAR(10) PRIMARY KEY, city VARCHAR(100));
-```
-
-### When to Denormalize
-
-| Scenario | Pattern |
-|----------|---------|
-| Read-heavy dashboards | Materialized views or summary tables |
-| Frequently joined data | Embed as JSONB column |
-| Reporting / analytics | Separate denormalized reporting tables |
-| Caching layer | Computed columns refreshed on write |
-
-Always start normalized. Denormalize only when you have measured evidence of a performance problem.
-
-## Migration Strategy
-
-### Zero-Downtime Migrations (Expand-Contract)
+### Zero-Downtime Migration (Expand-Contract)
 
 Never make a breaking change in a single migration. Use two phases:
 
 **Expand phase** (backward compatible):
 1. Add new column/table (nullable or with default)
 2. Deploy code that writes to both old and new
-3. Backfill existing data
+3. Backfill existing data in batches
 4. Deploy code that reads from new
 
 **Contract phase** (after all code uses new schema):
 1. Remove code that writes to old
 2. Drop old column/table
 
-### Rollback Plans
+### Migration Safety Rules
 
-Every migration must have a corresponding rollback:
+| Rule | Rationale |
+|------|-----------|
+| Every migration has a corresponding rollback | Safe to revert |
+| Test rollback in staging before production | Verify reversibility |
+| Data-destructive rollbacks need explicit approval | Prevent accidental data loss |
+| Keep migration files immutable once applied | Reproducible state |
+| Backfill large tables in batches (1000 rows) | Avoid table locks |
 
-```sql
--- Migration: up
-ALTER TABLE users ADD COLUMN display_name VARCHAR(255);
-
--- Migration: down
-ALTER TABLE users DROP COLUMN display_name;
-```
-
-Rules:
-- Test rollback in staging before applying to production
-- Data-destructive rollbacks (dropping columns with data) need explicit approval
-- Keep migration files immutable once applied
-
-### Data Backfill Patterns
-
-For large tables, backfill in batches to avoid locking:
+### Backfill Pattern
 
 ```sql
 -- Backfill in chunks of 1000
@@ -158,174 +165,34 @@ WHERE display_name IS NULL
 AND id IN (SELECT id FROM users WHERE display_name IS NULL LIMIT 1000);
 ```
 
-## Indexing Patterns
+### Migration Type Decision Table
 
-### B-tree Indexes (Default)
+| Change Type | Safe Approach | Dangerous Approach |
+|------------|---------------|-------------------|
+| Add column | Add nullable or with default | Add NOT NULL without default |
+| Remove column | Expand-contract (two deploys) | Drop column directly |
+| Rename column | Add new, copy data, drop old | ALTER RENAME (breaks queries) |
+| Add index | `CREATE INDEX CONCURRENTLY` | `CREATE INDEX` (locks table) |
+| Change column type | Add new column, migrate data | `ALTER COLUMN TYPE` (locks table) |
 
-Best for equality and range queries:
+STOP after migration plan — confirm rollback strategy before finalizing.
 
-```sql
--- Equality
-CREATE INDEX idx_users_email ON users(email);
+## Phase 5: Save and Transition
 
--- Range
-CREATE INDEX idx_orders_created ON orders(created_at);
-```
+After explicit approval:
 
-### GIN Indexes
+1. Save schema design to `docs/database/` or generate migration files
+2. Commit with message: `docs(db): add schema design for <feature>`
 
-Best for full-text search, JSONB, and array columns:
+### Transition Decision Table
 
-```sql
--- Full-text search
-CREATE INDEX idx_posts_search ON posts USING GIN(to_tsvector('english', body));
-
--- JSONB containment
-CREATE INDEX idx_events_metadata ON events USING GIN(metadata);
-
--- Array contains
-CREATE INDEX idx_posts_tags ON posts USING GIN(tags);
-```
-
-### Partial Indexes
-
-Index only rows matching a condition (smaller, faster):
-
-```sql
--- Only index active users
-CREATE INDEX idx_active_users_email ON users(email) WHERE active = true;
-
--- Only index unprocessed orders
-CREATE INDEX idx_unprocessed_orders ON orders(created_at) WHERE status = 'pending';
-```
-
-### Covering Indexes (INCLUDE)
-
-Include non-key columns to enable index-only scans:
-
-```sql
--- Include name so queries filtering by email and selecting name avoid table lookups
-CREATE INDEX idx_users_email ON users(email) INCLUDE (name);
-```
-
-### Composite Indexes
-
-Column order matters. The index is usable for queries on:
-- First column alone
-- First + second columns
-- First + second + third columns
-- NOT second column alone
-
-```sql
--- Supports: WHERE tenant_id = X, WHERE tenant_id = X AND status = Y
--- Does NOT efficiently support: WHERE status = Y alone
-CREATE INDEX idx_orders_tenant_status ON orders(tenant_id, status);
-```
-
-Rule: place high-cardinality equality columns first, range columns last.
-
-## Query Optimization
-
-### EXPLAIN ANALYZE Reading
-
-```sql
-EXPLAIN ANALYZE SELECT * FROM orders WHERE user_id = 123;
-```
-
-Key things to look for:
-- **Seq Scan** on large tables (missing index)
-- **Nested Loop** with large outer table (may need index or restructure)
-- **Hash Join** memory usage (work_mem may need tuning)
-- **Actual rows** vs **estimated rows** (stale statistics if far off)
-
-### N+1 Detection and Prevention
-
-```sql
--- N+1: one query per user's orders (bad)
-SELECT * FROM users;
--- Then for EACH user: SELECT * FROM orders WHERE user_id = ?;
-
--- Fixed: single join or subquery
-SELECT u.*, o.* FROM users u
-LEFT JOIN orders o ON o.user_id = u.id;
-
--- Or batch load
-SELECT * FROM orders WHERE user_id = ANY($1);
-```
-
-### Connection Pooling
-
-Use a connection pooler (PgBouncer, built-in pool) to avoid exhausting database connections:
-- Application servers should not open raw connections
-- Set pool size based on: `connections = (CPU cores * 2) + disk spindles`
-- Use transaction-level pooling for most workloads
-
-## Relationship Patterns
-
-### One-to-One
-
-```sql
--- Profile extends User (separate table for rarely-accessed data)
-CREATE TABLE user_profiles (
-  user_id INT PRIMARY KEY REFERENCES users(id),
-  bio TEXT,
-  avatar_url VARCHAR(500)
-);
-```
-
-### One-to-Many
-
-```sql
--- A user has many orders
-CREATE TABLE orders (
-  id SERIAL PRIMARY KEY,
-  user_id INT NOT NULL REFERENCES users(id),
-  total DECIMAL(10,2)
-);
-CREATE INDEX idx_orders_user ON orders(user_id);
-```
-
-### Many-to-Many
-
-```sql
--- Students enroll in courses
-CREATE TABLE enrollments (
-  student_id INT REFERENCES students(id),
-  course_id INT REFERENCES courses(id),
-  enrolled_at TIMESTAMPTZ DEFAULT now(),
-  PRIMARY KEY (student_id, course_id)
-);
-```
-
-### Polymorphic Associations
-
-```sql
--- Comments can belong to posts, videos, or photos
-CREATE TABLE comments (
-  id SERIAL PRIMARY KEY,
-  commentable_type VARCHAR(50) NOT NULL, -- 'post', 'video', 'photo'
-  commentable_id INT NOT NULL,
-  body TEXT NOT NULL
-);
-CREATE INDEX idx_comments_target ON comments(commentable_type, commentable_id);
-```
-
-Alternative (preferred): use separate foreign key columns with a CHECK constraint ensuring exactly one is set.
-
-### Self-Referential (Trees)
-
-```sql
--- Category tree using adjacency list
-CREATE TABLE categories (
-  id SERIAL PRIMARY KEY,
-  parent_id INT REFERENCES categories(id),
-  name VARCHAR(255) NOT NULL
-);
-
--- For efficient tree queries, consider materialized path or ltree:
-ALTER TABLE categories ADD COLUMN path LTREE;
-CREATE INDEX idx_categories_path ON categories USING GIST(path);
-```
+| User Intent | Next Skill | Rationale |
+|-------------|-----------|-----------|
+| "Create the migrations" | `planning` | Plan migration implementation |
+| "Write specs for this" | `spec-writing` | Behavioral specs for data operations |
+| "Implement the schema" | `test-driven-development` | TDD with migration tests |
+| "Just save the design" | None | Schema design is the deliverable |
+| "Review for performance" | `performance-optimization` | Analyze query patterns |
 
 ## ORM Guidance
 
@@ -341,5 +208,62 @@ CREATE INDEX idx_categories_path ON categories USING GIST(path);
 - Always review generated SQL (enable query logging in development)
 - Use eager loading to prevent N+1 queries
 - Write raw SQL for complex queries rather than fighting the ORM
-- Use migrations from the ORM, not auto-sync in production
-- Test query performance with realistic data volumes, not empty databases
+- Use ORM migrations, not auto-sync in production
+- Test query performance with realistic data volumes
+
+## Connection Pooling
+
+- Use a connection pooler (PgBouncer, built-in pool)
+- Pool size formula: `connections = (CPU cores * 2) + disk spindles`
+- Use transaction-level pooling for most workloads
+- Application servers should not open raw connections
+
+## Anti-Patterns / Common Mistakes
+
+| Mistake | Why It Is Wrong | What To Do Instead |
+|---------|----------------|-------------------|
+| No foreign key constraints | Orphaned data, broken relationships | Always define FK constraints |
+| VARCHAR for everything | Loses type safety, wastes storage | Use specific types (timestamptz, int, uuid) |
+| No indexes on FK columns | Slow joins on related tables | Index every FK column |
+| Premature denormalization | Complexity without measured benefit | Start normalized, denormalize with evidence |
+| Dropping columns directly | Breaks running application code | Use expand-contract pattern |
+| `CREATE INDEX` without CONCURRENTLY | Locks table during index creation | Always use `CONCURRENTLY` in production |
+| Auto-sync schema in production | Unpredictable destructive changes | Use explicit migration files |
+| No rollback plan for migrations | Cannot recover from failed deploy | Write down migration for every up migration |
+| Nullable columns everywhere | Loses data integrity guarantees | Default NOT NULL, allow NULL intentionally |
+
+## Anti-Rationalization Guards
+
+- **Do NOT** skip the conceptual model — understand entities and relationships first
+- **Do NOT** add indexes speculatively — measure query patterns first
+- **Do NOT** denormalize without measured evidence of a performance problem
+- **Do NOT** create migrations without rollback plans
+- **Do NOT** skip the discovery phase — understand query patterns and data volume
+- **Do NOT** drop columns or tables without expand-contract pattern in production
+
+## Integration Points
+
+| Skill | Relationship |
+|-------|-------------|
+| `api-design` | Upstream: API resources map to database entities |
+| `spec-writing` | Upstream: specs define data persistence requirements |
+| `planning` | Downstream: schema design informs implementation plan |
+| `test-driven-development` | Downstream: migration tests written before migration code |
+| `performance-optimization` | Downstream: query optimization after schema is live |
+| `reverse-engineering-specs` | Upstream: reverse-engineer existing schema behavior |
+| `senior-backend` | Parallel: backend specialist for ORM and query patterns |
+
+## Verification Gate
+
+Before claiming the schema design is complete:
+
+1. VERIFY all entities and relationships are modeled
+2. VERIFY normalization is at least 3NF (or denormalization is justified)
+3. VERIFY indexes are defined for all query patterns and FK columns
+4. VERIFY migration strategy includes rollback for every step
+5. VERIFY the user has approved the schema design
+6. VERIFY connection pooling strategy is defined for production
+
+## Skill Type
+
+**Flexible** — Adapt storage engine, normalization level, and index strategy to project needs while preserving the conceptual-to-physical modeling progression, migration safety rules, and measured-evidence-before-denormalization principle.

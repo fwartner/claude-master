@@ -1,17 +1,24 @@
 ---
 name: senior-frontend
-description: When the user needs production-grade React/Next.js/TypeScript development with rigorous component architecture, state management, performance optimization, and >85% test coverage.
+description: "Use when the user needs production-grade React/Next.js/TypeScript development with rigorous component architecture, state management, performance optimization, and >85% test coverage. Triggers: React component development, Next.js page creation, state management design, frontend performance audit, component library setup."
 ---
 
 # Senior Frontend Engineer
 
 ## Overview
 
-Deliver production-grade frontend code following a structured three-phase workflow: context discovery, development, and handoff. This skill enforces strict quality standards including atomic design component architecture, comprehensive state management patterns, SSR/SSG/ISR optimization, and mandatory >85% test coverage with Jest, React Testing Library, and Playwright.
+Deliver production-grade frontend code following a structured three-phase workflow: context discovery, development, and handoff. This skill enforces strict quality standards including atomic design component architecture, comprehensive state management patterns, SSR/SSG/ISR optimization, and mandatory >85% test coverage with Vitest, React Testing Library, and Playwright.
 
-## Process (Three Phases — Mandatory)
+**Announce at start:** "I'm using the senior-frontend skill for production-grade React/TypeScript development."
 
-### Phase 1: Context Discovery
+---
+
+## Phase 1: Context Discovery
+
+**Goal:** Understand the existing codebase before writing any code.
+
+### Actions
+
 1. Analyze existing codebase structure and conventions
 2. Identify the tech stack version (React 18/19, Next.js 14/15, TypeScript version)
 3. Review existing component library and design system
@@ -19,26 +26,39 @@ Deliver production-grade frontend code following a structured three-phase workfl
 5. Understand build tooling and CI pipeline
 6. Map existing test infrastructure and coverage
 
-### Phase 2: Development
+### STOP — Do NOT proceed to Phase 2 until:
+- [ ] Tech stack versions are identified
+- [ ] Existing patterns and conventions are documented
+- [ ] Test infrastructure is mapped
+- [ ] State management approach is identified
+
+---
+
+## Phase 2: Development
+
+**Goal:** Implement with strict TypeScript, atomic design, and TDD.
+
+### Actions
+
 1. Design component architecture following atomic design
 2. Implement with TypeScript strict mode
 3. Write tests alongside implementation (TDD when appropriate)
 4. Optimize for performance (bundle size, rendering, loading)
 5. Ensure accessibility compliance
 
-### Phase 3: Handoff
-1. Verify test coverage meets >85% threshold
-2. Run full lint and type check
-3. Document complex components with JSDoc/TSDoc
-4. Create Storybook stories for UI components
-5. Performance audit (Lighthouse, bundle analysis)
+### Component Architecture Decision Table (Atomic Design)
 
-## Component Architecture (Atomic Design)
+| Level | Description | Business Logic | Example |
+|-------|------------|---------------|---------|
+| **Atoms** | Smallest building blocks | None | Button, Input, Icon, Badge |
+| **Molecules** | Composed of atoms | Minimal | FormField, SearchBar, Card |
+| **Organisms** | Complex with business logic | Yes | DataTable, NavigationBar, CommentThread |
+| **Templates** | Page structure without data | Layout only | DashboardLayout, AuthLayout |
+| **Pages** | Templates connected to data | Data fetching | UsersPage, SettingsPage |
 
-### Atoms
-Smallest building blocks. No business logic.
+### Atom Example
+
 ```typescript
-// Button.tsx
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: 'primary' | 'secondary' | 'ghost' | 'danger';
   size?: 'sm' | 'md' | 'lg';
@@ -54,28 +74,10 @@ export function Button({ variant = 'primary', size = 'md', isLoading, children, 
 }
 ```
 
-### Molecules
-Composed of atoms. Minimal business logic.
-- FormField (Label + Input + Error)
-- SearchBar (Input + Button + Icon)
-- Card (CardHeader + CardBody + CardFooter)
-
-### Organisms
-Complex components with business logic.
-- DataTable (sorting, filtering, pagination)
-- NavigationBar (routing, auth state)
-- CommentThread (CRUD, real-time updates)
-
-### Templates / Layouts
-Page structure without data.
-
-### Pages
-Templates connected to data sources.
-
-## State Management Decision Matrix
+### State Management Decision Table
 
 | State Type | Solution | When to Use |
-|---|---|---|
+|------------|----------|-------------|
 | Server state | React Query / TanStack Query | API data, caching, sync |
 | Form state | React Hook Form + Zod | Form validation, submission |
 | Global UI state | Zustand | Theme, sidebar open, modals |
@@ -84,93 +86,49 @@ Templates connected to data sources.
 | Complex local | useReducer | Multiple related state transitions |
 | Shared context | React Context | Theme, locale, auth (infrequent updates) |
 
-### React Query Patterns
-```typescript
-// Custom hook for data fetching
-function useUsers(filters: UserFilters) {
-  return useQuery({
-    queryKey: ['users', filters],
-    queryFn: () => fetchUsers(filters),
-    staleTime: 5 * 60 * 1000, // 5 minutes
-    placeholderData: keepPreviousData,
-  });
-}
+### SSR / SSG / ISR Decision Table (Next.js App Router)
 
-// Mutation with optimistic update
-function useUpdateUser() {
-  const queryClient = useQueryClient();
-  return useMutation({
-    mutationFn: updateUser,
-    onMutate: async (newUser) => {
-      await queryClient.cancelQueries({ queryKey: ['users'] });
-      const previous = queryClient.getQueryData(['users']);
-      queryClient.setQueryData(['users'], (old) =>
-        old.map(u => u.id === newUser.id ? { ...u, ...newUser } : u)
-      );
-      return { previous };
-    },
-    onError: (err, newUser, context) => {
-      queryClient.setQueryData(['users'], context.previous);
-    },
-    onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: ['users'] });
-    },
-  });
-}
-```
-
-## SSR / SSG / ISR Patterns (Next.js App Router)
-
-### When to Use What
-| Pattern | Use When | Cache |
-|---|---|---|
+| Pattern | Use When | Cache Strategy |
+|---------|----------|---------------|
 | Static (SSG) | Content rarely changes | Build time |
 | ISR | Content changes periodically | Revalidate interval |
 | SSR | Content changes per request | No cache |
 | Client | User-specific, interactive | Browser |
 
-### Server Components (Default in App Router)
-```typescript
-// app/users/page.tsx — Server Component (default)
-export default async function UsersPage() {
-  const users = await getUsers(); // Direct database/API call
-  return <UserList users={users} />;
-}
+### Server vs Client Component Decision
 
-// Revalidation
-export const revalidate = 3600; // ISR: revalidate every hour
-```
+| Need | Component Type |
+|------|---------------|
+| Direct data fetching | Server (default) |
+| Event handlers (onClick, onChange) | Client (`'use client'`) |
+| useState / useReducer | Client |
+| useEffect / useLayoutEffect | Client |
+| Browser APIs (window, localStorage) | Client |
+| Third-party libs using client features | Client |
+| No interactivity needed | Server (default) |
 
-### Client Components
-```typescript
-'use client';
+### STOP — Do NOT proceed to Phase 3 until:
+- [ ] Components follow atomic design hierarchy
+- [ ] TypeScript strict mode is enabled, no `any` types
+- [ ] Tests are written for all components
+- [ ] Accessibility is verified (axe-core)
 
-// Only use when needed: event handlers, hooks, browser APIs
-export function UserSearch() {
-  const [query, setQuery] = useState('');
-  // ...
-}
-```
+---
 
-## Performance Optimization
+## Phase 3: Handoff
 
-### Code Splitting
-```typescript
-// Route-level splitting (automatic in Next.js)
-// Component-level splitting
-const HeavyChart = dynamic(() => import('./HeavyChart'), {
-  loading: () => <ChartSkeleton />,
-  ssr: false,
-});
-```
+**Goal:** Verify quality gates and prepare for review.
 
-### Memoization Rules
-- `useMemo`: expensive computations, referential equality for deps
-- `useCallback`: functions passed to optimized children
-- `React.memo`: components that re-render with same props
-- Do NOT memoize everything — profile first, optimize second
+### Actions
+
+1. Verify test coverage meets >85% threshold
+2. Run full lint and type check
+3. Document complex components with JSDoc/TSDoc
+4. Create Storybook stories for UI components
+5. Performance audit (Lighthouse, bundle analysis)
 
 ### Performance Checklist
+
 - [ ] Bundle size < 200KB gzipped (initial load)
 - [ ] Largest Contentful Paint < 2.5s
 - [ ] First Input Delay < 100ms
@@ -178,11 +136,35 @@ const HeavyChart = dynamic(() => import('./HeavyChart'), {
 - [ ] Images: next/image with proper sizing and formats
 - [ ] Fonts: next/font with display swap
 - [ ] No layout thrashing (batch DOM reads/writes)
-- [ ] Virtualization for lists > 100 items (react-window/tanstack-virtual)
+- [ ] Virtualization for lists > 100 items
 
-## Testing Requirements (>85% Coverage)
+### Coverage Thresholds
 
-### Unit Tests (Jest + React Testing Library)
+```json
+{
+  "coverageThreshold": {
+    "global": {
+      "branches": 85,
+      "functions": 85,
+      "lines": 85,
+      "statements": 85
+    }
+  }
+}
+```
+
+### STOP — Handoff complete when:
+- [ ] Test coverage >85% verified
+- [ ] Lint and type check pass with zero errors
+- [ ] Performance audit completed
+- [ ] Complex components documented
+
+---
+
+## Testing Requirements
+
+### Unit Tests (Vitest + React Testing Library)
+
 ```typescript
 describe('Button', () => {
   it('renders children', () => {
@@ -205,12 +187,14 @@ describe('Button', () => {
 ```
 
 ### Integration Tests
-- Test component compositions (form submission flow)
-- Test data fetching with MSW (Mock Service Worker)
-- Test routing and navigation
-- Test error boundaries and fallbacks
+
+- Component compositions (form submission flow)
+- Data fetching with MSW (Mock Service Worker)
+- Routing and navigation
+- Error boundaries and fallbacks
 
 ### E2E Tests (Playwright)
+
 ```typescript
 test('user can complete checkout', async ({ page }) => {
   await page.goto('/products');
@@ -218,25 +202,87 @@ test('user can complete checkout', async ({ page }) => {
   await page.getByRole('link', { name: 'Cart' }).click();
   await expect(page.getByText('1 item')).toBeVisible();
   await page.getByRole('button', { name: 'Checkout' }).click();
-  // ...
 });
 ```
 
-### Coverage Thresholds
-```json
-{
-  "jest": {
-    "coverageThreshold": {
-      "global": {
-        "branches": 85,
-        "functions": 85,
-        "lines": 85,
-        "statements": 85
-      }
-    }
-  }
+---
+
+## React Query Patterns
+
+```typescript
+function useUsers(filters: UserFilters) {
+  return useQuery({
+    queryKey: ['users', filters],
+    queryFn: () => fetchUsers(filters),
+    staleTime: 5 * 60 * 1000,
+    placeholderData: keepPreviousData,
+  });
+}
+
+function useUpdateUser() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: updateUser,
+    onMutate: async (newUser) => {
+      await queryClient.cancelQueries({ queryKey: ['users'] });
+      const previous = queryClient.getQueryData(['users']);
+      queryClient.setQueryData(['users'], (old) =>
+        old.map(u => u.id === newUser.id ? { ...u, ...newUser } : u)
+      );
+      return { previous };
+    },
+    onError: (err, newUser, context) => {
+      queryClient.setQueryData(['users'], context.previous);
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ['users'] });
+    },
+  });
 }
 ```
+
+---
+
+## Memoization Decision Table
+
+| Technique | Use When | Do NOT Use When |
+|-----------|----------|----------------|
+| `useMemo` | Expensive computation, referential equality for deps | Simple calculations, primitive values |
+| `useCallback` | Functions passed to memoized children | Functions not passed as props |
+| `React.memo` | Component re-renders often with same props | Props change on every render |
+| None | Default — do not memoize | Always profile first |
+
+---
+
+## Anti-Patterns / Common Mistakes
+
+| Anti-Pattern | Why It Is Wrong | Correct Approach |
+|-------------|----------------|-----------------|
+| `useEffect` for data fetching | Race conditions, no caching, no dedup | React Query or Server Components |
+| Prop drilling more than 2 levels | Tight coupling, maintenance burden | Composition, context, or Zustand |
+| Business logic in components | Untestable, unreusable | Extract to hooks or utility functions |
+| Barrel exports | Breaks tree-shaking, slower builds | Direct imports |
+| Testing implementation details | Brittle tests that break on refactor | Test behavior: user actions and outcomes |
+| `any` type anywhere | Defeats TypeScript's purpose | `unknown` + type guards |
+| Inline styles for non-dynamic values | Inconsistent, hard to maintain | CSS modules, Tailwind, or styled-components |
+| Memoizing everything | Adds complexity, often slower | Profile first, memoize second |
+
+---
+
+## Integration Points
+
+| Skill | Relationship |
+|-------|-------------|
+| `testing-strategy` | Strategy defines frontend test frameworks |
+| `test-driven-development` | Components are built with TDD cycle |
+| `react-best-practices` | Detailed React patterns complement this skill |
+| `performance-optimization` | Frontend performance follows optimization methodology |
+| `code-review` | Review verifies component architecture and test coverage |
+| `clean-code` | Code quality principles apply to component code |
+| `webapp-testing` | Playwright E2E tests use this skill's page structure |
+| `acceptance-testing` | UI acceptance criteria drive component tests |
+
+---
 
 ## Key Principles
 
@@ -247,16 +293,8 @@ test('user can complete checkout', async ({ page }) => {
 - Error boundaries at route and feature boundaries
 - Accessibility is not optional (test with axe-core)
 
-## Anti-Patterns
-
-- `useEffect` for data fetching (use React Query or Server Components)
-- Prop drilling more than 2 levels (use composition or context)
-- Business logic in components (extract to hooks or utilities)
-- Barrel exports that break tree-shaking
-- Testing implementation details (test behavior, not internals)
-- `any` type anywhere in the codebase
-- Inline styles for anything beyond truly dynamic values
+---
 
 ## Skill Type
 
-**RIGID** — The three-phase workflow is mandatory. Test coverage must exceed 85%. TypeScript strict mode is non-negotiable. Component architecture must follow atomic design principles.
+**FLEXIBLE** — Adapt component architecture and state management to the existing project conventions. The three-phase workflow is strongly recommended. Test coverage must target >85%. TypeScript strict mode is non-negotiable.

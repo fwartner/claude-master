@@ -1,6 +1,11 @@
 ---
 name: file-organizer
-description: When the user needs project structure organization — monorepo patterns, feature-based architecture, naming conventions, barrel exports, or configuration placement.
+description: >
+  Use when the user needs project structure organization — monorepo patterns, feature-based
+  architecture, naming conventions, barrel exports, or configuration placement.
+  Trigger conditions: restructure project directories, set up monorepo, define naming
+  conventions, create barrel exports, organize configuration files, plan migration
+  from flat to feature-based structure, establish import ordering rules.
 ---
 
 # File Organizer
@@ -9,13 +14,58 @@ description: When the user needs project structure organization — monorepo pat
 
 Design and maintain well-organized project structures that scale with team and codebase growth. This skill covers monorepo patterns, feature-based vs layer-based architecture, naming conventions, index/barrel files, configuration file placement, and documentation structure.
 
-## Process
+Apply this skill whenever a project's file organization needs to be established, audited, or restructured for clarity and scalability.
 
-1. Assess current project structure and pain points
-2. Determine organization strategy (feature-based, layer-based, hybrid)
-3. Define naming conventions and file placement rules
-4. Plan migration path for existing projects
-5. Document conventions for team alignment
+## Multi-Phase Process
+
+### Phase 1: Assessment
+
+1. Audit current project structure and identify pain points
+2. Measure project size (file count, team size, feature count)
+3. Identify existing naming conventions and import patterns
+4. Catalog configuration file locations
+5. Check for circular dependencies or deep nesting
+
+> **STOP — Do NOT propose a new structure without understanding the current state and its pain points.**
+
+### Phase 2: Strategy Selection
+
+1. Choose organization strategy using decision table below
+2. Define naming conventions and file placement rules
+3. Plan barrel export boundaries
+4. Establish configuration file placement rules
+5. Document import ordering convention
+
+> **STOP — Do NOT begin migration without documenting the target structure and getting team alignment.**
+
+### Phase 3: Migration Planning
+
+1. Plan migration path for existing projects (incremental, not big-bang)
+2. Identify files that move and their new locations
+3. Map import changes required
+4. Create automated codemods where possible
+5. Define rollback plan if migration causes issues
+
+> **STOP — Do NOT execute migration without verifying tests pass at each incremental step.**
+
+### Phase 4: Execution and Validation
+
+1. Move one feature or module at a time
+2. Update imports using automated tools
+3. Verify tests pass after each move
+4. Remove old structure after complete migration
+5. Document conventions for team reference
+
+## Architecture Strategy Decision Table
+
+| Project Size | Team Size | Recommendation | Why |
+|---|---|---|---|
+| < 20 files | 1-2 devs | Layer-based | Simple, low overhead |
+| 20-100 files | 2-5 devs | Hybrid | Balance of simplicity and scalability |
+| 100+ files | 5+ devs | Feature-based | Self-contained modules reduce conflicts |
+| Multiple apps sharing code | Any | Monorepo | Shared packages with clear boundaries |
+| Rapid prototype / MVP | 1-3 devs | Layer-based | Speed over structure, refactor later |
+| Enterprise, multiple teams | 10+ devs | Feature-based + Monorepo | Team ownership per feature module |
 
 ## Architecture Patterns
 
@@ -170,6 +220,7 @@ root/
 ## Naming Conventions
 
 ### Files and Directories
+
 | Type | Convention | Example |
 |---|---|---|
 | Components | PascalCase | `UserProfile.tsx` |
@@ -229,15 +280,16 @@ export type { User, AuthState } from './types/auth.types';
 // Do NOT export utility functions used only within the feature
 ```
 
-### When to Use Barrels
-- Feature module public API (always)
-- Shared component library (always)
-- Utility libraries (always)
+### Barrel Export Decision Table
 
-### When NOT to Use Barrels
-- Inside a feature (import directly between files within a feature)
-- When it causes circular dependencies
-- When it hurts tree-shaking (test with bundle analyzer)
+| Context | Use Barrel? | Why |
+|---|---|---|
+| Feature module public API | Yes, always | Clean boundary, controlled surface area |
+| Shared component library | Yes, always | Single import point for consumers |
+| Utility libraries | Yes, always | Discoverability for shared functions |
+| Inside a feature (internal) | No | Import directly, avoid indirection |
+| Would cause circular dependencies | No | Break the cycle, import directly |
+| Hurts tree-shaking (verified) | No | Use direct imports for bundle size |
 
 ## Configuration File Placement
 
@@ -298,30 +350,39 @@ docs/
 - IDE refactoring: rename/move with automatic import updates
 - ESLint `import/order`: enforce import ordering
 
-## Quality Checklist
+## Anti-Patterns / Common Mistakes
 
-- [ ] Clear top-level directory purpose (README or directory naming)
-- [ ] Consistent naming convention across the project
-- [ ] Feature modules are self-contained
-- [ ] Shared code is in a dedicated shared/common location
-- [ ] No circular dependencies between features
-- [ ] Barrel exports for public APIs
-- [ ] Configuration files at root level
-- [ ] Tests co-located with source code
-- [ ] Environment files follow .env.example pattern
-- [ ] Import paths use aliases (@ or ~) not deep relative paths
+| Anti-Pattern | Why It Fails | What To Do Instead |
+|---|---|---|
+| Deeply nested folders (> 4 levels) | Hard to navigate, long import paths | Flatten structure, use path aliases |
+| `utils/` as a dumping ground | Becomes unmaintainable junk drawer | Organize utils by domain or purpose |
+| Circular dependencies between features | Build failures, unclear ownership | Features import only from shared or own modules |
+| Barrel exports re-exporting everything | Kills tree-shaking, bloats bundles | Export only the public API |
+| Inconsistent naming (mixed conventions) | Cognitive load, merge conflicts | Pick one convention, enforce with linter |
+| Config scattered across multiple locations | Hard to find and maintain | All config at project root |
+| Tests in separate directory tree | Hard to find tests for a file | Co-locate tests with source code |
+| 100+ files in one flat folder | Impossible to navigate | Group into sub-modules or features |
+| Index files containing logic | Unexpected side effects on import | Index files only re-export |
+| Big-bang migration (move everything at once) | High risk, hard to rollback | Incremental moves with tests after each |
 
-## Anti-Patterns
+## Anti-Rationalization Guards
 
-- Deeply nested folder hierarchies (> 4 levels)
-- `utils/` as a dumping ground (organize by domain instead)
-- Circular dependencies between features
-- Barrel exports that re-export everything (kills tree-shaking)
-- Inconsistent naming (mix of camelCase and kebab-case)
-- Configuration scattered across multiple locations
-- Test files in a completely separate directory tree
-- `components/` folder with 100+ unorganized files
-- Index files that contain logic (should only re-export)
+- Do NOT restructure without understanding current pain points -- assess first.
+- Do NOT skip the team alignment step -- structure changes affect everyone.
+- Do NOT migrate everything at once -- move one module at a time with test verification.
+- Do NOT create deeply nested structures "for future scalability" -- flatten until complexity demands it.
+- Do NOT ignore barrel export impact on bundle size -- verify with bundle analyzer.
+
+## Integration Points
+
+| Skill | How It Connects |
+|---|---|
+| `senior-frontend` | Frontend project structure follows feature-based or hybrid patterns |
+| `senior-architect` | Architecture decisions inform module boundaries and package structure |
+| `senior-fullstack` | Full-stack projects need coordinated frontend/backend organization |
+| `clean-code` | Naming conventions and module boundaries support clean code principles |
+| `deployment` | Monorepo structure affects CI/CD pipeline configuration |
+| `laravel-specialist` | Laravel projects follow framework-specific directory conventions |
 
 ## Skill Type
 
