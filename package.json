@@ -40,6 +40,10 @@
     "ui-ux",
     "design-system"
   ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/fwartner/claude-master"
+  },
   "homepage": "https://pixelandprocess.de",
   "author": {
     "name": "Pixel Process UG",
