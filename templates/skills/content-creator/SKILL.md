@@ -1,249 +1,254 @@
 ---
 name: content-creator
-description: When the user needs marketing copy, social media content, headline formulas, copywriting frameworks, or brand voice guidelines.
+description: When the user needs marketing copy, social media content, brand voice development, ad copy, newsletters, or persuasive writing for business audiences.
 ---
 
 # Content Creator
 
 ## Overview
 
-Create compelling marketing copy and social media content using proven copywriting frameworks. This skill covers headline formulas, persuasion frameworks (AIDA, PAS, BAB), platform-specific best practices, brand voice development, and A/B testing copy variants for maximum engagement.
+Create compelling marketing content across channels including social media, email campaigns, landing pages, ad copy, newsletters, and brand messaging. This skill covers brand voice development, audience targeting, copywriting frameworks (AIDA, PAS, BAB), platform-specific optimization, A/B testing copy, content calendars, and conversion-focused writing.
 
 ## Process
 
-### Phase 1: Brief
-1. Define the goal (awareness, engagement, conversion)
-2. Identify the target audience (demographics, psychographics)
-3. Determine the platform and format
-4. Review brand voice guidelines
-5. Identify the key message and desired action
+### Phase 1: Brand and Audience Analysis
+1. Define or review the brand voice (tone, personality, values)
+2. Identify target audience personas (demographics, psychographics, pain points)
+3. Map the customer journey stage for this content
+4. Analyze competitor messaging and positioning
+5. Establish key differentiators and value propositions
 
-### Phase 2: Creation
-1. Generate multiple headline/hook options (5-10)
-2. Select the best framework for the content type
-3. Write the body copy following the framework
-4. Add a clear call-to-action
-5. Create platform-specific variations
+### Phase 2: Content Strategy
+1. Determine content goal (awareness, engagement, conversion, retention)
+2. Select channel(s) and format(s)
+3. Identify primary and secondary keywords or themes
+4. Define call-to-action (CTA) for each piece
+5. Plan content cadence and publishing schedule
 
-### Phase 3: Optimization
-1. A/B test headline variants
+### Phase 3: Creation
+1. Draft using appropriate copywriting framework
+2. Write multiple headline/hook variations
+3. Adapt tone and length for each platform
+4. Create supporting visual direction or copy for images
+5. Include relevant hashtags, mentions, or links
+
+### Phase 4: Optimization
+1. A/B test headlines, CTAs, and opening lines
 2. Review for brand voice consistency
-3. Check readability and scannability
-4. Verify platform requirements (char limits, image specs)
-5. Schedule for optimal timing
-
-## Headline Formulas
-
-### Proven Formulas
-```
-1. How to [Desired Outcome] Without [Pain Point]
-   "How to Double Your Revenue Without Hiring More Staff"
-
-2. [Number] Ways to [Achieve Outcome]
-   "7 Ways to Reduce Cloud Costs by 40%"
-
-3. The [Adjective] Guide to [Topic]
-   "The Complete Guide to TypeScript Generics"
-
-4. Why [Common Belief] Is Wrong (And What to Do Instead)
-   "Why Daily Standups Are Wrong (And What to Do Instead)"
-
-5. [Achieve Outcome] in [Timeframe]: A Step-by-Step Guide
-   "Launch Your SaaS in 30 Days: A Step-by-Step Guide"
-
-6. What [Successful People] Know About [Topic] That You Don't
-   "What Top 1% Developers Know About Code Review That You Don't"
-
-7. I [Did Something Impressive]. Here's How.
-   "I Reduced Our Build Time by 90%. Here's How."
-
-8. Stop [Doing Thing]. Start [Better Thing].
-   "Stop Writing Unit Tests. Start Writing Integration Tests."
-
-9. The [Number]-Minute [Topic] That Will [Benefit]
-   "The 5-Minute Morning Routine That Will Transform Your Productivity"
-
-10. [Question That Reader Wants Answered]?
-    "Is Your API Actually RESTful? Here's How to Tell."
-```
-
-### Headline Testing Criteria
-- **Clarity**: Reader instantly understands the value
-- **Specificity**: Numbers, names, and concrete details
-- **Urgency**: Reason to read now (without being clickbait)
-- **Relevance**: Speaks to the target audience's pain
-- **Length**: 6-12 words for blog, 5-10 for social
+3. Check readability (aim for grade 6-8 for general audiences)
+4. Verify compliance (disclosures, disclaimers, regulations)
+5. Schedule or publish with tracking parameters (UTMs)
 
 ## Copywriting Frameworks
 
 ### AIDA (Attention, Interest, Desire, Action)
 ```
-Attention: Bold statement or statistic that stops the scroll
-Interest: Expand on the problem and why it matters
-Desire: Present the solution and its benefits
-Action: Clear, specific call-to-action
+Attention: Hook that stops the scroll
+Interest:  Why this matters to the reader
+Desire:    Paint the transformation/benefit
+Action:    Clear, specific CTA
+```
 
-Example:
-A: "73% of startups fail because of premature scaling."
-I: "Most founders hire too fast, build too much, and run out of runway."
-D: "Our framework helps you identify the exact right time to scale each
-    function — backed by data from 500+ successful startups."
-A: "Download the free scaling checklist →"
+**Example:**
+```
+Tired of spreadsheets that crash with 10,000 rows?        [Attention]
+Our engine handles 10 million rows in under a second.     [Interest]
+Imagine finishing your quarterly report in minutes,        [Desire]
+not hours.
+Start your free trial — no credit card required.           [Action]
 ```
 
 ### PAS (Problem, Agitate, Solution)
 ```
-Problem: Identify the specific pain point
-Agitate: Make the pain feel urgent and real
-Solution: Present your offer as the resolution
+Problem:   Name the pain point directly
+Agitate:   Amplify the consequences of inaction
+Solution:  Present your offering as the resolution
+```
 
-Example:
-P: "Deploying on Friday used to mean weekend on-call."
-A: "One wrong config change and your phone rings at 3 AM.
-    Your team dreads releases. Features pile up. Users wait."
-S: "With automated canary deployments and instant rollback,
-    your team ships confidently — any day of the week."
+**Example:**
+```
+Your team wastes 6 hours/week on manual data entry.       [Problem]
+That's 312 hours a year — enough to launch two new        [Agitate]
+products. What if you could get that time back?
+AutoFlow eliminates manual entry with AI-powered           [Solution]
+data capture. See it in action →
 ```
 
 ### BAB (Before, After, Bridge)
 ```
-Before: Describe the current painful situation
-After: Paint a picture of the ideal outcome
-Bridge: Show how your product/service connects the two
-
-Example:
-B: "Right now, your team spends 40% of sprint time on bug fixes."
-A: "Imagine shipping features every week with near-zero regression."
-B: "Our testing framework catches bugs before they reach production,
-    cutting bug-fix time by 80% in the first month."
+Before: Current painful state
+After:  Desired future state
+Bridge: How to get there (your product/service)
 ```
 
-### 4 Ps (Promise, Picture, Proof, Push)
+### 4Ps (Promise, Picture, Proof, Push)
 ```
-Promise: Make a bold, specific claim
-Picture: Help them visualize the outcome
-Proof: Provide evidence (testimonials, data, case studies)
-Push: Urgency or scarcity to act now
-```
-
-### FAB (Features, Advantages, Benefits)
-```
-Feature: "Real-time collaborative editing"
-Advantage: "Multiple team members can work on the same document simultaneously"
-Benefit: "Ship documentation 3x faster with zero merge conflicts"
+Promise: Bold claim or benefit
+Picture: Help reader visualize the outcome
+Proof:   Social proof, data, testimonials
+Push:    Urgency or clear next step
 ```
 
-## Social Media Best Practices
+## Platform-Specific Guidelines
 
-### LinkedIn
-- **Format**: Text post with line breaks, or document carousel
-- **Length**: 1,300 characters optimal (up to 3,000)
-- **Hook**: First 2 lines visible before "see more" — make them count
-- **Engagement**: Ask a question at the end
-- **Posting time**: Tue-Thu, 8-10 AM local time
-- **Hashtags**: 3-5 relevant hashtags
-
-### Twitter/X
-- **Length**: Under 280 characters for single tweet, thread for depth
-- **Hook**: Lead with the insight, not the context
-- **Threads**: 5-10 tweets, numbered, each valuable standalone
-- **Engagement**: End with a question or retweet request
-- **Posting time**: Weekdays, 9 AM - 12 PM
-
-### Instagram
-- **Captions**: Front-load value, use line breaks, 5-10 hashtags
-- **Carousels**: 7-10 slides, swipe-worthy first slide, CTA on last
-- **Reels**: Hook in first 3 seconds, 30-60 seconds optimal
-- **Stories**: Polls, questions, links for engagement
-
-### YouTube
-- **Titles**: Front-load keyword, under 60 chars, no clickbait
-- **Thumbnails**: High contrast, readable text, face with emotion
-- **Descriptions**: First 2 lines above fold, include links and timestamps
-- **Hook**: Promise value in first 30 seconds
-
-## Brand Voice Guidelines Template
-
-```markdown
-## Brand Voice Profile
-
-### Personality
-- [Trait 1]: We are [quality]. Example: "We are direct, not aggressive."
-- [Trait 2]: We are [quality]. Example: "We are helpful, not patronizing."
-- [Trait 3]: We are [quality]. Example: "We are confident, not arrogant."
-
-### Tone Spectrum
-| Context | Tone |
-|---|---|
-| Error messages | Empathetic, helpful |
-| Feature announcements | Excited, clear |
-| Documentation | Precise, approachable |
-| Social media | Casual, witty |
-| Sales pages | Confident, evidence-based |
-
-### Vocabulary
-- We say: [preferred terms]
-- We don't say: [avoided terms]
-- Industry jargon: [use/avoid per audience]
-
-### Grammar Preferences
-- Oxford comma: [yes/no]
-- Contractions: [yes/no]
-- Exclamation marks: [sparingly/never]
-- Emoji: [context-specific/never]
-```
-
-## A/B Testing Copy Variants
-
-### What to Test
-| Element | Variant A | Variant B |
+### Social Media Character Limits and Best Practices
+| Platform | Ideal Length | Best Practices |
 |---|---|---|
-| Headline | Benefit-focused | Curiosity-driven |
-| CTA button | "Get Started" | "Start Free Trial" |
-| Social proof | Testimonial quote | Usage statistic |
-| Urgency | "Limited time" | "Join 10,000+ users" |
-| Length | Short (50 words) | Long (200 words) |
-| Tone | Professional | Casual |
+| Twitter/X | 70-100 chars (engagement sweet spot) | Questions, threads, polls; 1-2 hashtags |
+| LinkedIn | 1300 chars (before "see more") | Professional tone, personal stories, carousels; 3-5 hashtags |
+| Instagram caption | 125 chars (before truncation) | Visual-first, emoji ok, 20-30 hashtags in comment |
+| Facebook | 40-80 chars (highest engagement) | Questions, storytelling, video preferred |
+| TikTok caption | 150 chars | Trending sounds, hooks in first 3 seconds |
+| YouTube title | 60 chars max | Keyword-front, emotional trigger, number |
+| Email subject | 30-50 chars | Personalization, curiosity gap, urgency |
+| Blog headline | 55-70 chars | How-to, numbered lists, power words |
 
-### Testing Rules
-- Test one element at a time
-- Minimum sample size: 100 conversions per variant
-- Run for at least 7 days (full week cycle)
-- Statistical significance: 95% confidence
-- Document and version every variant
+### Post Structure by Platform
+```
+# LinkedIn
+[Hook line — bold statement or question]
 
-## Content Calendar Principles
+[2-3 short paragraphs with line breaks]
 
-- **Mix**: 80% value content, 20% promotional
-- **Consistency**: Same time, same days, same quality
-- **Repurpose**: One idea becomes blog + thread + carousel + video
-- **Seasonal**: Plan around industry events and holidays
-- **Evergreen**: Build a library of timeless content
+[Insight or lesson]
 
-## Quality Checklist
+[CTA — question to drive comments]
 
-- [ ] Clear goal for the content piece
-- [ ] Target audience identified and addressed
-- [ ] Hook/headline grabs attention in first 2 seconds
-- [ ] Copy follows a proven framework (AIDA, PAS, BAB)
-- [ ] Benefits emphasized over features
-- [ ] Social proof included (numbers, testimonials)
-- [ ] Clear, specific call-to-action
-- [ ] Brand voice consistent
-- [ ] Platform-specific formatting applied
-- [ ] Proofread for errors
+#relevant #hashtags
+
+---
+
+# Twitter/X Thread
+1/ [Strong hook with the main insight]
+
+2/ [Context or background]
+
+3/ [Key point with evidence]
+
+4/ [Practical takeaway]
+
+5/ [CTA — follow, share, or reply]
+
+---
+
+# Instagram
+[First line = hook (shows in feed)]
+
+Full caption with story, value, or education.
+
+CTA: Save this post / Tag someone who needs this
+
+.
+.
+.
+#hashtags #in #comment #or #after #line #breaks
+```
+
+## Brand Voice Framework
+
+### Voice Attributes Matrix
+| Attribute | We Are | We Are Not | Example |
+|---|---|---|---|
+| Tone | Confident | Arrogant | "Here's what works" not "We're the best" |
+| Language | Clear | Simplistic | Explain complex topics simply |
+| Humor | Witty | Sarcastic | Light wordplay, never at reader's expense |
+| Formality | Professional | Stuffy | First person, contractions ok |
+| Emotion | Empathetic | Manipulative | Acknowledge pain, don't exploit it |
+
+### Voice Consistency Checklist
+- Would a real person say this out loud?
+- Does it sound like the same person across all channels?
+- Is the vocabulary level appropriate for the audience?
+- Are we talking WITH the reader, not AT them?
+- Does the tone match the content gravity (don't be playful about serious topics)?
+
+## Headline Formulas
+
+### Proven Patterns
+```
+How to [Achieve Desired Outcome] Without [Common Objection]
+[Number] [Adjective] Ways to [Achieve Goal] in [Timeframe]
+Why [Common Belief] Is Wrong (And What to Do Instead)
+The [Adjective] Guide to [Topic] for [Audience]
+[Number] Mistakes [Audience] Make with [Topic] (And How to Fix Them)
+What [Authority/Company] Taught Me About [Topic]
+[Topic]: [Subtitle That Adds Specificity]
+Stop [Bad Practice]. Start [Good Practice]. Here's How.
+```
+
+### Headline Testing Criteria
+| Factor | Weight | Evaluation |
+|---|---|---|
+| Clarity | 30% | Reader knows what they'll get |
+| Specificity | 25% | Numbers, outcomes, timeframes |
+| Emotional trigger | 20% | Curiosity, fear, aspiration |
+| Relevance | 15% | Matches audience pain points |
+| Uniqueness | 10% | Stands out from competitors |
+
+## Email Copy Patterns
+
+### Welcome Email
+```
+Subject: Welcome to [Brand] — here's your first win
+
+Hi [Name],
+
+You just made a great decision.
+
+Here's one thing you can do right now to get the most
+out of [Product]:
+
+[Single, specific action with link]
+
+That's it. One step. Takes 2 minutes.
+
+If you need anything, just reply to this email — a real
+human will answer.
+
+[Signature]
+```
+
+### Promotional Email
+```
+Subject: [Benefit] — [Time Limitation]
+
+[Name], quick question:
+
+[Problem statement as a question?]
+
+We built [Product/Feature] to solve exactly that.
+
+Here's what [Customer/Number] are saying:
+"[Testimonial]"
+
+[CTA Button: Get Started / Try Free / See How]
+
+[Urgency element if genuine]
+```
+
+## Content Calendar Template
+
+| Day | Platform | Content Type | Topic/Theme | CTA | Status |
+|---|---|---|---|---|---|
+| Mon | LinkedIn | Thought leadership | Industry trend | Comment | Draft |
+| Tue | Twitter | Thread | How-to tip | Follow | Scheduled |
+| Wed | Blog | Long-form article | Deep dive | Subscribe | Writing |
+| Thu | Instagram | Carousel | Quick tips | Save | Design |
+| Fri | Email | Newsletter | Weekly roundup | Read more | Template |
 
 ## Anti-Patterns
 
-- Writing features without benefits ("AI-powered" — so what?)
-- Burying the lead (context before value)
-- Generic CTAs ("Click here" instead of "Download your free guide")
-- Ignoring platform conventions (LinkedIn essay on Twitter)
-- No social proof or credibility markers
-- Writing for everyone (not specific enough)
-- Publishing without a goal or metric to track
-- Using jargon the audience doesn't understand
+- Writing for the brand instead of for the audience
+- Using the same copy across all platforms without adaptation
+- Burying the CTA at the end of long copy
+- Leading with features instead of benefits
+- Using corporate jargon ("leverage", "synergy", "paradigm shift")
+- Publishing without a clear goal for each piece of content
+- Ignoring character limits and platform-specific formatting
+- Writing clickbait headlines that the content doesn't deliver on
+- Not testing multiple variations of headlines and CTAs
+- Neglecting to include tracking parameters for attribution
 
 ## Skill Type
 
-**FLEXIBLE** — Adapt frameworks, tone, and platform strategy to the brand, audience, and campaign goals. The copywriting frameworks are templates to start from, not rigid formulas.
+**FLEXIBLE** — Adapt voice, format, and framework to the brand guidelines, target audience, and distribution channel. The copywriting frameworks and platform guidelines are recommendations; brand voice consistency is the non-negotiable.
