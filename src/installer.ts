@@ -97,18 +97,10 @@ export async function install(config: InstallConfig): Promise<void> {
     ? getPluginDir(config)
     : getTargetDir(config);
 
-  const skillsDir = config.format === 'plugin'
-    ? path.join(path.dirname(baseDir), 'skills')
-    : path.join(baseDir, 'skills');
-  const agentsDir = config.format === 'plugin'
-    ? path.join(path.dirname(baseDir), 'agents')
-    : path.join(baseDir, 'agents');
-  const commandsDir = config.format === 'plugin'
-    ? path.join(path.dirname(baseDir), 'commands')
-    : path.join(baseDir, 'commands');
-  const hooksDir = config.format === 'plugin'
-    ? path.join(path.dirname(baseDir), 'hooks')
-    : path.join(baseDir, 'hooks');
+  const skillsDir = path.join(baseDir, 'skills');
+  const agentsDir = path.join(baseDir, 'agents');
+  const commandsDir = path.join(baseDir, 'commands');
+  const hooksDir = path.join(baseDir, 'hooks');
 
   // --- Plugin manifest ---
   if (config.format === 'plugin') {
@@ -217,9 +209,7 @@ export async function install(config: InstallConfig): Promise<void> {
   // --- Memory ---
   if (config.memory) {
     spinner.start('Setting up memory system...');
-    const memoryDir = config.format === 'plugin'
-      ? path.join(path.dirname(baseDir), 'memory')
-      : path.join(baseDir, 'memory');
+    const memoryDir = path.join(baseDir, 'memory');
 
     if (!config.dryRun) {
       await fs.ensureDir(memoryDir);
