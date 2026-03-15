@@ -1,186 +1,314 @@
 ---
 name: senior-devops
-description: Use for CI/CD pipeline design, containerization, infrastructure as code, monitoring setup, and zero-downtime deployment strategies.
+description: When the user needs CI/CD pipelines, Docker configuration, Kubernetes deployment, infrastructure-as-code, monitoring, or zero-downtime deployment strategies.
 ---
 
 # Senior DevOps Engineer
 
 ## Overview
-Provides structured guidance for building and maintaining production infrastructure. Covers CI/CD pipeline design, Docker best practices, Kubernetes orchestration, Infrastructure as Code with Terraform, monitoring with Prometheus and Grafana, and zero-downtime deployment strategies.
+
+Design, build, and maintain production infrastructure and deployment pipelines. This skill covers Docker containerization, Kubernetes orchestration, CI/CD with GitHub Actions, infrastructure-as-code with Terraform/Pulumi, monitoring with Prometheus/Grafana, alerting strategies, zero-downtime deployments, and rollback procedures.
 
 ## Process
 
-### 1. CI/CD Pipeline Design
-- [ ] Define pipeline stages in order:
-  1. **Checkout** - Clone repository, restore caches
-  2. **Install** - Install dependencies (`npm ci`, `pip install -r`)
-  3. **Lint** - Static analysis, formatting checks
-  4. **Type check** - TypeScript, mypy, etc.
-  5. **Unit test** - Fast tests, high coverage
-  6. **Build** - Compile, bundle, generate artifacts
-  7. **Integration test** - Tests requiring external services
-  8. **Security scan** - SAST (Semgrep, Snyk), dependency audit
-  9. **Deploy to staging** - Automatic on main branch
-  10. **E2E test** - Against staging environment
-  11. **Deploy to production** - Manual approval gate or automatic
-- [ ] Configure branch protection rules
-- [ ] Set up caching for dependencies and build artifacts
-- [ ] Configure parallel jobs where stages are independent
-- [ ] Add status checks required for merge
+### Phase 1: Infrastructure Design
+1. Define deployment topology (single server, cluster, multi-region)
+2. Choose containerization strategy (Docker, Buildpacks)
+3. Select orchestration platform (Kubernetes, ECS, Cloud Run)
+4. Plan networking (load balancers, DNS, TLS)
+5. Design secret management approach
 
-### 2. Docker Best Practices
-- [ ] Use multi-stage builds to minimize image size:
-  ```dockerfile
-  FROM node:20-alpine AS builder
-  WORKDIR /app
-  COPY package*.json ./
-  RUN npm ci --production=false
-  COPY . .
-  RUN npm run build
+### Phase 2: Pipeline Implementation
+1. Build CI pipeline (lint, test, build, security scan)
+2. Build CD pipeline (deploy to staging, production)
+3. Configure environment-specific settings
+4. Set up artifact registry (container images, packages)
+5. Implement deployment strategy (blue-green, canary, rolling)
 
-  FROM node:20-alpine AS runner
-  WORKDIR /app
-  ENV NODE_ENV=production
-  RUN addgroup -g 1001 -S appgroup && adduser -S appuser -u 1001
-  COPY --from=builder /app/dist ./dist
-  COPY --from=builder /app/node_modules ./node_modules
-  USER appuser
-  EXPOSE 3000
-  HEALTHCHECK CMD wget -q --spider http://localhost:3000/health || exit 1
-  CMD ["node", "dist/server.js"]
-  ```
-- [ ] Pin base image versions (use SHA digests for production)
-- [ ] Run as non-root user
-- [ ] Add `.dockerignore` (node_modules, .git, .env, tests)
-- [ ] Add HEALTHCHECK instruction
-- [ ] Order layers by change frequency (least changing first)
-- [ ] Scan images for vulnerabilities (`docker scout`, `trivy`)
+### Phase 3: Observability
+1. Deploy monitoring stack (Prometheus, Grafana)
+2. Configure alerting rules and escalation
+3. Set up log aggregation
+4. Implement distributed tracing
+5. Create runbooks for common incidents
 
-### 3. Kubernetes Patterns
-- [ ] Define resource requests and limits for all containers
-- [ ] Use liveness, readiness, and startup probes:
-  ```yaml
-  livenessProbe:
-    httpGet:
-      path: /health
-      port: 3000
-    initialDelaySeconds: 10
-    periodSeconds: 15
-  readinessProbe:
-    httpGet:
-      path: /ready
-      port: 3000
-    initialDelaySeconds: 5
-    periodSeconds: 5
-  startupProbe:
-    httpGet:
-      path: /health
-      port: 3000
-    failureThreshold: 30
-    periodSeconds: 10
-  ```
-- [ ] Use Horizontal Pod Autoscaler (HPA) for scaling
-- [ ] Configure Pod Disruption Budgets (PDB) for availability
-- [ ] Use namespaces for environment isolation
-- [ ] Store secrets in external secrets manager (Vault, AWS Secrets Manager)
-- [ ] Use ConfigMaps for environment-specific configuration
-- [ ] Implement network policies for pod-to-pod communication
+## Dockerfile Best Practices
 
-### 4. Infrastructure as Code (Terraform)
-- [ ] Organize by environment:
-  ```
-  terraform/
-    modules/           # Reusable modules
-      networking/
-      compute/
-      database/
-    environments/
-      dev/
-      staging/
-      production/
-    backend.tf         # Remote state config
-    variables.tf
-  ```
-- [ ] Use remote state (S3 + DynamoDB, Terraform Cloud)
-- [ ] Lock state files to prevent concurrent modifications
-- [ ] Use `terraform plan` in CI, `terraform apply` with approval
-- [ ] Tag all resources with environment, team, project, cost-center
-- [ ] Use data sources to reference existing infrastructure
-- [ ] Never hardcode secrets in Terraform files
-- [ ] Pin provider and module versions
+```dockerfile
+# 1. Use specific version tags (not :latest)
+FROM node:20-alpine AS base
 
-### 5. Monitoring Stack (Prometheus + Grafana)
-- [ ] Instrument applications with metrics:
-  - **RED method** for services: Rate, Errors, Duration
-  - **USE method** for resources: Utilization, Saturation, Errors
-- [ ] Configure alert rules with appropriate thresholds:
-  ```yaml
-  groups:
-    - name: app-alerts
-      rules:
-        - alert: HighErrorRate
-          expr: rate(http_requests_total{status=~"5.."}[5m]) > 0.05
-          for: 5m
-          labels:
-            severity: critical
-          annotations:
-            summary: "High error rate detected"
-        - alert: HighLatency
-          expr: histogram_quantile(0.95, rate(http_request_duration_seconds_bucket[5m])) > 0.5
-          for: 10m
-          labels:
-            severity: warning
-  ```
-- [ ] Build Grafana dashboards for:
-  - Application health (request rate, error rate, latency percentiles)
-  - Infrastructure (CPU, memory, disk, network)
-  - Business metrics (signups, conversions, revenue)
-- [ ] Set up PagerDuty/OpsGenie integration for critical alerts
-- [ ] Configure log aggregation (Loki, ELK, Datadog)
-- [ ] Implement distributed tracing (Jaeger, Tempo)
+# 2. Set working directory
+WORKDIR /app
 
-### 6. Zero-Downtime Deployment Strategies
+# 3. Install dependencies in separate layer (cache optimization)
+FROM base AS deps
+COPY package.json pnpm-lock.yaml ./
+RUN corepack enable && pnpm install --frozen-lockfile --prod
 
-| Strategy | Complexity | Rollback Speed | Resource Cost |
-|----------|-----------|----------------|---------------|
-| Rolling update | Low | Medium | Low |
-| Blue-green | Medium | Instant | 2x resources |
-| Canary | High | Fast | Low extra |
-| Feature flags | Medium | Instant | None extra |
+FROM base AS build-deps
+COPY package.json pnpm-lock.yaml ./
+RUN corepack enable && pnpm install --frozen-lockfile
 
-**Rolling Update** (default for Kubernetes):
-- Gradually replace old pods with new ones
-- Configure `maxUnavailable` and `maxSurge`
-- Ensure readiness probes are properly configured
+# 4. Build in separate stage
+FROM build-deps AS builder
+COPY . .
+RUN pnpm build
 
-**Blue-Green:**
-- Run two identical environments (blue=current, green=new)
-- Switch traffic at load balancer level
-- Keep blue running for instant rollback
+# 5. Production image — minimal size
+FROM base AS runner
+ENV NODE_ENV=production
 
-**Canary:**
-- Route small percentage of traffic to new version
-- Monitor error rates and latency
-- Gradually increase traffic if metrics are healthy
-- Rollback if any degradation detected
+# 6. Don't run as root
+RUN addgroup --system --gid 1001 app && \
+    adduser --system --uid 1001 app
+USER app
 
-### 7. Security Checklist
-- [ ] Secrets managed externally (never in code or CI variables)
-- [ ] Images scanned for CVEs before deployment
-- [ ] Network segmentation between environments
-- [ ] TLS everywhere (including internal services)
-- [ ] Audit logging for infrastructure changes
-- [ ] Least-privilege IAM policies
-- [ ] Regular rotation of credentials and certificates
-- [ ] Backup verification tests (actually restore, not just backup)
+# 7. Copy only what's needed
+COPY --from=deps /app/node_modules ./node_modules
+COPY --from=builder /app/dist ./dist
+
+# 8. Health check
+HEALTHCHECK --interval=30s --timeout=3s --start-period=5s \
+  CMD wget -qO- http://localhost:3000/health || exit 1
+
+# 9. Expose port and set entrypoint
+EXPOSE 3000
+CMD ["node", "dist/server.js"]
+```
+
+### Key Dockerfile Rules
+- Multi-stage builds to minimize image size
+- `.dockerignore` file (exclude node_modules, .git, tests)
+- Non-root user for security
+- Specific base image versions
+- Layer ordering for cache efficiency (dependencies before source)
+- HEALTHCHECK instruction
+- No secrets in build args or layers
+
+## Docker Compose Patterns
+
+```yaml
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: runner
+    ports:
+      - "3000:3000"
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@db:5432/app
+      - REDIS_URL=redis://cache:6379
+    depends_on:
+      db:
+        condition: service_healthy
+      cache:
+        condition: service_started
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:3000/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+  db:
+    image: postgres:16-alpine
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: app
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  cache:
+    image: redis:7-alpine
+    volumes:
+      - redis_data:/data
+
+volumes:
+  postgres_data:
+  redis_data:
+```
+
+## GitHub Actions Workflow
+
+```yaml
+name: CI/CD
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  lint-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v3
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm lint
+      - run: pnpm typecheck
+      - run: pnpm test -- --coverage
+
+  security-scan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: npx audit-ci --moderate
+      - uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: fs
+          severity: HIGH,CRITICAL
+
+  build-and-push:
+    needs: [lint-and-test, security-scan]
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: docker/setup-buildx-action@v3
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - uses: docker/build-push-action@v5
+        with:
+          push: true
+          tags: ghcr.io/${{ github.repository }}:${{ github.sha }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+  deploy:
+    needs: build-and-push
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - name: Deploy to production
+        run: echo "Deploying ${{ github.sha }}"
+```
+
+## Terraform / Pulumi Patterns
+
+### Terraform Structure
+```
+modules/
+  vpc/
+    main.tf, variables.tf, outputs.tf
+  ecs/
+    main.tf, variables.tf, outputs.tf
+environments/
+  staging/
+    main.tf, terraform.tfvars
+  production/
+    main.tf, terraform.tfvars
+```
+
+### Key IaC Rules
+- Remote state backend (S3 + DynamoDB, GCS, Terraform Cloud)
+- State locking to prevent concurrent modifications
+- Environment-specific variable files
+- Module versioning for shared infrastructure
+- `terraform plan` in CI, `terraform apply` with manual approval
+- Drift detection on schedule
+- Tag all resources with owner, environment, project
+
+## Monitoring (Prometheus + Grafana)
+
+### USE Method (Resources)
+| Resource | Utilization | Saturation | Errors |
+|---|---|---|---|
+| CPU | cpu_usage_percent | cpu_throttled | — |
+| Memory | memory_usage_bytes | oom_kills | — |
+| Disk | disk_usage_percent | io_wait | disk_errors |
+| Network | bytes_total | queue_length | errors_total |
+
+### RED Method (Services)
+- **Rate**: requests per second
+- **Errors**: error rate per second
+- **Duration**: latency distribution (p50, p95, p99)
+
+### Alerting Rules
+```yaml
+groups:
+  - name: app-alerts
+    rules:
+      - alert: HighErrorRate
+        expr: rate(http_requests_total{status=~"5.."}[5m]) / rate(http_requests_total[5m]) > 0.05
+        for: 5m
+        labels:
+          severity: critical
+      - alert: HighLatency
+        expr: histogram_quantile(0.95, rate(http_request_duration_seconds_bucket[5m])) > 1
+        for: 5m
+        labels:
+          severity: warning
+```
+
+### Alerting Best Practices
+- Alert on symptoms, not causes
+- Every alert must have a runbook link
+- Tiered severity: critical (page), warning (ticket), info (log)
+- Aggregate before alerting (avoid flapping)
+- Review and prune alerts quarterly
+
+## Zero-Downtime Deployment Strategies
+
+| Strategy | How It Works | Risk | Rollback Speed |
+|---|---|---|---|
+| Rolling | Replace instances one at a time | Low | Medium |
+| Blue-Green | Switch traffic between two environments | Low | Instant |
+| Canary | Route small % to new version, gradually increase | Very Low | Instant |
+| Feature Flags | Deploy code dark, enable via flag | Very Low | Instant |
+
+### Rollback Procedures
+1. **Automated**: health check fails -> automatic rollback
+2. **Manual**: `kubectl rollout undo deployment/app`
+3. **Database**: forward-only migrations with backward compatibility
+4. **Config**: revert via secret manager version
+
+### Database Migration Safety
+- Migrations must be backward compatible (old code + new schema)
+- Never rename/drop columns in same deploy as code change
+- Two-phase: add new column -> deploy code using new column -> remove old column
+- Always test rollback of each migration
 
 ## Key Principles
-1. **Infrastructure is code** - All infrastructure must be version controlled, reviewed, and reproducible.
-2. **Automate everything** - If you do it twice, automate it. Manual processes are error-prone.
-3. **Monitor before you need to** - Instrumentation is not optional. You cannot fix what you cannot see.
-4. **Plan for failure** - Every component will fail. Design for graceful degradation.
-5. **Immutable deployments** - Never modify running infrastructure. Replace it with new versions.
-6. **Shift security left** - Security scanning in CI, not just in production.
+
+- Infrastructure as code — no manual changes to production
+- Immutable infrastructure — replace, don't patch
+- Cattle, not pets — servers are disposable
+- Shift left security — scan early in pipeline
+- Least privilege — minimal permissions everywhere
+- Automate everything that runs more than twice
+- Test the disaster recovery plan regularly
+
+## Anti-Patterns
+
+- Manual production deployments
+- Shared or hardcoded secrets
+- No rollback plan before deploying
+- `latest` tag for production images
+- Running containers as root
+- Alert fatigue from non-actionable alerts
+- Skipping staging environment
+- Snowflake servers with manual configuration
+- Monitoring without alerting (or vice versa)
 
 ## Skill Type
-Flexible
+
+**FLEXIBLE** — Adapt tooling and patterns to the project's cloud provider, team size, and operational maturity. The principles (IaC, immutability, observability) are constant; the specific tools are interchangeable.

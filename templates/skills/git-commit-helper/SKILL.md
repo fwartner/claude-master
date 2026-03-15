@@ -1,195 +1,239 @@
 ---
 name: git-commit-helper
-description: Use when creating git commits, generating changelogs, applying conventional commit format, or determining semantic version bumps.
+description: When the user needs help with conventional commits, semantic versioning, changelog generation, or commit message quality improvement.
 ---
 
 # Git Commit Helper
 
 ## Overview
-Enforces conventional commit standards for consistent, machine-readable commit history. Covers commit message formatting, semantic versioning, changelog generation, and commit quality validation. Ensures every commit tells a clear story of what changed and why.
+
+Enforce conventional commit standards, guide semantic versioning decisions, generate changelogs, and ensure commit message quality. This skill provides a structured approach to version control communication that enables automated tooling and clear project history.
 
 ## Process
 
-### 1. Stage Changes Review
-- [ ] Run `git diff --staged` to review exactly what will be committed
-- [ ] Verify no unintended files are staged (secrets, build artifacts, IDE configs)
-- [ ] Confirm changes are logically cohesive (one concern per commit)
-- [ ] If changes span multiple concerns, split into separate commits
+1. Analyze the changes to be committed (staged diff)
+2. Classify the change type (feat, fix, refactor, etc.)
+3. Identify the scope (module, component, or area affected)
+4. Determine if the change is breaking
+5. Write a commit message following the conventional format
+6. Assess version bump implications
 
-### 2. Determine Commit Type
+## Conventional Commit Format
 
-| Type | Description | Semver Impact | Example |
-|------|-------------|---------------|---------|
-| `feat` | New feature for the user | MINOR | `feat(auth): add OAuth2 login flow` |
-| `fix` | Bug fix for the user | PATCH | `fix(api): handle null response from payment gateway` |
-| `docs` | Documentation only | None | `docs(readme): update installation instructions` |
-| `style` | Formatting, no code change | None | `style(lint): apply prettier formatting` |
-| `refactor` | Code change, no feature/fix | None | `refactor(user): extract validation into separate module` |
-| `perf` | Performance improvement | PATCH | `perf(query): add index for user lookup` |
-| `test` | Adding or fixing tests | None | `test(auth): add integration tests for login` |
-| `chore` | Maintenance, tooling | None | `chore(deps): update eslint to v9` |
-| `ci` | CI/CD configuration | None | `ci(github): add playwright to CI pipeline` |
-| `build` | Build system changes | None | `build(docker): optimize multi-stage build` |
-
-### 3. Compose Commit Message
-
-**Format:**
 ```
-<type>(<scope>): <subject>
+<type>(<scope>): <description>
 
 [optional body]
 
 [optional footer(s)]
 ```
 
-**Rules for subject line:**
-- [ ] Use imperative mood ("add" not "added" or "adds")
-- [ ] Do not capitalize the first letter
-- [ ] Do not end with a period
-- [ ] Keep under 72 characters
-- [ ] Describe what the commit does, not what you did
+### Commit Types
 
-**Rules for body (when needed):**
-- [ ] Separate from subject with a blank line
-- [ ] Explain the "why" behind the change
-- [ ] Wrap at 72 characters per line
-- [ ] Use bullet points for multiple items
+| Type | Description | Version Bump | Example |
+|---|---|---|---|
+| `feat` | New feature for the user | MINOR | `feat(auth): add OAuth2 login flow` |
+| `fix` | Bug fix for the user | PATCH | `fix(api): handle null response in user endpoint` |
+| `docs` | Documentation only changes | None | `docs(readme): update installation steps` |
+| `style` | Formatting, missing semicolons, etc. | None | `style(lint): fix trailing whitespace` |
+| `refactor` | Code change that neither fixes a bug nor adds a feature | None | `refactor(utils): extract date formatting helpers` |
+| `perf` | Performance improvement | PATCH | `perf(query): add index for user lookup` |
+| `test` | Adding or correcting tests | None | `test(auth): add login failure scenarios` |
+| `chore` | Maintenance, deps, tooling | None | `chore(deps): update typescript to 5.4` |
+| `ci` | CI/CD configuration changes | None | `ci(github): add Node 20 to test matrix` |
+| `build` | Build system or external dependencies | None | `build(webpack): optimize chunk splitting` |
 
-**Rules for footer (when needed):**
-- [ ] `BREAKING CHANGE: <description>` for breaking changes (triggers MAJOR bump)
-- [ ] `Closes #123` or `Fixes #456` for issue references
-- [ ] `Refs: #789` for related but not closed issues
-- [ ] `Co-authored-by: Name <email>` for pair programming
+### Scope Guidelines
 
-### 4. Breaking Changes
+Scope should identify the area of the codebase affected:
+
+- **By module**: `auth`, `billing`, `dashboard`, `api`
+- **By layer**: `db`, `ui`, `middleware`, `config`
+- **By package**: `@app/core`, `@app/shared`
+- **General**: `deps`, `ci`, `lint`, `types`
+
+Rules:
+- Lowercase, kebab-case
+- Keep consistent within a project
+- Optional but recommended for projects with > 10 files changed regularly
+- Omit scope for truly cross-cutting changes
+
+### Description Rules
+
+- Use imperative mood: "add" not "added" or "adds"
+- No capital first letter
+- No period at the end
+- Maximum 72 characters (type + scope + description combined)
+- Describe WHAT changed, not HOW
+
+### Body Guidelines
+
 ```
-feat(api)!: change user endpoint response format
+feat(cart): add quantity update functionality
 
-BREAKING CHANGE: The /api/users endpoint now returns a paginated
-response object instead of a flat array. Clients must update to
-access `response.data` instead of the response directly.
-
-Migration guide: https://docs.example.com/migration/v3
-```
-
-- The `!` after scope signals a breaking change in the subject
-- `BREAKING CHANGE:` footer is required for tooling to detect it
-- Always include migration instructions or a link to them
-
-### 5. Semantic Versioning Decision
-
-Given a version `MAJOR.MINOR.PATCH`:
-
-```
-PATCH (1.0.0 → 1.0.1):
-  - fix: bug fixes
-  - perf: performance improvements
-  - No breaking changes, no new features
-
-MINOR (1.0.0 → 1.1.0):
-  - feat: new features
-  - Backward compatible additions
-  - Resets PATCH to 0
-
-MAJOR (1.0.0 → 2.0.0):
-  - BREAKING CHANGE in any commit type
-  - feat!:, fix!:, refactor!:
-  - Resets MINOR and PATCH to 0
-
-Pre-release:
-  - 1.0.0-alpha.1, 1.0.0-beta.1, 1.0.0-rc.1
-  - Used for testing before stable release
-```
-
-### 6. Changelog Generation
-
-Changelogs are derived from conventional commits automatically:
-
-```markdown
-# Changelog
-
-## [1.2.0] - 2026-03-15
-
-### Features
-- **auth**: add OAuth2 login flow (#123)
-- **dashboard**: add export to CSV (#145)
-
-### Bug Fixes
-- **api**: handle null response from payment gateway (#130)
-- **ui**: fix date picker timezone offset (#142)
-
-### Performance
-- **query**: add composite index for dashboard queries (#138)
-
-### Breaking Changes
-- **api**: change user endpoint response format (#150)
-```
-
-**Grouping rules:**
-- Group by type, then by scope
-- Include PR/issue number references
-- List breaking changes prominently at the top or in their own section
-- Only include `feat`, `fix`, `perf`, and breaking changes in user-facing changelogs
-
-### 7. Commit Quality Checklist
-- [ ] Changes are atomic (one logical change per commit)
-- [ ] Type accurately reflects the nature of the change
-- [ ] Scope identifies the affected module or component
-- [ ] Subject is clear and under 72 characters
-- [ ] Body explains "why" when the change is not obvious
-- [ ] Breaking changes are explicitly marked with `BREAKING CHANGE:`
-- [ ] No generated files committed (build output, node_modules)
-- [ ] No secrets or credentials in the commit
-- [ ] Tests pass before committing
-- [ ] Linting passes before committing
-
-### 8. Commit Message Examples
-
-**Simple fix:**
-```
-fix(auth): prevent session expiry during active usage
-```
-
-**Feature with context:**
-```
-feat(notifications): add email digest for weekly summary
-
-Users who opt in receive a weekly email summarizing their
-activity. Digest is generated every Sunday at 08:00 UTC.
+Users can now change item quantities directly in the cart
+without removing and re-adding items. The quantity selector
+supports values from 1 to 99 with real-time price updates.
 
 Closes #234
 ```
 
-**Refactor with rationale:**
+- Wrap at 72 characters
+- Explain WHY the change was made (motivation)
+- Explain WHAT changed at a high level
+- Use blank line to separate from description and footer
+
+### Breaking Changes
+
 ```
-refactor(payments): extract Stripe integration into adapter
+feat(api)!: change user endpoint response format
 
-Preparing for multi-gateway support. The adapter pattern
-allows swapping payment providers without changing
-business logic.
+BREAKING CHANGE: The /api/users endpoint now returns a paginated
+response object instead of a plain array. Clients must update
+to read from the `data` field.
 
-Refs: #300
-```
-
-**Multi-line body with bullets:**
-```
-fix(upload): handle edge cases in file validation
-
-- Reject files with double extensions (.jpg.exe)
-- Handle zero-byte files gracefully
-- Add timeout for virus scan API calls
-- Log validation failures for monitoring
-
-Closes #189, #192
+Migration guide:
+- Before: const users = await fetch('/api/users').json()
+- After:  const { data: users } = await fetch('/api/users').json()
 ```
 
-## Key Principles
-1. **Atomic commits** - Each commit should represent one complete, logical change that can be understood in isolation.
-2. **Imperative mood** - Write the subject as a command: "add feature" not "added feature."
-3. **Why over what** - The diff shows what changed. The message should explain why.
-4. **Machine-readable** - Conventional format enables automated changelog generation, version bumping, and release notes.
-5. **No noise commits** - Avoid "WIP", "fix typo", "oops" commits. Use interactive rebase to clean up before pushing.
-6. **Scope consistency** - Use the same scope names across the project. Document them in CONTRIBUTING.md.
+Two ways to indicate breaking changes:
+1. `!` after type/scope: `feat(api)!: description`
+2. `BREAKING CHANGE:` footer (provides space for migration details)
+
+Both trigger a MAJOR version bump.
+
+## Semantic Versioning (SemVer)
+
+### Version Format: MAJOR.MINOR.PATCH
+
+| Component | Increment When | Example |
+|---|---|---|
+| MAJOR | Breaking changes (incompatible API changes) | 1.0.0 -> 2.0.0 |
+| MINOR | New features (backward compatible) | 1.0.0 -> 1.1.0 |
+| PATCH | Bug fixes (backward compatible) | 1.0.0 -> 1.0.1 |
+
+### Version Bumping Rules
+
+```
+Commits since last release:
+  fix(auth): handle expired tokens       -> PATCH
+  feat(search): add fuzzy matching       -> MINOR (overrides PATCH)
+  fix(ui): correct button alignment      -> already MINOR
+  feat(api)!: change response format     -> MAJOR (overrides MINOR)
+
+Result: MAJOR bump (highest wins)
+```
+
+### Pre-Release Versions
+```
+1.0.0-alpha.1    -> Early testing
+1.0.0-beta.1     -> Feature complete, testing
+1.0.0-rc.1       -> Release candidate
+1.0.0            -> Stable release
+```
+
+### Initial Development (0.x.y)
+- 0.1.0: First usable version
+- 0.x.y: API is not stable; MINOR can include breaking changes
+- 1.0.0: First stable release; SemVer rules fully apply
+
+## Changelog Generation
+
+### CHANGELOG.md Format
+```markdown
+# Changelog
+
+## [1.2.0] - 2025-03-15
+
+### Added
+- Fuzzy search matching for product catalog (#234)
+- Bulk export functionality for reports (#245)
+
+### Fixed
+- Handle expired authentication tokens gracefully (#230)
+- Correct button alignment on mobile viewports (#232)
+
+### Changed
+- Update TypeScript to 5.4 (#240)
+
+## [1.1.0] - 2025-02-28
+...
+```
+
+### Mapping Commits to Changelog Sections
+| Commit Type | Changelog Section |
+|---|---|
+| `feat` | Added |
+| `fix` | Fixed |
+| `perf` | Performance |
+| `refactor` | Changed |
+| `docs` | Documentation |
+| `BREAKING CHANGE` | Breaking Changes (top of release) |
+| `chore`, `ci`, `build`, `style`, `test` | Typically excluded |
+
+### Automation Tools
+- `conventional-changelog`: generate from git history
+- `semantic-release`: fully automated versioning + publishing
+- `changeset`: manual changeset files for monorepos
+- `release-please`: Google's release automation
+
+## Commit Message Quality Checklist
+
+### Must Pass
+- [ ] Uses conventional commit format (`type(scope): description`)
+- [ ] Type is from the allowed list
+- [ ] Description uses imperative mood
+- [ ] Description is under 72 characters total
+- [ ] No period at end of description
+- [ ] Breaking changes are clearly marked
+
+### Should Pass
+- [ ] Scope accurately identifies the affected area
+- [ ] Body explains WHY, not just WHAT (for non-trivial changes)
+- [ ] References issue/ticket number (`Closes #123`, `Refs #456`)
+- [ ] Single logical change per commit (atomic commits)
+- [ ] No "WIP" or "temp" commits in main branch history
+
+### Red Flags
+- "misc changes" — too vague, split into specific commits
+- "fix stuff" — specify what was fixed and where
+- Huge commits touching 20+ files — likely needs splitting
+- Commit message contradicts the diff
+- Multiple unrelated changes in one commit
+
+## Commit Splitting Guide
+
+### When to Split
+- Changes to different modules/features
+- A refactor combined with a feature addition
+- Test additions for existing code + new feature
+- Config changes + code changes
+
+### How to Split
+```bash
+# Interactive staging for partial commits
+git add -p                    # Stage hunks interactively
+git add path/to/specific/file # Stage specific files
+
+# Example: split refactor + feature
+git add src/utils/date.ts
+git commit -m "refactor(utils): extract date formatting helpers"
+
+git add src/components/DatePicker.tsx src/components/DatePicker.test.tsx
+git commit -m "feat(ui): add date range picker component"
+```
+
+## Anti-Patterns
+
+- Commits with "fix" type that actually add features
+- Squashing meaningful history into single "big" commit
+- Using `--no-verify` to skip commit hooks
+- Amending published/pushed commits without team awareness
+- Empty commit messages or "." commits
+- Mixing formatting changes with logic changes
+- Commit messages that duplicate the diff ("change line 45 from X to Y")
 
 ## Skill Type
-Rigid
+
+**RIGID** — Conventional commit format is mandatory. Version bumping rules are deterministic. Changelog sections map directly from commit types. No deviation from the format specification.
