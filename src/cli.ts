@@ -5,7 +5,10 @@ import { runWizard } from './wizard';
 import { install } from './installer';
 import { SKILLS, AGENTS, COMMANDS } from './config';
 import type { InstallConfig } from './config';
+import { checkForUpdates } from './updater';
 import chalk from 'chalk';
+
+const MANDATORY_SKILLS = ['self-learning', 'auto-improvement'];
 
 const program = new Command();
 
@@ -41,9 +44,16 @@ program
         memory: options.memory !== false,
         claudeMd: options.claudeMd !== false,
         dryRun: (options.dryRun as boolean) || false,
-      } as InstallConfig;
+        laravelBoost: false,
+      };
     } else if (options.skills) {
       const selectedSkills = (options.skills as string).split(',').map((s: string) => s.trim());
+      // Enforce mandatory skills
+      for (const mandatory of MANDATORY_SKILLS) {
+        if (!selectedSkills.includes(mandatory)) {
+          selectedSkills.push(mandatory);
+        }
+      }
       config = {
         scope: options.global ? 'global' : 'project',
         format: options.plugin ? 'plugin' : (options.direct ? 'direct' : 'plugin'),
@@ -54,7 +64,8 @@ program
         memory: options.memory !== false,
         claudeMd: options.claudeMd !== false,
         dryRun: (options.dryRun as boolean) || false,
-      } as InstallConfig;
+        laravelBoost: false,
+      };
     } else {
       config = await runWizard(options as { global?: boolean; dryRun?: boolean });
     }
@@ -65,6 +76,16 @@ program
     }
 
     await install(config);
+  });
+
+program
+  .command('update')
+  .description('Check for updates and re-install latest version')
+  .action(async () => {
+    console.log('');
+    console.log(chalk.bold.cyan('  superkit-agents update'));
+    console.log('');
+    await checkForUpdates();
   });
 
 program.parse();

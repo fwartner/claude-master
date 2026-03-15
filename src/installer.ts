@@ -10,8 +10,10 @@ import {
   backupIfExists,
   mergeClaudeMd,
 } from './utils';
+import { execSync } from 'child_process';
 import { MEMORY_FILES } from './config';
 import type { InstallConfig } from './config';
+import { saveConfig } from './updater';
 
 interface InstallResult {
   skills: string[];
@@ -24,7 +26,7 @@ interface InstallResult {
 
 function generateSessionStartScript(rootDir: string): string {
   return `#!/usr/bin/env bash
-# SessionStart hook for @fwartner/claude-toolkit (direct mode)
+# SessionStart hook for @pixelandprocess/superkit-agents (direct mode)
 set -euo pipefail
 
 TOOLKIT_ROOT="${rootDir}"
@@ -60,7 +62,7 @@ escape_for_json() {
 using_toolkit_escaped=$(escape_for_json "$using_toolkit_content")
 memory_escaped=$(escape_for_json "$memory_context")
 
-session_context="<EXTREMELY_IMPORTANT>\\nYou have the Claude Toolkit installed.\\n\\n**Below is the full content of your 'toolkit:using-toolkit' skill. For all other skills, use the 'Skill' tool:**\\n\\n\${using_toolkit_escaped}\\n\\n**Project Memory:**\\n\${memory_escaped}\\n</EXTREMELY_IMPORTANT>"
+session_context="<EXTREMELY_IMPORTANT>\\nYou have superkit-agents installed.\\n\\n**Below is the full content of your 'toolkit:using-toolkit' skill. For all other skills, use the 'Skill' tool:**\\n\\n\${using_toolkit_escaped}\\n\\n**Project Memory:**\\n\${memory_escaped}\\n</EXTREMELY_IMPORTANT>"
 
 cat <<EOF
 {
@@ -248,6 +250,31 @@ export async function install(config: InstallConfig): Promise<void> {
     }
     installed.claudeMd = true;
     spinner.succeed('CLAUDE.md configured');
+  }
+
+  // --- Laravel Boost ---
+  if (config.laravelBoost && !config.dryRun) {
+    spinner.start('Installing Laravel Boost (composer require laravel/boost)...');
+    try {
+      execSync('composer require laravel/boost', {
+        cwd: process.cwd(),
+        encoding: 'utf8',
+        timeout: 120000,
+        stdio: ['pipe', 'pipe', 'pipe'],
+      });
+      spinner.succeed('Laravel Boost installed');
+    } catch {
+      spinner.fail('Laravel Boost installation failed (is Composer installed?)');
+    }
+  }
+
+  // --- Save config for future updates ---
+  if (!config.dryRun) {
+    try {
+      await saveConfig(config as unknown as Record<string, unknown>);
+    } catch {
+      // non-critical, ignore
+    }
   }
 
   // --- Summary ---

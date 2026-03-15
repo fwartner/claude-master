@@ -28,10 +28,11 @@ describe('Installer', () => {
     memory: false,
     claudeMd: false,
     dryRun: false,
+    laravelBoost: false,
     ...overrides,
   });
 
-  it('installs all 61 skills in plugin mode', async () => {
+  it('installs all 64 skills in plugin mode', async () => {
     await install(makeConfig({ skills: Object.keys(SKILLS) }));
 
     for (const skill of Object.keys(SKILLS)) {
@@ -43,7 +44,7 @@ describe('Installer', () => {
     expect(await fs.pathExists(pluginPath)).toBe(true);
   });
 
-  it('installs all 61 skills in direct mode', async () => {
+  it('installs all 64 skills in direct mode', async () => {
     await install(makeConfig({ format: 'direct', skills: Object.keys(SKILLS) }));
 
     for (const skill of Object.keys(SKILLS)) {
@@ -52,7 +53,7 @@ describe('Installer', () => {
     }
   });
 
-  it('installs all 18 agents', async () => {
+  it('installs all 20 agents', async () => {
     await install(makeConfig({ agents: Object.keys(AGENTS) }));
 
     for (const agent of Object.keys(AGENTS)) {
@@ -61,7 +62,7 @@ describe('Installer', () => {
     }
   });
 
-  it('installs all 29 commands', async () => {
+  it('installs all 31 commands', async () => {
     await install(makeConfig({ commands: Object.keys(COMMANDS) }));
 
     for (const cmd of Object.keys(COMMANDS)) {
@@ -140,7 +141,7 @@ describe('Installer', () => {
     expect(content).toContain('<!-- TOOLKIT START -->');
     expect(content).toContain('<!-- TOOLKIT END -->');
     expect(content).toContain('HARD-GATES');
-    expect(content).toContain('61 skills');
+    expect(content).toContain('64 skills');
   });
 
   it('merges CLAUDE.md with existing content', async () => {

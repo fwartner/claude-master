@@ -1,13 +1,16 @@
 ---
 name: finishing-a-development-branch
-description: "Use when completing work on a feature branch, preparing to merge, or cleaning up after development is done"
+description: >
+  Use when completing work on a feature branch, preparing to merge, or cleaning up after development
+  is done. Triggers: branch work is complete, user says "merge", "create PR", "finish branch",
+  "done with this branch", ready for code review.
 ---
 
 # Finishing a Development Branch
 
-## Purpose
+## Overview
 
-Provide a structured, safe process for completing work on a development branch, including verification, merge strategy selection, and cleanup.
+Provide a structured, safe process for completing work on a development branch, including verification, merge strategy selection, and cleanup. This skill ensures no branch is merged without passing tests, and every destructive operation requires explicit user confirmation.
 
 ## When to Use
 
@@ -16,7 +19,9 @@ Provide a structured, safe process for completing work on a development branch, 
 - Cleaning up after development work is finished
 - Preparing a pull request for team review
 
-## Step 1: Verify All Tests Pass
+## Phase 1: Verify All Tests Pass
+
+[HARD-GATE] Do NOT proceed to any merge or PR activity without passing verification.
 
 Before any merge or PR activity, invoke **verification-before-completion** to confirm:
 
@@ -30,9 +35,11 @@ Before any merge or PR activity, invoke **verification-before-completion** to co
 # Do NOT skip this step even if "tests were passing earlier"
 ```
 
-If verification fails, stop. Fix the failures before proceeding. Do not create PRs or merge branches with failing tests.
+If verification fails, STOP. Fix the failures before proceeding. Do NOT create PRs or merge branches with failing tests.
 
-## Step 2: Determine Base Branch
+**STOP — Verification must pass before continuing to Phase 2.**
+
+## Phase 2: Determine Base Branch
 
 Identify the branch to merge into, using this detection logic:
 
@@ -47,12 +54,15 @@ git log --oneline --decorate --graph HEAD...main --first-parent 2>/dev/null
 git log --oneline --decorate --graph HEAD...master --first-parent 2>/dev/null
 ```
 
-### Priority Order
+### Base Branch Selection Decision Table
 
-1. **main** -- if it exists, this is the default
-2. **master** -- legacy default, still common
-3. **develop** -- if the project uses GitFlow
-4. **Ask the user** -- if none of the above exist or multiple candidates are found
+| Condition | Base Branch | Confidence |
+|---|---|---|
+| `main` exists | `main` | High |
+| Only `master` exists | `master` | High |
+| `develop` exists and project uses GitFlow | `develop` | Medium |
+| Multiple candidates found | Ask user | Required |
+| None of the above exist | Ask user | Required |
 
 ### Verify Base Branch is Up to Date
 
@@ -63,39 +73,20 @@ git log HEAD..<base-branch> --oneline
 
 If the base branch has advanced since the feature branch was created, inform the user. They may want to rebase or merge base into the feature branch first.
 
-## Step 3: Present Merge Options
+### Base Branch Divergence Decision Table
 
-Present exactly these four options to the user. Do not add or remove options.
+| Divergence | Action |
+|---|---|
+| Base has 0 new commits | Proceed normally |
+| Base has 1-5 new commits | Inform user, suggest rebase |
+| Base has 6+ new commits | Warn user, recommend merge or rebase before proceeding |
+| Merge conflicts detected | STOP — resolve conflicts first |
 
-### Option A: Create Pull Request
+**STOP — Confirm the base branch with the user before proceeding.**
 
-Push the branch to the remote and open a pull request.
+## Phase 3: Present Merge Options
 
-- Best for: team projects, code review workflows, CI/CD pipelines
-- The branch remains open until the PR is reviewed and merged
-
-### Option B: Merge Locally
-
-Merge the feature branch into the base branch using a merge commit.
-
-- Best for: solo projects, local-only workflows
-- Preserves full branch history
-
-### Option C: Squash Merge
-
-Squash all commits into a single commit and merge into the base branch.
-
-- Best for: branches with many small/WIP commits, cleaner history
-- Individual commit history is lost on the base branch
-
-### Option D: Leave Branch As-Is
-
-Keep the branch in its current state without merging.
-
-- Best for: work that is complete but not ready to merge, pausing for later
-- No changes to any other branch
-
-Present them clearly:
+Present exactly these four options to the user. Do NOT add or remove options.
 
 ```
 How would you like to finish this branch?
@@ -106,7 +97,18 @@ How would you like to finish this branch?
   D) Leave as-is  -- keep the branch, decide later
 ```
 
-## Step 4: Execute Chosen Option
+### Option Selection Decision Table
+
+| Context | Recommended Option | Why |
+|---|---|---|
+| Team project with code review | A) Create PR | Enables review workflow |
+| Solo project, clean history | B) Merge | Preserves full branch history |
+| Many WIP commits, messy history | C) Squash merge | Clean single commit on base |
+| Work incomplete or uncertain | D) Leave as-is | No risk, decide later |
+
+**STOP — Wait for user to select an option. Do NOT assume a default.**
+
+## Phase 4: Execute Chosen Option
 
 ### Option A: Create Pull Request
 
@@ -174,7 +176,7 @@ Branch <branch-name> left as-is.
 You can return to it later with: git checkout <branch-name>
 ```
 
-## Step 5: Cleanup
+## Phase 5: Cleanup
 
 After executing options A, B, or C, perform cleanup:
 
@@ -210,24 +212,52 @@ Confirm the base branch is in the expected state.
 
 ## Confirmation Requirements
 
-The following operations require explicit user confirmation before execution:
+[HARD-GATE] The following operations require explicit user confirmation before execution. Do NOT proceed on assumption. Always ask.
 
-| Operation | Why |
-|-----------|-----|
-| Merge into base branch | Destructive: changes base branch history |
-| Squash merge | Destructive: loses individual commit history |
+| Operation | Why Confirmation Is Required |
+|---|---|
+| Merge into base branch | Changes base branch history |
+| Squash merge | Loses individual commit history |
 | Delete local branch | Cannot be undone if not pushed |
 | Delete remote branch | Affects other collaborators |
 | Force remove worktree | May discard uncommitted changes |
+| Rebase onto updated base | Rewrites commit history |
 
-Never proceed with these operations on assumption. Always ask.
+## Anti-Patterns / Common Mistakes
+
+| Anti-Pattern | Why It Is Wrong | What to Do Instead |
+|---|---|---|
+| Merging without running tests | Broken code reaches base branch | Always run full verification first |
+| Skipping base branch freshness check | Merge conflicts discovered late | `git fetch` and check divergence |
+| Auto-selecting merge strategy | User may prefer different approach | Always present all four options |
+| Deleting branch without confirmation | Data loss risk | Ask before every deletion |
+| Creating PR with failing CI | Wastes reviewer time | Fix CI before creating PR |
+| Squash message from last commit only | Loses context of full branch work | Summarize all changes in squash msg |
+| Leaving stale remote branches | Cluttered repository | Clean up remote after merge |
+| Force-pushing after PR creation | Destroys review comments | Avoid force-push on PR branches |
 
 ## Error Handling
 
 | Error | Action |
-|-------|--------|
-| Merge conflicts | Report conflicts, ask user to resolve, do not auto-resolve |
+|---|---|
+| Merge conflicts | Report conflicts, ask user to resolve, do NOT auto-resolve |
 | Push rejected | Fetch and check if rebase/merge is needed |
-| PR creation fails | Check gh auth status, report error details |
+| PR creation fails | Check `gh auth status`, report error details |
 | Branch already deleted | Skip deletion, continue with remaining cleanup |
-| Tests fail | Stop immediately, do not merge or create PR |
+| Tests fail | STOP immediately, do NOT merge or create PR |
+| Base branch does not exist on remote | Ask user to confirm the correct base |
+
+## Integration Points
+
+| Skill | Integration |
+|---|---|
+| `verification-before-completion` | Must invoke in Phase 1 before any merge activity |
+| `using-git-worktrees` | Cleanup includes worktree removal if applicable |
+| `git-commit-helper` | Squash commit message follows conventional commit format |
+| `code-review` | PR creation (Option A) feeds into code review workflow |
+| `planning` | Branch completion is the final step of plan execution |
+| `deployment` | Merge to main/release may trigger deployment pipeline |
+
+## Skill Type
+
+**RIGID** — Follow this process exactly. Every phase must be completed in order. Do NOT skip verification. Do NOT merge without user confirmation. Do NOT assume a merge strategy. Do NOT delete branches without asking.

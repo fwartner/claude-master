@@ -2,6 +2,7 @@ import inquirer from 'inquirer';
 import chalk from 'chalk';
 import { SKILLS, AGENTS, COMMANDS, SKILL_CATEGORIES } from './config';
 import type { InstallConfig, SkillCategory } from './config';
+import { detectLaravel } from './utils';
 
 interface CliOptions {
   global?: boolean;
@@ -35,6 +36,26 @@ export async function runWizard(cliOptions: CliOptions): Promise<InstallConfig |
     },
   ]);
 
+  // Laravel detection
+  let laravelDetected = false;
+  let installLaravelBoost = false;
+  if (scope === 'project') {
+    laravelDetected = await detectLaravel();
+    if (laravelDetected) {
+      console.log('');
+      console.log(chalk.bold.magenta('  Laravel project detected!'));
+      const { boost } = await inquirer.prompt([
+        {
+          type: 'confirm',
+          name: 'boost',
+          message: 'Install Laravel Boost for performance optimization? (composer require laravel/boost)',
+          default: true,
+        },
+      ]);
+      installLaravelBoost = boost as boolean;
+    }
+  }
+
   const skillChoices = Object.entries(SKILLS).map(([key, skill]) => {
     const category = SKILL_CATEGORIES[skill.category as SkillCategory] || skill.category;
     return {
@@ -59,6 +80,25 @@ export async function runWizard(cliOptions: CliOptions): Promise<InstallConfig |
     return null;
   }
 
+  // Enforce mandatory skills
+  const mandatorySkills = ['self-learning', 'auto-improvement'];
+  const selectedSkills = skills as string[];
+  for (const mandatory of mandatorySkills) {
+    if (!selectedSkills.includes(mandatory)) {
+      selectedSkills.push(mandatory);
+      console.log(chalk.dim(`  ${mandatory} is always active (mandatory)`));
+    }
+  }
+
+  // Auto-select Laravel skills if Laravel was detected
+  if (laravelDetected) {
+    for (const ls of ['laravel-specialist', 'php-specialist', 'laravel-boost']) {
+      if (!selectedSkills.includes(ls)) {
+        selectedSkills.push(ls);
+      }
+    }
+  }
+
   const { features } = await inquirer.prompt([
     {
       type: 'checkbox',
@@ -79,13 +119,14 @@ export async function runWizard(cliOptions: CliOptions): Promise<InstallConfig |
   const config: InstallConfig = {
     scope: scope as 'project' | 'global',
     format: format as 'plugin' | 'direct',
-    skills: skills as string[],
+    skills: selectedSkills,
     agents: selectedFeatures.includes('agents') ? Object.keys(AGENTS) : [],
     commands: selectedFeatures.includes('commands') ? Object.keys(COMMANDS) : [],
     hooks: selectedFeatures.includes('hooks'),
     memory: selectedFeatures.includes('memory'),
     claudeMd: selectedFeatures.includes('claudeMd'),
     dryRun: cliOptions.dryRun || false,
+    laravelBoost: installLaravelBoost,
   };
 
   console.log('');

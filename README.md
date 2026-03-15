@@ -24,7 +24,7 @@ npx @pixelandprocess/superkit-agents --all
 
 ## What's Included
 
-| 61 Skills | 18 Agents | 29 Commands | Hooks | Memory System |
+| 64 Skills | 20 Agents | 31 Commands | Hooks | Memory System |
 |:---------:|:--------:|:-----------:|:-----:|:-------------:|
 | Structured workflows for every phase of development | Specialized sub-agents for parallel work | Slash commands that trigger skills | Session-start context injection | Persistent project knowledge |
 
@@ -150,6 +150,14 @@ Now with **Ralph integration** — autonomous iterative development loops with c
 |-------|-------------|
 | `email-composer` | Professional email drafting, tone adjustment |
 
+### Frameworks & Languages (3)
+
+| Skill | Description |
+|-------|-------------|
+| `laravel-specialist` | Laravel development — Eloquent, Blade, Livewire, queues, Pest testing |
+| `php-specialist` | Modern PHP 8.x — enums, fibers, readonly, PSR standards, static analysis |
+| `laravel-boost` | Laravel Boost performance optimization — caching, database, Octane |
+
 ---
 
 ## Commands
@@ -187,6 +195,8 @@ Slash commands trigger skills directly in Claude Code:
 | `/mcp` | MCP server development |
 | `/commit` | Git commit helper |
 | `/decompose` | Task decomposition |
+| `/laravel` | Laravel development |
+| `/php` | Modern PHP development |
 
 ---
 
@@ -214,6 +224,8 @@ Specialized sub-agents dispatched for parallel or focused work:
 | `typescript-pro` | Advanced type patterns, conditional types, branded types |
 | `task-decomposer` | Hierarchical task breakdown, parallelization strategy |
 | `mobile-developer` | Cross-platform mobile, platform-specific patterns |
+| `laravel-developer` | Laravel specialist with Eloquent, Blade, Livewire, and Pest expertise |
+| `php-developer` | Modern PHP 8.x development with PSR compliance and static analysis |
 
 ---
 
@@ -289,6 +301,28 @@ npx @pixelandprocess/superkit-agents --all --direct
 # Selective skills
 npx @pixelandprocess/superkit-agents --skills planning,tdd,code-review,autonomous-loop
 ```
+
+---
+
+## Update
+
+Check for updates and get the latest version:
+
+```bash
+superkit-agents update
+```
+
+This checks the npm registry for newer versions and provides upgrade instructions. Your installation preferences are automatically saved and reused on update.
+
+---
+
+## Laravel Detection
+
+When running in a Laravel project directory (detected via `composer.json`), superkit-agents automatically:
+
+1. Detects the Laravel framework dependency
+2. Prompts to install **Laravel Boost** (`composer require laravel/boost`) for performance optimization
+3. Auto-selects `laravel-specialist`, `php-specialist`, and `laravel-boost` skills
 
 ---
 
@@ -534,7 +568,7 @@ Add your own skills alongside toolkit ones. Each skill is a directory containing
 
 ### Find More Skills
 
-When the toolkit's 61 skills don't cover your needs:
+When the toolkit's 64 skills don't cover your needs:
 
 ```bash
 npx skills find [query]                    # Search the ecosystem

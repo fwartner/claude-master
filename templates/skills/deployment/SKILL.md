@@ -1,46 +1,55 @@
 ---
 name: deployment
-description: Use when setting up CI/CD pipelines, creating deployment configurations, generating deploy checklists, or configuring infrastructure
+description: >
+  Use when setting up CI/CD pipelines, creating deployment configurations, generating deploy checklists,
+  or configuring infrastructure. Triggers: new project needs deployment, migrating CI/CD provider,
+  adding staging/production environments, automating release process, setting up monitoring for deploys.
 ---
 
 # Deployment
 
 ## Overview
 
-Set up CI/CD pipelines and deployment configurations. Detect the deployment target, generate pipeline config, create pre/post-deploy checklists, and configure monitoring.
+Set up CI/CD pipelines and deployment configurations that automate the path from code to production. This skill detects the deployment target, generates pipeline config, creates pre/post-deploy checklists, and configures monitoring — producing a fully automated, rollback-ready deployment pipeline.
 
-**Announce at start:** "I'm using the deployment skill to set up the deployment pipeline."
+**Announce at start:** "I am using the deployment skill to set up the deployment pipeline."
 
-## Checklist
+## Phase 1: Detect Deployment Target
 
-1. **Detect target** — identify deployment platform and infrastructure
-2. **Design pipeline** — define stages, jobs, triggers
-3. **Generate config** — CI/CD configuration files
-4. **Create checklists** — pre-deploy and post-deploy verification
-5. **Review with user** — present pipeline, get approval
-6. **Save config** — write to `.github/workflows/` or equivalent
+**STOP after this phase — present findings to user for confirmation before proceeding.**
 
-## Step 1: Detect Deployment Target
+Ask questions to identify the full deployment context:
 
-Ask questions to identify:
-
-**Platform:**
+**Platform Detection:**
 - Where does this deploy? (Vercel, AWS, GCP, Azure, DigitalOcean, self-hosted)
 - Container-based? (Docker, Kubernetes)
 - Serverless? (Lambda, Cloud Functions, Edge Functions)
 
-**CI/CD:**
+**CI/CD Detection:**
 - What CI system? (GitHub Actions, GitLab CI, CircleCI, Jenkins)
 - What triggers deployments? (push to main, tags, manual)
 - Multi-environment? (dev, staging, production)
 
-**Infrastructure:**
+**Infrastructure Detection:**
 - Database migrations needed?
 - Environment variables management? (secrets manager, .env)
 - CDN/caching? Asset pipeline?
 - Monitoring/alerting? (Datadog, Sentry, New Relic)
 
-## Step 2: Design Pipeline
+### Platform Selection Decision Table
+
+| Project Type | Recommended Platform | CI/CD | Why |
+|---|---|---|---|
+| Static site / SPA | Vercel, Netlify, Cloudflare Pages | Built-in | Zero config, edge CDN |
+| Node.js API | AWS ECS, Cloud Run, Railway | GitHub Actions | Container support, auto-scaling |
+| Monorepo (frontend + backend) | Vercel + AWS / Railway | GitHub Actions | Split concerns, independent scaling |
+| Enterprise / compliance-heavy | AWS EKS, GKE | GitLab CI, Jenkins | Full control, audit trails |
+| Hobby / side project | Railway, Fly.io, Render | Built-in or GitHub Actions | Simple, low cost |
+| ML / data pipelines | AWS SageMaker, GCP Vertex | GitHub Actions + Airflow | GPU support, pipeline orchestration |
+
+## Phase 2: Design Pipeline
+
+**STOP after this phase — present pipeline design to user for approval before generating config.**
 
 ### Standard Pipeline Stages
 
@@ -57,15 +66,26 @@ Ask questions to identify:
 **Deploy:** Push to target environment
 **Verify:** Health checks, smoke tests, monitoring
 
-### Branch Strategy
+### Branch Strategy Decision Table
 
-| Branch | Action | Environment |
-|--------|--------|-------------|
-| `feature/*` | Build + Test + Lint | - |
-| `main` | Build + Test + Lint + Deploy | Staging |
-| `release/*` or tags | Build + Test + Lint + Deploy | Production |
+| Branch | Action | Environment | Gate |
+|---|---|---|---|
+| `feature/*` | Build + Test + Lint | None | PR checks pass |
+| `main` | Build + Test + Lint + Deploy | Staging | All checks green |
+| `release/*` or tags | Build + Test + Lint + Deploy | Production | Manual approval |
+| `hotfix/*` | Build + Test + Deploy | Production (expedited) | Senior approval |
 
-## Step 3: Generate Config
+### Deployment Strategy Decision Table
+
+| Strategy | When to Use | Risk Level | Rollback Speed |
+|---|---|---|---|
+| Direct deploy | Solo/hobby projects, staging | High | Slow (redeploy) |
+| Blue-green | Apps with health checks, low-downtime needs | Low | Instant (switch) |
+| Canary | High-traffic production, gradual rollout | Very Low | Fast (reroute) |
+| Rolling | Kubernetes clusters, stateless services | Low | Medium |
+| Feature flags | Decoupled deploy from release | Very Low | Instant (toggle) |
+
+## Phase 3: Generate Config
 
 ### GitHub Actions Example
 
@@ -77,6 +97,10 @@ on:
     branches: [main]
   pull_request:
     branches: [main]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   build-and-test:
@@ -112,7 +136,50 @@ jobs:
       # [platform-specific deploy steps]
 ```
 
-## Step 4: Deployment Checklists
+### GitLab CI Example
+
+```yaml
+stages:
+  - build
+  - test
+  - deploy
+
+build:
+  stage: build
+  script:
+    - npm ci
+    - npm run build
+  artifacts:
+    paths: [dist/]
+
+test:
+  stage: test
+  script:
+    - npm run lint
+    - npm run type-check
+    - npm test -- --coverage
+
+deploy-staging:
+  stage: deploy
+  environment: staging
+  script:
+    - # platform-specific deploy
+  only:
+    - main
+
+deploy-production:
+  stage: deploy
+  environment: production
+  script:
+    - # platform-specific deploy
+  when: manual
+  only:
+    - tags
+```
+
+## Phase 4: Create Deployment Checklists
+
+**STOP — present checklists to user. Customize based on their stack.**
 
 ### Pre-Deploy Checklist
 
@@ -121,7 +188,7 @@ jobs:
 
 - [ ] All tests passing on CI
 - [ ] Code reviewed and approved
-- [ ] No Critical issues in code review
+- [ ] No critical/high security vulnerabilities
 - [ ] Environment variables configured for target environment
 - [ ] Database migrations tested (if applicable)
 - [ ] Feature flags configured (if applicable)
@@ -146,6 +213,30 @@ jobs:
 - [ ] No new errors in error tracking (Sentry, etc.)
 ```
 
+## Phase 5: Review and Finalize
+
+Present the complete pipeline configuration to the user:
+1. VERIFY CI/CD config file syntax is valid
+2. VERIFY all environment variables are documented
+3. VERIFY rollback plan exists
+4. VERIFY pre/post-deploy checklists are complete
+5. VERIFY the pipeline can be tested locally (act, etc.)
+
+Save config to `.github/workflows/` or equivalent.
+
+## Anti-Patterns / Common Mistakes
+
+| Anti-Pattern | Why It Is Wrong | What to Do Instead |
+|---|---|---|
+| Manual production deploys | Error-prone, no audit trail | Automate via CI/CD pipeline |
+| No rollback plan | Stuck if deploy breaks production | Define rollback before every deploy |
+| Skipping staging | Bugs found in production | Always deploy to staging first |
+| Secrets in code/config files | Security breach risk | Use secrets manager or env vars |
+| `latest` tag for production images | Non-reproducible deploys | Pin specific version tags |
+| No concurrency control | Conflicting deploys | Add concurrency groups to CI |
+| Deploying without health checks | No visibility into deploy health | Add health endpoint + post-deploy check |
+| Alert fatigue from noisy monitors | Real issues get missed | Alert on symptoms, tune thresholds |
+
 ## Key Principles
 
 - **Automate everything** — no manual steps in the critical path
@@ -154,12 +245,19 @@ jobs:
 - **Rollback-ready** — every deploy has a rollback plan
 - **Observable** — monitoring before, during, and after deploy
 - **Secure** — no secrets in code, use secrets management
+- **Idempotent** — deploying the same version twice produces the same result
 
-## Verification Gate
+## Integration Points
 
-Before claiming the deployment config is complete:
-1. VERIFY CI/CD config file syntax is valid
-2. VERIFY all environment variables are documented
-3. VERIFY rollback plan exists
-4. VERIFY pre/post-deploy checklists are complete
-5. VERIFY the pipeline can be tested locally (act, etc.)
+| Skill | Integration |
+|---|---|
+| `senior-devops` | Provides Docker, K8s, and IaC patterns used in deploy config |
+| `git-commit-helper` | Conventional commits drive changelog and version bumping |
+| `finishing-a-development-branch` | Branch completion triggers deployment pipeline |
+| `verification-before-completion` | Post-deploy verification gate |
+| `security-review` | Security scan stage in the pipeline |
+| `planning` | Deployment plan is part of the implementation plan |
+
+## Skill Type
+
+**FLEXIBLE** — Adapt pipeline design, platform selection, and tooling to the project's cloud provider, team size, and operational maturity. The principles (automation, rollback, observability) are constant; specific tools are interchangeable.

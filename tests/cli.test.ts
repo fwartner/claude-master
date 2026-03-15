@@ -2,8 +2,8 @@ import { describe, it, expect } from 'vitest';
 import { SKILLS, AGENTS, COMMANDS, MEMORY_FILES, SKILL_CATEGORIES } from '../src/config';
 
 describe('Config', () => {
-  it('has 61 skills defined', () => {
-    expect(Object.keys(SKILLS)).toHaveLength(61);
+  it('has 64 skills defined', () => {
+    expect(Object.keys(SKILLS)).toHaveLength(64);
   });
 
   it('has all expected skills', () => {
@@ -38,13 +38,15 @@ describe('Config', () => {
       'email-composer',
       // Productivity (1)
       'file-organizer',
+      // Framework (3)
+      'laravel-specialist', 'php-specialist', 'laravel-boost',
     ];
     expect(Object.keys(SKILLS)).toEqual(expect.arrayContaining(expected));
-    expect(expected).toHaveLength(61);
+    expect(expected).toHaveLength(64);
   });
 
-  it('has 18 agents defined', () => {
-    expect(Object.keys(AGENTS)).toHaveLength(18);
+  it('has 20 agents defined', () => {
+    expect(Object.keys(AGENTS)).toHaveLength(20);
   });
 
   it('has all expected agents', () => {
@@ -55,13 +57,14 @@ describe('Config', () => {
       'frontend-developer', 'ui-ux-designer', 'backend-architect',
       'context-manager', 'database-architect', 'architect-reviewer',
       'typescript-pro', 'task-decomposer', 'mobile-developer',
+      'laravel-developer', 'php-developer',
     ];
     expect(Object.keys(AGENTS)).toEqual(expect.arrayContaining(expected));
-    expect(expected).toHaveLength(18);
+    expect(expected).toHaveLength(20);
   });
 
-  it('has 29 commands defined', () => {
-    expect(Object.keys(COMMANDS)).toHaveLength(29);
+  it('has 31 commands defined', () => {
+    expect(Object.keys(COMMANDS)).toHaveLength(31);
   });
 
   it('has all expected commands', () => {
@@ -70,10 +73,10 @@ describe('Config', () => {
       'verify', 'execute', 'worktree', 'brainstorm', 'ralph', 'specs', 'loop',
       'frontend', 'backend', 'architect', 'fullstack', 'design-system',
       'ui-ux', 'mobile', 'clean', 'devops', 'agent', 'seo', 'email',
-      'mcp', 'commit', 'decompose',
+      'mcp', 'commit', 'decompose', 'laravel', 'php',
     ];
     expect(Object.keys(COMMANDS)).toEqual(expect.arrayContaining(expected));
-    expect(expected).toHaveLength(29);
+    expect(expected).toHaveLength(31);
   });
 
   it('has 5 memory files defined', () => {

@@ -1,6 +1,10 @@
 ---
 name: content-research-writer
-description: When the user needs research methodology, long-form content creation, academic-style citations, fact-checking, or evidence-based writing with proper source attribution.
+description: >
+  Use when the user needs research methodology, long-form content creation, academic-style citations,
+  fact-checking, or evidence-based writing with proper source attribution.
+  Trigger conditions: whitepaper drafting, research article writing, source evaluation,
+  citation management, fact-checking protocol, case study creation, evidence-based argumentation.
 ---
 
 # Content Research Writer
@@ -9,9 +13,12 @@ description: When the user needs research methodology, long-form content creatio
 
 Produce well-researched, authoritative long-form content with proper source attribution, structured argumentation, and evidence-based claims. This skill covers research methodology, source evaluation, citation management, outline construction, drafting workflows, fact-checking protocols, and publishing-ready formatting for articles, whitepapers, reports, and educational content.
 
-## Process
+Apply this skill whenever content must be backed by evidence, cited properly, and structured for credibility with expert audiences.
+
+## Multi-Phase Process
 
 ### Phase 1: Research Planning
+
 1. Define the topic scope and target audience
 2. Identify key questions the content must answer
 3. Determine content type (article, whitepaper, case study, guide)
@@ -19,15 +26,21 @@ Produce well-researched, authoritative long-form content with proper source attr
 5. Establish credibility requirements (peer-reviewed, industry reports, primary data)
 6. Create a research timeline with milestones
 
+> **STOP — Do NOT begin source discovery until the research plan is documented and scope is agreed upon.**
+
 ### Phase 2: Source Discovery and Evaluation
+
 1. Search academic databases (Google Scholar, PubMed, JSTOR, arXiv)
 2. Identify industry reports and authoritative publications
 3. Find primary sources (official documentation, datasets, specifications)
-4. Evaluate source credibility using the CRAAP test
+4. Evaluate source credibility using the CRAAP test (see table below)
 5. Organize sources in a reference manager or structured format
 6. Extract key findings, statistics, and quotable passages
 
+> **STOP — Do NOT begin outlining until you have sufficient Tier 1-2 sources for every core claim.**
+
 ### Phase 3: Outline and Structure
+
 1. Create a thesis statement or central argument
 2. Build hierarchical outline with main sections and subsections
 3. Map evidence to each section (which sources support which claims)
@@ -35,7 +48,10 @@ Produce well-researched, authoritative long-form content with proper source attr
 5. Define transitions between sections for narrative flow
 6. Plan visual elements (tables, charts, diagrams, callouts)
 
+> **STOP — Do NOT begin drafting until the outline is reviewed and evidence gaps are filled.**
+
 ### Phase 4: Drafting
+
 1. Write section by section following the outline
 2. Integrate citations as you write (never retrofit)
 3. Balance original analysis with supporting evidence
@@ -43,13 +59,27 @@ Produce well-researched, authoritative long-form content with proper source attr
 5. Include concrete examples, data points, and case studies
 6. Write introduction last (after body is complete)
 
+> **STOP — Do NOT move to review until all sections are drafted and all citations are in place.**
+
 ### Phase 5: Review and Fact-Check
+
 1. Verify every factual claim against its source
 2. Check all statistics for accuracy and context
 3. Ensure citations are complete and correctly formatted
 4. Review for logical consistency and argument strength
 5. Proofread for clarity, grammar, and style
 6. Have subject matter expert review if possible
+
+## Content Type Decision Table
+
+| Content Type | Word Count | Research Depth | Audience | Citation Style |
+|---|---|---|---|---|
+| Blog article | 1,500-3,000 | Tier 2-3 sources | General | Inline links |
+| Long-form article | 3,000-5,000 | Tier 1-3 sources | Informed readers | Parenthetical (APA) |
+| Whitepaper | 3,000-8,000 | Tier 1-2 mandatory | Decision-makers | Footnotes or numbered |
+| Case study | 1,000-2,500 | Primary + Tier 2 | Buyers | Inline attribution |
+| Technical report | 5,000-15,000 | Tier 1 mandatory | Experts | IEEE or APA |
+| Educational guide | 2,000-6,000 | Tier 1-3 mixed | Learners | Parenthetical |
 
 ## Source Evaluation Framework (CRAAP Test)
 
@@ -62,6 +92,7 @@ Produce well-researched, authoritative long-form content with proper source attr
 | **Purpose** | Why does this exist? Inform, sell, persuade? | Strong commercial bias, advocacy without disclosure |
 
 ### Source Tier System
+
 | Tier | Source Type | Credibility | Use For |
 |---|---|---|---|
 | Tier 1 | Peer-reviewed journals, official standards | Highest | Core claims, statistics |
@@ -200,6 +231,7 @@ https://www.example.com/report.pdf
 6. **Name and title check**: Verify correct spelling and current titles
 
 ### Common Fact-Checking Pitfalls
+
 | Pitfall | Example | Prevention |
 |---|---|---|
 | Outdated statistics | "50% of..." from a 2018 study | Always note publication year, seek recent data |
@@ -221,18 +253,39 @@ https://www.example.com/report.pdf
 | Zotero / Mendeley | Reference management | Organizing sources |
 | Perplexity | AI-assisted research | Initial discovery |
 
-## Anti-Patterns
+## Anti-Patterns / Common Mistakes
 
-- Making claims without citing sources
-- Using only one source for major assertions
-- Citing secondary sources when primary sources are available
-- Writing the introduction before the body (leads to misalignment)
-- Padding content to reach word count instead of adding value
-- Using weasel words ("some experts say", "studies show") without specifics
-- Retrofitting citations after writing instead of integrating during drafting
-- Ignoring counterarguments or presenting only one perspective
-- Copying structure or phrasing too closely from sources (even with citation)
-- Not disclosing potential conflicts of interest or sponsored content
+| Anti-Pattern | Why It Fails | What To Do Instead |
+|---|---|---|
+| Claims without citations | Undermines credibility entirely | Cite every factual claim inline |
+| Single-source assertions | One source can be wrong or biased | Cross-reference with 2+ independent sources |
+| Citing secondary when primary exists | Telephone game distorts findings | Trace to and cite the original study |
+| Writing introduction first | Leads to misalignment with body | Write body first, introduction last |
+| Padding to reach word count | Readers detect filler immediately | Add depth or cut the target |
+| Weasel words without specifics | "Some experts say" means nothing | Name the expert, cite the source |
+| Retrofitting citations after drafting | Gaps in evidence go unnoticed | Integrate citations during writing |
+| Ignoring counterarguments | One-sided work lacks credibility | Address objections explicitly |
+| Paraphrasing too closely | Borderline plagiarism even with citation | Summarize in your own analytical voice |
+| No conflict-of-interest disclosure | Erodes trust when discovered | Disclose sponsorship or affiliations upfront |
+
+## Anti-Rationalization Guards
+
+- Do NOT skip the CRAAP test because "the source looks reputable" -- evaluate it formally.
+- Do NOT use Tier 4-5 sources for core claims, regardless of convenience.
+- Do NOT begin drafting without a completed outline with evidence mapped to sections.
+- Do NOT publish without running the fact-checking protocol on every statistic and quote.
+- Do NOT retrofit citations after writing -- integrate them as you draft.
+
+## Integration Points
+
+| Skill | How It Connects |
+|---|---|
+| `seo-optimizer` | Research content needs SEO-optimized titles, meta descriptions, and structured data |
+| `content-creator` | Research findings feed into marketing copy and social media content |
+| `email-composer` | Research summaries inform stakeholder update emails and executive briefings |
+| `tech-docs-generator` | Technical research follows similar source evaluation and citation practices |
+| `llm-as-judge` | Evaluate research content quality against rubric dimensions |
+| `clean-code` | Writing quality checklist parallels clean code principles for prose |
 
 ## Skill Type
 

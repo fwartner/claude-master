@@ -9,7 +9,8 @@ export type SkillCategory =
   | 'business'
   | 'document-processing'
   | 'productivity'
-  | 'communication';
+  | 'communication'
+  | 'framework';
 
 export interface Skill {
   name: string;
@@ -38,6 +39,7 @@ export interface InstallConfig {
   memory: boolean;
   claudeMd: boolean;
   dryRun: boolean;
+  laravelBoost: boolean;
 }
 
 export const SKILLS: Record<string, Skill> = {
@@ -367,6 +369,23 @@ export const SKILLS: Record<string, Skill> = {
     description: 'Project structure, file naming, directory architecture',
     category: 'productivity',
   },
+
+  // === Framework ===
+  'laravel-specialist': {
+    name: 'laravel-specialist',
+    description: 'Laravel development — Eloquent, Blade, Livewire, queues, Pest testing, middleware',
+    category: 'framework',
+  },
+  'php-specialist': {
+    name: 'php-specialist',
+    description: 'Modern PHP 8.x — enums, fibers, readonly, PSR standards, Composer, static analysis',
+    category: 'framework',
+  },
+  'laravel-boost': {
+    name: 'laravel-boost',
+    description: 'Laravel Boost performance optimization — installation, configuration, caching',
+    category: 'framework',
+  },
 };
 
 export const AGENTS: Record<string, Agent> = {
@@ -445,6 +464,14 @@ export const AGENTS: Record<string, Agent> = {
     name: 'mobile-developer',
     description: 'Cross-platform mobile, platform-specific patterns',
   },
+  'laravel-developer': {
+    name: 'laravel-developer',
+    description: 'Laravel specialist with Eloquent, Blade, Livewire, and Pest expertise',
+  },
+  'php-developer': {
+    name: 'php-developer',
+    description: 'Modern PHP 8.x development with PSR compliance and static analysis',
+  },
 };
 
 export const COMMANDS: Record<string, Command> = {
@@ -480,6 +507,8 @@ export const COMMANDS: Record<string, Command> = {
   'mcp': { name: 'mcp', skill: 'mcp-builder', description: 'MCP server development' },
   'commit': { name: 'commit', skill: 'git-commit-helper', description: 'Git commit helper' },
   'decompose': { name: 'decompose', skill: 'task-decomposition', description: 'Task decomposition' },
+  'laravel': { name: 'laravel', skill: 'laravel-specialist', description: 'Laravel development' },
+  'php': { name: 'php', skill: 'php-specialist', description: 'Modern PHP development' },
 };
 
 export const MEMORY_FILES: string[] = [
@@ -502,4 +531,5 @@ export const SKILL_CATEGORIES: Record<SkillCategory, string> = {
   'document-processing': 'Document Processing',
   productivity: 'Productivity',
   communication: 'Communication',
+  framework: 'Frameworks & Languages',
 };

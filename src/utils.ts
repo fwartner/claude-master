@@ -39,6 +39,19 @@ export async function backupIfExists(filePath: string): Promise<string | null> {
   return null;
 }
 
+export async function detectLaravel(): Promise<boolean> {
+  try {
+    const composerPath = path.join(process.cwd(), 'composer.json');
+    if (await fs.pathExists(composerPath)) {
+      const composer = await fs.readJson(composerPath);
+      return !!(composer.require?.['laravel/framework'] || composer['require-dev']?.['laravel/framework']);
+    }
+  } catch {
+    // ignore parse errors
+  }
+  return false;
+}
+
 export async function mergeClaudeMd(existingPath: string, newContent: string): Promise<string> {
   const START_MARKER = '<!-- TOOLKIT START -->';
   const END_MARKER = '<!-- TOOLKIT END -->';

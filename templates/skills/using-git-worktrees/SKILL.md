@@ -1,13 +1,16 @@
 ---
 name: using-git-worktrees
-description: "Use when starting a new feature branch, creating isolated development environments, or working on multiple tasks simultaneously without stashing or switching branches"
+description: >
+  Use when starting a new feature branch, creating isolated development environments, or working on
+  multiple tasks simultaneously without stashing or switching branches. Triggers: user says "worktree",
+  "new branch for work", "parallel development", "isolated environment", needs to work on two things at once.
 ---
 
 # Using Git Worktrees
 
-## Purpose
+## Overview
 
-Create isolated working directories for parallel development tasks using `git worktree`, allowing multiple branches to be checked out simultaneously without conflicts.
+Create isolated working directories for parallel development tasks using `git worktree`, allowing multiple branches to be checked out simultaneously without conflicts. This skill enforces a deterministic, multi-phase process from directory selection through setup verification, ensuring every worktree is production-ready before any work begins.
 
 ## When to Use
 
@@ -16,9 +19,11 @@ Create isolated working directories for parallel development tasks using `git wo
 - Creating a clean environment for testing or code review
 - Running long processes (tests, builds) while continuing development
 
-## Step 1: Select Worktree Directory
+## Phase 1: Select Worktree Directory
 
-Follow this priority order:
+[HARD-GATE] Do NOT skip directory selection. Do NOT assume a default path without checking priorities.
+
+Follow this priority order exactly:
 
 ### Priority 1: Existing Worktree Matching Task
 
@@ -28,7 +33,7 @@ Check if a worktree already exists for the task:
 git worktree list
 ```
 
-If a matching worktree exists, use it. Do not create a duplicate.
+If a matching worktree exists, use it. Do NOT create a duplicate.
 
 ### Priority 2: CLAUDE.md Worktree Directory Hint
 
@@ -49,9 +54,21 @@ If no hint is configured and no convention is obvious, ask the user where worktr
 ../worktrees/<project-name>/<branch-name>
 ```
 
-## Step 2: Safety Verification
+**STOP — Confirm the worktree directory with the user before proceeding.**
 
-Before creating a worktree, verify these conditions:
+### Directory Selection Decision Table
+
+| Condition | Action |
+|---|---|
+| Worktree for this branch already exists | Navigate to existing worktree |
+| CLAUDE.md has `worktree-directory` | Use configured path |
+| Project has existing worktrees | Use same parent directory pattern |
+| No convention found | Ask user, suggest `../worktrees/<project>/<branch>` |
+| User specifies path inside repo root | Warn — must add to `.gitignore` |
+
+## Phase 2: Safety Verification
+
+[HARD-GATE] Do NOT create any worktree until all safety checks pass.
 
 ### Check .gitignore Coverage
 
@@ -85,7 +102,17 @@ git worktree list
 
 A branch cannot be checked out in two worktrees simultaneously. If the branch is already checked out, navigate to that existing worktree instead.
 
-## Step 3: Create the Worktree
+### Safety Check Decision Table
+
+| Check | Result | Action |
+|---|---|---|
+| Path inside repo, not in `.gitignore` | FAIL | Add to `.gitignore` first |
+| Branch already in another worktree | FAIL | Use existing worktree |
+| Working tree dirty | WARN | Inform user, ask preference |
+| Path already exists (not worktree) | FAIL | Choose different path |
+| All checks pass | PASS | Proceed to Phase 3 |
+
+## Phase 3: Create the Worktree
 
 ```bash
 # For a new branch
@@ -103,67 +130,45 @@ Branch: feature/my-feature
 Base: main
 ```
 
-## Step 4: Project Setup and Auto-Detection
+**STOP — Confirm the worktree was created successfully before proceeding to setup.**
+
+## Phase 4: Project Setup and Auto-Detection
 
 After creating the worktree, detect and run the project's setup commands.
 
-### Node.js
+### Setup Detection Decision Table
 
-Detect by presence of `package.json`:
-
-```bash
-# Check lock file to determine package manager
-if [ -f "pnpm-lock.yaml" ]; then
-    pnpm install
-elif [ -f "yarn.lock" ]; then
-    yarn install
-elif [ -f "package-lock.json" ]; then
-    npm install
-else
-    npm install
-fi
-```
-
-### Python
-
-Detect by presence of `pyproject.toml`, `setup.py`, or `requirements.txt`:
-
-```bash
-if [ -f "pyproject.toml" ]; then
-    # Check for poetry
-    if grep -q "tool.poetry" pyproject.toml; then
-        poetry install
-    else
-        pip install -e .
-    fi
-elif [ -f "setup.py" ]; then
-    pip install -e .
-elif [ -f "requirements.txt" ]; then
-    pip install -r requirements.txt
-fi
-```
-
-### Go
-
-Detect by presence of `go.mod`:
-
-```bash
-go mod download
-```
-
-### Rust
-
-Detect by presence of `Cargo.toml`:
-
-```bash
-cargo build
-```
+| Indicator File | Ecosystem | Setup Command |
+|---|---|---|
+| `pnpm-lock.yaml` | Node.js (pnpm) | `pnpm install` |
+| `yarn.lock` | Node.js (yarn) | `yarn install` |
+| `package-lock.json` | Node.js (npm) | `npm install` |
+| `package.json` (no lock) | Node.js (npm) | `npm install` |
+| `pyproject.toml` + `tool.poetry` | Python (poetry) | `poetry install` |
+| `pyproject.toml` (no poetry) | Python (pip) | `pip install -e .` |
+| `setup.py` | Python (pip) | `pip install -e .` |
+| `requirements.txt` | Python (pip) | `pip install -r requirements.txt` |
+| `go.mod` | Go | `go mod download` |
+| `Cargo.toml` | Rust | `cargo build` |
+| `Gemfile` | Ruby | `bundle install` |
+| `composer.json` | PHP | `composer install` |
 
 ### Multiple Ecosystems
 
 If the project uses multiple ecosystems (e.g., a Go backend with a Node.js frontend), run setup for each detected ecosystem in the appropriate subdirectories.
 
-## Step 5: Clean Baseline Test Verification
+### Environment Files
+
+If the project has `.env.example` or `.env.template`:
+
+```bash
+# Copy environment template if .env does not exist in worktree
+cp .env.example .env  # then inform user to update values
+```
+
+## Phase 5: Clean Baseline Test Verification
+
+[HARD-GATE] Do NOT proceed with any work until baseline tests pass or failures are acknowledged.
 
 Run the project's test suite to establish a clean baseline BEFORE starting any work:
 
@@ -185,7 +190,7 @@ If baseline tests fail:
 - Do NOT proceed with work until the baseline is understood
 - The base branch may have broken tests that need addressing first
 
-## Step 6: Location Reporting
+## Phase 6: Location Reporting
 
 Always report the worktree location clearly to the user:
 
@@ -229,18 +234,28 @@ git worktree unlock <path>
 git worktree remove <path>
 ```
 
-## Common Issues
+## Anti-Patterns / Common Mistakes
 
-| Issue | Solution |
-|-------|----------|
-| Branch already checked out | Use the existing worktree or create a new branch |
-| Dirty worktree on removal | Commit, stash, or use `--force` |
-| Missing dependencies | Re-run project setup in the worktree |
-| Tests fail in worktree but pass in main | Check for environment-specific config or missing env vars |
-| Worktree path shows in git status | Add path to `.gitignore` |
+| Anti-Pattern | Why It Is Wrong | What to Do Instead |
+|---|---|---|
+| Creating duplicate worktree for same branch | Git does not allow it; wastes time | Check `git worktree list` first |
+| Worktree inside repo without `.gitignore` | Worktree files show as untracked | Add path to `.gitignore` |
+| Skipping dependency install in worktree | Build/test failures from missing deps | Always run project setup |
+| Skipping baseline test run | Cannot distinguish pre-existing vs new failures | Run tests before starting work |
+| Assuming worktree has same env vars | `.env` files are not shared between worktrees | Copy and configure `.env` |
+| Leaving stale worktrees after merge | Disk waste, confusing `git worktree list` | Remove worktrees after branch completion |
+| Force-removing worktree with uncommitted work | Permanent data loss | Commit or stash first |
 
-## Integration with Other Skills
+## Integration Points
 
-- After completing work in a worktree, use **finishing-a-development-branch** to merge or create a PR
-- Use **dispatching-parallel-agents** to run agents in separate worktrees for true isolation
-- Use **verification-before-completion** to validate work before leaving the worktree
+| Skill | Integration |
+|---|---|
+| `finishing-a-development-branch` | After completing work in a worktree, use this to merge or create a PR |
+| `dispatching-parallel-agents` | Run agents in separate worktrees for true isolation |
+| `verification-before-completion` | Validate work before leaving the worktree |
+| `self-learning` | Check CLAUDE.md for worktree directory preferences |
+| `planning` | Worktree creation is often the first step of plan execution |
+
+## Skill Type
+
+**RIGID** — Follow this process exactly. Every phase must be completed in order. Do NOT skip safety checks. Do NOT skip baseline test verification. Do NOT create worktrees without confirming the directory.

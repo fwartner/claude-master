@@ -1,51 +1,58 @@
 ---
 name: prd-generation
-description: Use when user wants to generate a Product Requirements Document from a high-level idea, feature request, or product vision
+description: "Use when generating a Product Requirements Document from a high-level idea, feature request, or product vision — covers discovery questions, structured PRD drafting, section-by-section review, and transition to implementation planning"
 ---
 
 # PRD Generation
 
 ## Overview
 
-Transform high-level ideas into structured Product Requirements Documents through guided discovery. Ask questions to understand the full scope, then generate a professional PRD.
+Transform high-level ideas into structured Product Requirements Documents through guided discovery. This skill walks through problem/solution/constraint discovery, generates a professional PRD with measurable goals and user stories, and ensures stakeholder approval before saving.
 
 **Announce at start:** "I'm using the prd-generation skill to create a Product Requirements Document."
 
-## Checklist
-
-You MUST create a task for each of these items and complete them in order:
-
-1. **Discovery** — ask questions to understand the product/feature
-2. **Draft PRD** — generate the structured document
-3. **Review** — present section by section, get approval
-4. **Save** — write to `docs/prds/YYYY-MM-DD-<feature>.md`
-5. **Transition** — if implementation follows, invoke brainstorming skill
-
 ## Phase 1: Discovery
 
-Ask these questions ONE AT A TIME (prefer multiple choice):
+Ask these questions ONE AT A TIME (prefer multiple choice where possible).
 
-**Problem Space:**
-- What problem does this solve?
-- Who are the target users? (personas, roles)
-- How are users currently solving this problem?
-- What's the impact of NOT solving this?
+**Do NOT skip discovery.** Even if the user provides a detailed brief, confirm understanding by asking at least 3 clarifying questions.
 
-**Solution Space:**
-- What does success look like? (specific metrics)
-- What are the must-have vs nice-to-have features?
-- What are the explicit non-goals?
-- Are there existing solutions to learn from?
+STOP after discovery — present a summary of collected answers and get confirmation before drafting.
 
-**Constraints:**
-- What's the timeline? Any hard deadlines?
-- What technical constraints exist? (platform, stack, integrations)
-- What resources are available?
-- Are there compliance or regulatory requirements?
+### Problem Space Questions
+
+| # | Question | Why It Matters |
+|---|----------|----------------|
+| 1 | What problem does this solve? | Anchors the entire PRD |
+| 2 | Who are the target users? (personas, roles) | Shapes user stories |
+| 3 | How are users currently solving this? | Identifies competitive landscape |
+| 4 | What is the impact of NOT solving this? | Justifies priority |
+
+### Solution Space Questions
+
+| # | Question | Why It Matters |
+|---|----------|----------------|
+| 5 | What does success look like? (specific metrics) | Defines success metrics |
+| 6 | What are must-have vs nice-to-have features? | Sets priority tiers |
+| 7 | What are the explicit non-goals? | Prevents scope creep |
+| 8 | Are there existing solutions to learn from? | Informs design decisions |
+
+### Constraint Questions
+
+| # | Question | Why It Matters |
+|---|----------|----------------|
+| 9 | What is the timeline? Any hard deadlines? | Scopes release plan |
+| 10 | What technical constraints exist? | Narrows solution space |
+| 11 | What resources are available? | Sets realistic expectations |
+| 12 | Are there compliance or regulatory requirements? | Identifies non-functional reqs |
 
 ## Phase 2: Draft PRD
 
-Dispatch the `prd-writer` agent with collected answers. The PRD follows this structure:
+Generate the PRD using the template below. Dispatch the `prd-writer` agent with collected answers for heavy generation.
+
+STOP after drafting — do NOT present as final until Phase 3 review is complete.
+
+### PRD Template
 
 ```markdown
 # [Product/Feature Name] — Product Requirements Document
@@ -93,6 +100,7 @@ As a [persona], I want to [action], so that [benefit].
 
 ## 9. Timeline & Milestones
 | Phase | Description | Target Date |
+|-------|-------------|-------------|
 
 ## 10. Open Questions
 - [ ] Question 1
@@ -102,32 +110,103 @@ As a [persona], I want to [action], so that [benefit].
 References, mockups, related documents
 ```
 
+### Priority Classification
+
+| Priority | Meaning | Rule |
+|----------|---------|------|
+| **P0** | Must-have for launch | Without this, the product does not ship |
+| **P1** | Important, ship soon after launch | Significant value but not blocking |
+| **P2** | Nice-to-have | Enhances experience, can wait |
+
 ## Phase 3: Review
 
 Present the PRD section by section:
-- After each section, ask: "Does this capture your intent? Any changes?"
-- Revise based on feedback before moving to next section
-- Pay special attention to: Goals/Non-Goals, User Stories, Success Metrics
 
-## After Approval
+1. After each section, ask: "Does this capture your intent? Any changes?"
+2. Revise based on feedback before moving to next section
+3. Pay special attention to these high-signal sections:
+   - Goals & Non-Goals (scope alignment)
+   - User Stories (persona accuracy)
+   - Success Metrics (measurability)
+   - Functional Requirements (acceptance criteria completeness)
 
-- Save to `docs/prds/YYYY-MM-DD-<feature>.md`
-- Commit the PRD
-- If implementation follows, invoke the brainstorming skill
+STOP after review — get explicit "approved" confirmation before saving.
 
-## Key Principles
+## Phase 4: Save and Transition
 
-- **Discovery before documentation** — understand fully before writing
-- **Measurable goals** — every goal must have a metric
-- **Explicit non-goals** — prevent scope creep by defining what's out of scope
-- **User-centric** — frame everything from the user's perspective
-- **Living document** — PRDs should be updated as understanding evolves
+After explicit approval:
+
+1. Save to `docs/prds/YYYY-MM-DD-<feature>.md`
+2. Commit the PRD with message: `docs(prd): add PRD for <feature>`
+3. If implementation follows, invoke the `brainstorming` skill
+4. If specs are needed, invoke the `spec-writing` skill
+
+### Transition Decision Table
+
+| User Intent | Next Skill | Rationale |
+|-------------|-----------|-----------|
+| "Let's build this" | `brainstorming` → `planning` | Explore approaches then plan |
+| "Write the specs" | `spec-writing` | Break PRD into JTBD specs |
+| "Just save it" | None | PRD is the deliverable |
+| "Get estimates" | `task-decomposition` | Break into estimable tasks |
+
+## Anti-Patterns / Common Mistakes
+
+| Mistake | Why It Is Wrong | What To Do Instead |
+|---------|----------------|-------------------|
+| Skipping discovery and jumping to draft | Produces assumptions-based PRD | Always complete Phase 1 first |
+| Goals without metrics | Cannot measure success | Every goal needs a number |
+| Missing non-goals | Scope creep guaranteed | Explicitly list what is out of scope |
+| User stories without acceptance criteria | Untestable requirements | Add Given/When/Then to each story |
+| Generic success metrics ("improve UX") | Unmeasurable | Use specific numbers: "reduce load time to <2s" |
+| Presenting entire PRD at once for review | User overwhelmed, gives superficial approval | Present section by section |
+| Copying competitor features verbatim | Misses actual user needs | Focus on user problems, not solutions |
+
+## Anti-Rationalization Guards
+
+- **Do NOT** skip discovery because "the user already described it well enough"
+- **Do NOT** leave placeholder text in any section — fill every section or mark as "TBD: [reason]"
+- **Do NOT** proceed to save without explicit user approval of each section
+- **Do NOT** invent success metrics — they must come from the user
+
+## Integration Points
+
+| Skill | Relationship |
+|-------|-------------|
+| `brainstorming` | Upstream: explores ideas before PRD; downstream: explores implementation after PRD |
+| `spec-writing` | Downstream: PRD provides high-level requirements; specs detail them with JTBD |
+| `planning` | Downstream: plan references PRD requirements for task breakdown |
+| `task-decomposition` | Downstream: breaks PRD into estimable work items |
+| `tech-docs-generator` | Parallel: PRD informs what documentation is needed |
+| `acceptance-testing` | Downstream: acceptance criteria from PRD feed test definitions |
 
 ## Verification Gate
 
 Before claiming the PRD is complete:
+
 1. VERIFY all 11 sections are filled (not placeholder text)
 2. VERIFY every goal has a measurable metric
-3. VERIFY non-goals are explicit
+3. VERIFY non-goals are explicit and meaningful
 4. VERIFY user stories have acceptance criteria
-5. VERIFY user has approved each section
+5. VERIFY user has approved each section individually
+6. VERIFY the file is saved and committed
+
+## Concrete Example: Discovery Summary
+
+```
+Problem: Users cannot find relevant search results in the dashboard.
+Users: Data analysts (primary), team leads (secondary).
+Current workaround: Export to Excel and use Ctrl+F.
+Impact of not solving: 30min/day wasted per analyst (team of 12).
+Success metric: Reduce average search time from 5min to <30s.
+Must-have: Full-text search across all dashboard widgets.
+Non-goal: Advanced boolean query syntax (P2, not launch).
+Timeline: 6 weeks to MVP.
+Constraint: Must work with existing Elasticsearch cluster.
+```
+
+This summary is presented to the user for confirmation before Phase 2 begins.
+
+## Skill Type
+
+**Flexible** — Adapt discovery depth and PRD structure to project context while preserving the discovery-before-drafting principle and section-by-section review process.

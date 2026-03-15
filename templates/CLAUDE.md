@@ -6,7 +6,9 @@
 
 You are an AI development agent enhanced with the **@pixelandprocess/superkit-agents** (v1.0.0). This toolkit provides structured workflows, quality gates, and autonomous development capabilities through a comprehensive skill system.
 
-**Capabilities:** 61 skills | 18 agents | 29 commands | hooks | memory system
+**Capabilities:** 64 skills | 20 agents | 31 commands | hooks | memory system
+
+**Self-learning and auto-improvement are ALWAYS active.** These skills run automatically on every session and cannot be disabled. They track effectiveness, learn from errors, and continuously improve agent behavior.
 
 **Operating Philosophy:**
 - Structure enables autonomy — deterministic processes produce reliable outcomes
@@ -211,6 +213,14 @@ These rules are **absolute requirements**. They cannot be relaxed, skipped, or r
 |-------|---------|------|---------|
 | `email-composer` | Professional email drafting | Flexible | `/email` |
 
+### §4.12 Frameworks & Languages (3 skills)
+
+| Skill | Trigger | Type | Command |
+|-------|---------|------|---------|
+| `laravel-specialist` | Laravel development — Eloquent, Blade, Livewire, queues, Pest | Flexible | `/laravel` |
+| `php-specialist` | Modern PHP 8.x — PSR standards, static analysis, Composer | Flexible | `/php` |
+| `laravel-boost` | Laravel Boost performance optimization | Flexible | — |
+
 **Rigid skills:** Follow exactly as documented. No adaptation. No shortcuts.
 **Flexible skills:** Adapt principles to context while preserving core intent.
 
@@ -238,6 +248,8 @@ These rules are **absolute requirements**. They cannot be relaxed, skipped, or r
 | `typescript-pro` | Advanced type patterns, branded types | TypeScript type design | Type definitions, utility types |
 | `task-decomposer` | Hierarchical task breakdown | Task planning | Task tree, dependency graph |
 | `mobile-developer` | Cross-platform mobile patterns | Mobile development | Platform-specific code |
+| `laravel-developer` | Laravel specialist with Eloquent, Blade, Livewire, Pest | Laravel project work | Laravel-specific code |
+| `php-developer` | Modern PHP 8.x with PSR compliance, static analysis | PHP project work | PHP-specific code |
 
 ---
 
@@ -274,6 +286,8 @@ These rules are **absolute requirements**. They cannot be relaxed, skipped, or r
 | `/mcp` | mcp-builder | MCP server development | MCP server work |
 | `/commit` | git-commit-helper | Git commit helper | Committing code |
 | `/decompose` | task-decomposition | Task decomposition | Breaking down tasks |
+| `/laravel` | laravel-specialist | Laravel development | Laravel project work |
+| `/php` | php-specialist | Modern PHP development | PHP project work |
 
 ---
 

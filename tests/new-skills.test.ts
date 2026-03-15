@@ -17,6 +17,7 @@ const NEW_SKILLS = [
   'senior-data-scientist', 'docx-processing', 'pdf-processing', 'xlsx-processing',
   'seo-optimizer', 'content-research-writer', 'content-creator', 'email-composer',
   'file-organizer', 'task-decomposition', 'auto-improvement',
+  'laravel-specialist', 'php-specialist', 'laravel-boost',
 ];
 
 const NEW_AGENTS = [
@@ -24,13 +25,14 @@ const NEW_AGENTS = [
   'frontend-developer', 'ui-ux-designer', 'backend-architect',
   'context-manager', 'database-architect', 'architect-reviewer',
   'typescript-pro', 'task-decomposer', 'mobile-developer',
+  'laravel-developer', 'php-developer',
 ];
 
 const NEW_COMMANDS = [
   'ralph', 'specs', 'loop',
   'frontend', 'backend', 'architect', 'fullstack', 'design-system',
   'ui-ux', 'mobile', 'clean', 'devops', 'agent', 'seo', 'email',
-  'mcp', 'commit', 'decompose',
+  'mcp', 'commit', 'decompose', 'laravel', 'php',
 ];
 
 describe('New Skills', () => {
