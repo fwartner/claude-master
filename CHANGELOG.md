@@ -1,5 +1,22 @@
 # Changelog
 
+## [1.1.0] - 2026-03-15
+
+### Added
+- **Plugin system**: `superkit-agents plugin add|list|remove|search` commands for extending the toolkit with third-party or custom plugins via `superkit-plugin.json` manifests
+- **System requirements checker**: Validates Node.js >= 18, Git, and Claude Code CLI at startup with OS-aware install suggestions (macOS, Linux apt/yum, Windows choco/winget)
+- **Context7 integration**: 10 framework/library skills now include a "Documentation Lookup (Context7)" section for real-time doc fetching via MCP
+- **Laravel docs verification protocol**: Hard-gate in `laravel-specialist` skill requiring verification via Context7 MCP or official Laravel docs before using uncertain APIs
+- **Subagent dispatch guidance**: 8 skills now include "Subagent Dispatch Opportunities" tables with specific patterns for parallel work
+- **Comprehensive documentation**: 9 docs in `docs/` folder (getting-started, configuration, skill/agent/command authoring, plugin development, architecture, API reference, FAQ)
+- **CONTRIBUTING.md**: Contribution guidelines with commit conventions and skill contribution process
+- **`--skip-checks` CLI flag**: Skip system requirements check when not needed
+- **README rewrite**: Collapsible sections, prerequisites, plugin system docs, FAQ with 8 common questions
+
+### Changed
+- **README.md**: Restructured with collapsible `<details>` sections, friendlier tone, and plugin system documentation
+- **CLI**: Now runs `checkRequirements()` before installation wizard
+
 ## [1.0.0] - 2026-03-15
 
 ### Added
