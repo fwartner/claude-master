@@ -5,6 +5,8 @@
 [![npm version](https://img.shields.io/npm/v/@fwartner/claude-toolkit)](https://www.npmjs.com/package/@fwartner/claude-toolkit)
 [![license](https://img.shields.io/npm/l/@fwartner/claude-toolkit)](LICENSE)
 [![node](https://img.shields.io/node/v/@fwartner/claude-toolkit)](package.json)
+[![CI](https://github.com/fwartner/claude-toolkit/actions/workflows/ci.yml/badge.svg)](https://github.com/fwartner/claude-toolkit/actions/workflows/ci.yml)
+[![Test](https://github.com/fwartner/claude-toolkit/actions/workflows/test.yml/badge.svg)](https://github.com/fwartner/claude-toolkit/actions/workflows/test.yml)
 
 ## Quick Start
 
@@ -22,27 +24,38 @@ npx @fwartner/claude-toolkit --all
 
 ## What's Included
 
-| 25 Skills | 6 Agents | 11 Commands | Hooks | Memory System |
+| 32 Skills | 9 Agents | 14 Commands | Hooks | Memory System |
 |:---------:|:--------:|:-----------:|:-----:|:-------------:|
 | Structured workflows for every phase of development | Specialized sub-agents for parallel work | Slash commands that trigger skills | Session-start context injection | Persistent project knowledge |
+
+Now with **Ralph integration** — autonomous iterative development loops with circuit breakers, structured status reporting, JTBD specifications, and acceptance-driven backpressure.
 
 ---
 
 ## Skills
 
-### Core Process (7)
+### Core (4)
 
 | Skill | Description |
 |-------|-------------|
 | `using-toolkit` | Master skill — establishes how to find and use all toolkit skills |
+| `self-learning` | Auto-discover and remember project context |
+| `resilient-execution` | Never fail — retry with alternative approaches |
+| `circuit-breaker` | Loop stagnation detection, rate limiting, and recovery patterns |
+
+### Process & Workflow (7)
+
+| Skill | Description |
+|-------|-------------|
 | `brainstorming` | Creative exploration and design before planning |
 | `planning` | Structured planning before any implementation work |
 | `task-management` | Break work into discrete tracked steps |
 | `executing-plans` | Step-by-step execution of approved plan documents |
 | `subagent-driven-development` | Same-session execution with two-stage review gates |
 | `dispatching-parallel-agents` | Coordinate multiple independent agents in parallel |
+| `autonomous-loop` | Ralph-style iterative development with autonomous planning and building loops |
 
-### Quality Assurance (6)
+### Quality Assurance (8)
 
 | Skill | Description |
 |-------|-------------|
@@ -52,6 +65,8 @@ npx @fwartner/claude-toolkit --all
 | `systematic-debugging` | 4-phase debugging methodology with root cause analysis |
 | `security-review` | OWASP Top 10, auth patterns, input validation, secrets |
 | `performance-optimization` | Profiling, caching, bundle optimization, Web Vitals |
+| `acceptance-testing` | Acceptance-driven backpressure with behavioral validation gates |
+| `llm-as-judge` | Non-deterministic validation for subjective quality criteria |
 
 ### Design (3)
 
@@ -61,13 +76,15 @@ npx @fwartner/claude-toolkit --all
 | `frontend-ui-design` | Component architecture, responsive design, accessibility |
 | `database-schema-design` | Data modeling, migrations, indexing, query optimization |
 
-### Documentation (3)
+### Documentation (5)
 
 | Skill | Description |
 |-------|-------------|
 | `prd-generation` | Generate Product Requirements Documents |
 | `tech-docs-generator` | Generate technical documentation from code |
 | `writing-skills` | Create new skills with TDD and best practices |
+| `spec-writing` | JTBD-based specification writing with acceptance criteria |
+| `reverse-engineering-specs` | Generate implementation-free specs from existing codebases |
 
 ### Operations (3)
 
@@ -77,12 +94,11 @@ npx @fwartner/claude-toolkit --all
 | `using-git-worktrees` | Isolated development environments with git worktrees |
 | `finishing-a-development-branch` | Structured branch completion with merge options |
 
-### Foundation (3)
+### Status & Reporting (2)
 
 | Skill | Description |
 |-------|-------------|
-| `self-learning` | Auto-discover and remember project context |
-| `resilient-execution` | Never fail — retry with alternative approaches |
+| `ralph-status` | Structured status reporting with exit signal protocol |
 | `verification-before-completion` | 5-step verification gate before any completion claim |
 
 ---
@@ -104,6 +120,9 @@ Slash commands trigger skills directly in Claude Code:
 | `/learn` | Scan and learn project context |
 | `/docs` | Generate technical docs |
 | `/worktree` | Set up git worktree |
+| `/ralph` | Start Ralph autonomous development loop |
+| `/specs` | Write or audit specifications |
+| `/loop` | Start autonomous loop iteration |
 
 ---
 
@@ -119,6 +138,47 @@ Specialized sub-agents dispatched for parallel or focused work:
 | `doc-generator` | Generates technical documentation from code |
 | `spec-reviewer` | Reviews implementation against spec compliance |
 | `quality-reviewer` | Reviews code quality, patterns, performance, security |
+| `loop-orchestrator` | Manages autonomous development loop iterations |
+| `spec-writer` | Generates JTBD specifications with acceptance criteria |
+| `acceptance-judge` | Evaluates subjective quality via LLM-as-judge pattern |
+
+---
+
+## Ralph Integration
+
+The toolkit integrates key concepts from [Ralph](https://github.com/frankbria/ralph-claude-code) and the [Ralph Playbook](https://github.com/ClaytonFarr/ralph-playbook) — an autonomous AI development methodology by Geoffrey Huntley.
+
+### Autonomous Loop (`/ralph` or `/loop`)
+
+Iterative development cycle: **PLANNING** → **BUILDING** → **STATUS CHECK** → repeat until done.
+
+- **ONE task per loop** — each iteration selects and completes exactly one task
+- **Context efficiency** — main context at 40-60% utilization, up to 500 parallel read subagents
+- **Upstream/downstream steering** — specs shape inputs, tests/builds/lints create backpressure
+- **Dual-condition exit gate** — requires both completion language AND explicit `EXIT_SIGNAL: true`
+
+### Circuit Breaker
+
+Safety mechanism preventing infinite loops and resource exhaustion:
+
+- Opens after 3 loops with no progress, 5 identical errors, or 70% output decline
+- 30-minute cooldown before retry
+- Rate limiting (configurable calls per hour)
+- File protection prevents accidental config deletion
+
+### JTBD Specifications (`/specs`)
+
+Jobs to Be Done methodology for writing implementation-free specs:
+
+- Break requirements into topics of concern
+- "One Sentence Without 'And'" test for proper scoping
+- Acceptance criteria in Given/When/Then format
+- SLC (Simple/Lovable/Complete) release planning
+
+### Acceptance Testing & LLM-as-Judge
+
+- **Acceptance testing** — backpressure chain: specs → tests → code (fix code, not specs)
+- **LLM-as-judge** — structured rubric evaluation for subjective criteria (tone, UX, readability)
 
 ---
 
@@ -154,7 +214,7 @@ npx @fwartner/claude-toolkit --all --global
 npx @fwartner/claude-toolkit --all --direct
 
 # Selective skills
-npx @fwartner/claude-toolkit --skills planning,tdd,code-review
+npx @fwartner/claude-toolkit --skills planning,tdd,code-review,autonomous-loop
 ```
 
 ---
@@ -234,6 +294,7 @@ When installing, the toolkit handles existing `CLAUDE.md` files safely:
 
 ```
 /brainstorm     → explore the idea, create design doc
+/specs          → write specifications with JTBD methodology
 /plan           → create implementation plan with tasks
 /execute        → execute plan with TDD and progress tracking
 /review         → verify against plan and standards
@@ -249,20 +310,33 @@ When installing, the toolkit handles existing `CLAUDE.md` files safely:
 /verify         → confirm fix with fresh evidence
 ```
 
+### Ralph Autonomous Session
+
+```
+/specs          → write or audit specifications
+/ralph          → start autonomous loop
+                  → PLANNING: analyze specs, generate implementation plan
+                  → BUILDING: select task, implement, test, commit
+                  → STATUS: produce RALPH_STATUS, evaluate exit gate
+                  → repeat until dual-condition exit gate passes
+/review         → final code review
+/verify         → verify all acceptance tests pass
+```
+
+### Legacy Codebase Onboarding
+
+```
+/learn                      → scan and discover project context
+reverse-engineering-specs   → generate specs from existing code
+/specs                      → audit and refine generated specs
+/plan                       → plan improvements
+```
+
 ### Documentation
 
 ```
 /docs           → generate technical documentation from code
 /prd            → create Product Requirements Documents
-```
-
-### API Design
-
-```
-api-design skill → design endpoints, generate OpenAPI spec
-/plan            → create implementation plan
-testing-strategy → define test approach
-/tdd             → implement with tests
 ```
 
 ---
@@ -271,55 +345,50 @@ testing-strategy → define test approach
 
 ```
 templates/
-├── skills/                    # 25 skill directories
+├── skills/                    # 32 skill directories
 │   ├── using-toolkit/SKILL.md
 │   ├── planning/SKILL.md
 │   ├── brainstorming/SKILL.md
 │   ├── task-management/SKILL.md
 │   ├── executing-plans/SKILL.md
 │   ├── subagent-driven-development/
-│   │   ├── SKILL.md
-│   │   ├── implementer-prompt.md
-│   │   ├── spec-reviewer-prompt.md
-│   │   └── code-quality-reviewer-prompt.md
 │   ├── dispatching-parallel-agents/SKILL.md
 │   ├── code-review/SKILL.md
 │   ├── test-driven-development/
-│   │   ├── SKILL.md
-│   │   └── testing-anti-patterns.md
 │   ├── testing-strategy/SKILL.md
 │   ├── systematic-debugging/
-│   │   ├── SKILL.md
-│   │   ├── root-cause-tracing.md
-│   │   └── defense-in-depth.md
 │   ├── security-review/
-│   │   ├── SKILL.md
-│   │   └── owasp-checklist.md
 │   ├── performance-optimization/
-│   │   ├── SKILL.md
-│   │   └── performance-budgets.md
 │   ├── api-design/SKILL.md
 │   ├── frontend-ui-design/SKILL.md
 │   ├── database-schema-design/SKILL.md
 │   ├── prd-generation/SKILL.md
 │   ├── tech-docs-generator/SKILL.md
 │   ├── writing-skills/
-│   │   ├── SKILL.md
-│   │   └── anthropic-best-practices.md
 │   ├── deployment/SKILL.md
 │   ├── using-git-worktrees/SKILL.md
 │   ├── finishing-a-development-branch/SKILL.md
 │   ├── self-learning/SKILL.md
 │   ├── resilient-execution/SKILL.md
-│   └── verification-before-completion/SKILL.md
-├── agents/                    # 6 agent definitions
+│   ├── verification-before-completion/SKILL.md
+│   ├── autonomous-loop/SKILL.md        # NEW: Ralph loop
+│   ├── circuit-breaker/SKILL.md        # NEW: Stagnation detection
+│   ├── ralph-status/SKILL.md           # NEW: Status reporting
+│   ├── spec-writing/SKILL.md           # NEW: JTBD specs
+│   ├── reverse-engineering-specs/SKILL.md  # NEW: Legacy specs
+│   ├── acceptance-testing/SKILL.md     # NEW: Backpressure
+│   └── llm-as-judge/SKILL.md          # NEW: Subjective quality
+├── agents/                    # 9 agent definitions
 │   ├── planner.md
 │   ├── code-reviewer.md
 │   ├── prd-writer.md
 │   ├── doc-generator.md
 │   ├── spec-reviewer.md
-│   └── quality-reviewer.md
-├── commands/                  # 11 slash commands
+│   ├── quality-reviewer.md
+│   ├── loop-orchestrator.md            # NEW
+│   ├── spec-writer.md                  # NEW
+│   └── acceptance-judge.md             # NEW
+├── commands/                  # 14 slash commands
 │   ├── plan.md
 │   ├── brainstorm.md
 │   ├── execute.md
@@ -330,19 +399,42 @@ templates/
 │   ├── prd.md
 │   ├── learn.md
 │   ├── docs.md
-│   └── worktree.md
-├── hooks/                     # Session hooks
+│   ├── worktree.md
+│   ├── ralph.md                        # NEW
+│   ├── specs.md                        # NEW
+│   └── loop.md                         # NEW
+├── hooks/
 │   ├── hooks.json
 │   └── session-start
-├── memory/                    # Memory templates
+├── memory/
 │   ├── project-context.md
 │   ├── learned-patterns.md
 │   ├── user-preferences.md
 │   └── decisions-log.md
 ├── claude-plugin/
 │   └── plugin.json
-└── CLAUDE.md                  # Project guidelines template
+└── CLAUDE.md
 ```
+
+---
+
+## CI/CD
+
+The toolkit includes GitHub Actions workflows:
+
+| Workflow | Trigger | Purpose |
+|----------|---------|---------|
+| **test.yml** | Push to main/develop, PRs | Run tests on Node 18/20/22 matrix with coverage |
+| **ci.yml** | Push to main, PRs | Lint + dry-run CLI validation |
+| **release.yml** | Tag push (`v*`) | Publish to npm with provenance, create GitHub Release |
+| **claude.yml** | `@claude` in issues/PRs | Claude Code action for automated assistance |
+
+### Required Secrets
+
+| Secret | Purpose |
+|--------|---------|
+| `NPM_TOKEN` | npm publish authentication |
+| `ANTHROPIC_API_KEY` | Claude Code action (optional) |
 
 ---
 
@@ -353,7 +445,7 @@ templates/
 Install only the skills you need:
 
 ```bash
-npx @fwartner/claude-toolkit --skills planning,tdd,code-review,systematic-debugging
+npx @fwartner/claude-toolkit --skills planning,tdd,code-review,autonomous-loop
 ```
 
 Or use the interactive wizard to pick categories and individual skills.
@@ -364,6 +456,16 @@ Add your own skills alongside toolkit ones. Each skill is a directory containing
 
 ```
 .claude/skills/my-custom-skill/SKILL.md
+```
+
+### Find More Skills
+
+When the toolkit's 32 skills don't cover your needs:
+
+```bash
+npx skills find [query]                    # Search the ecosystem
+npx skills add <owner/repo@skill> -g -y    # Install
+npx skills check                           # Check for updates
 ```
 
 ---
