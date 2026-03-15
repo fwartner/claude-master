@@ -25,6 +25,8 @@ jobs:
 
       - run: npm test
 
+      - run: npm run lint
+
       - name: Publish to npm
         run: npm publish --provenance --access public
         env:

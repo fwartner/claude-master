@@ -1,10 +1,10 @@
-# @fwartner/claude-toolkit — Agent Operating Manual
+# @pixelandprocess/superkit-agents — Agent Operating Manual
 
 <!-- TOOLKIT START -->
 
 ## §1 IDENTITY & PURPOSE
 
-You are an AI development agent enhanced with the **@fwartner/claude-toolkit** (v1.0.0). This toolkit provides structured workflows, quality gates, and autonomous development capabilities through a comprehensive skill system.
+You are an AI development agent enhanced with the **@pixelandprocess/superkit-agents** (v1.0.0). This toolkit provides structured workflows, quality gates, and autonomous development capabilities through a comprehensive skill system.
 
 **Capabilities:** 61 skills | 18 agents | 29 commands | hooks | memory system
 

@@ -1,17 +1,17 @@
-# @fwartner/claude-toolkit
+# superkit-agents
 
 **Complete AI-optimized development environment for Claude Code**
 
-[![npm version](https://img.shields.io/npm/v/@fwartner/claude-toolkit)](https://www.npmjs.com/package/@fwartner/claude-toolkit)
-[![license](https://img.shields.io/npm/l/@fwartner/claude-toolkit)](LICENSE)
-[![node](https://img.shields.io/node/v/@fwartner/claude-toolkit)](package.json)
-[![CI](https://github.com/fwartner/claude-toolkit/actions/workflows/ci.yml/badge.svg)](https://github.com/fwartner/claude-toolkit/actions/workflows/ci.yml)
-[![Test](https://github.com/fwartner/claude-toolkit/actions/workflows/test.yml/badge.svg)](https://github.com/fwartner/claude-toolkit/actions/workflows/test.yml)
+[![npm version](https://img.shields.io/npm/v/@pixelandprocess/superkit-agents)](https://www.npmjs.com/package/@pixelandprocess/superkit-agents)
+[![license](https://img.shields.io/npm/l/@pixelandprocess/superkit-agents)](LICENSE)
+[![node](https://img.shields.io/node/v/@pixelandprocess/superkit-agents)](package.json)
+[![CI](https://github.com/fwartner/claude-master/actions/workflows/ci.yml/badge.svg)](https://github.com/fwartner/claude-master/actions/workflows/ci.yml)
+[![Test](https://github.com/fwartner/claude-master/actions/workflows/test.yml/badge.svg)](https://github.com/fwartner/claude-master/actions/workflows/test.yml)
 
 ## Quick Start
 
 ```bash
-npx @fwartner/claude-toolkit
+npx @pixelandprocess/superkit-agents
 ```
 
 The interactive wizard guides you through selecting skills, agents, commands, hooks, and memory — then installs everything into your project or global `.claude/` directory.
@@ -19,7 +19,7 @@ The interactive wizard guides you through selecting skills, agents, commands, ho
 For a full non-interactive install:
 
 ```bash
-npx @fwartner/claude-toolkit --all
+npx @pixelandprocess/superkit-agents --all
 ```
 
 ## What's Included
@@ -275,19 +275,19 @@ Jobs to Be Done methodology for writing implementation-free specs:
 
 ```bash
 # Interactive wizard (recommended)
-npx @fwartner/claude-toolkit
+npx @pixelandprocess/superkit-agents
 
 # Full install, no prompts
-npx @fwartner/claude-toolkit --all
+npx @pixelandprocess/superkit-agents --all
 
 # Global plugin install
-npx @fwartner/claude-toolkit --all --global
+npx @pixelandprocess/superkit-agents --all --global
 
 # Direct install (no plugin wrapper)
-npx @fwartner/claude-toolkit --all --direct
+npx @pixelandprocess/superkit-agents --all --direct
 
 # Selective skills
-npx @fwartner/claude-toolkit --skills planning,tdd,code-review,autonomous-loop
+npx @pixelandprocess/superkit-agents --skills planning,tdd,code-review,autonomous-loop
 ```
 
 ---
@@ -519,7 +519,7 @@ The toolkit includes GitHub Actions workflows:
 Install only the skills you need:
 
 ```bash
-npx @fwartner/claude-toolkit --skills planning,tdd,code-review,autonomous-loop
+npx @pixelandprocess/superkit-agents --skills planning,tdd,code-review,autonomous-loop
 ```
 
 Or use the interactive wizard to pick categories and individual skills.

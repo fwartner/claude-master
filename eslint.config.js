@@ -1,9 +1,6 @@
-export default [
-  {
-    files: ['src/**/*.ts', 'tests/**/*.ts'],
-    languageOptions: {
-      ecmaVersion: 2022,
-      sourceType: 'module',
-    },
-  },
-];
+import tseslint from 'typescript-eslint';
+
+export default tseslint.config(
+  { files: ['src/**/*.ts', 'tests/**/*.ts'] },
+  ...tseslint.configs.recommended,
+);

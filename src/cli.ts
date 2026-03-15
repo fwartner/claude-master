@@ -10,7 +10,7 @@ import chalk from 'chalk';
 const program = new Command();
 
 program
-  .name('claude-toolkit')
+  .name('superkit-agents')
   .description('Set up a complete AI-optimized development environment for Claude Code')
   .version('1.0.0')
   .option('--all', 'Install everything non-interactively')
