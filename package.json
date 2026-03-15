@@ -43,6 +43,9 @@
   ],
   "author": "fwartner",
   "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  },
   "dependencies": {
     "chalk": "^5.4.0",
     "commander": "^13.0.0",
